@@ -1,0 +1,11 @@
+    .header-bg {
+        background-image: linear-gradient(
+            rgba(4, 14, 205, 0.6),
+            rgba(65, 78, 220, 0.3)
+          ),url(../../public/build/images/header_bg2.f791e8bb.png);
+    }
+
+    .hover-link:hover {
+        scale: 1.1;
+        font-weight: bolder;
+    }
