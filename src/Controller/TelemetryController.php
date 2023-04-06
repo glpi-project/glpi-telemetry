@@ -12,7 +12,7 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(TelemetryRepository $telemetryRepository): Response
     {
-        $data = $telemetryRepository->findBy([], ['id' => 'ASC'], 35, 0);
+        $data = $telemetryRepository->getAllGlpiVersion();
         return $this->render('telemetry/index.html.twig', [
             'controller_name' => 'controller-name',
             'datas'           => $data

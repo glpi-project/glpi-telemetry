@@ -39,6 +39,29 @@ class TelemetryRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllGlpiVersion(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT glpi_version, COUNT(id)
+            FROM telemetry
+            GROUP BY glpi_version
+            ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
+
+       /* foreach ($result as $res) {
+            foreach ($res as $datas) {
+                $new[] = $res;
+            }
+        }
+        return $new;*/
+
+    }
+
 //    /**
 //     * @return Telemetry[] Returns an array of Telemetry objects
 //     */

@@ -13,7 +13,7 @@ import './bootstrap';
 
 bsCustomFileInput.init();
 
-import './echarts/charts';
+import '../js/charts';
 
 
 
