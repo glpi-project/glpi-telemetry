@@ -10,7 +10,10 @@
         font-weight: bolder;
     }
 
-    .test-size {
-        width: 800px;
-        height: 600px;
+    .pie-size {
+        width: 300px;
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }

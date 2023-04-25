@@ -52,6 +52,37 @@ class TelemetryRepository extends ServiceEntityRepository
         $resultSet = $stmt->executeQuery();
 
         return $resultSet->fetchAllAssociative();
+    }
+
+    public function getWebEngines(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT web_engine, COUNT(id)
+            FROM telemetry
+            GROUP BY web_engine
+            ';
+            $stmt = $conn->prepare($sql);
+            $resultSet = $stmt->executeQuery();
+
+            return $resultSet->fetchAllAssociative();
+    }
+
+    public function getOsFamily(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT os_family, COUNT(id)
+            FROM telemetry
+            GROUP BY os_family
+            ';
+            $stmt = $conn->prepare($sql);
+            $resultSet = $stmt->executeQuery();
+
+            return $resultSet->fetchAllAssociative();
+    }
 
        /* foreach ($result as $res) {
             foreach ($res as $datas) {
@@ -60,7 +91,6 @@ class TelemetryRepository extends ServiceEntityRepository
         }
         return $new;*/
 
-    }
 
 //    /**
 //     * @return Telemetry[] Returns an array of Telemetry objects
