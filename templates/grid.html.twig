@@ -1,57 +1,7 @@
-<div class="container-lg bg-light p-3 my-3 rounded-3">
+<div class="container-fluid bg-light p-3 my-3 rounded-3">
     <div class="row text-center">
-        <div id="glpi_version" class="pie-size p-1 col-4 border rounded-3 bg-white"></div>
+        {% include 'telemetry/glpiversion.html.twig' %}
         {% include 'telemetry/webengine.html.twig' %}
         {% include 'telemetry/osfamily.html.twig' %}
-
     </div>
 </div>
-<script>
-window.addEventListener("DOMContentLoaded", (event) => {
-    const chartDom = document.getElementById("glpi_version");
-    const myChart = echarts.init(chartDom);
-    option = {
-        title: {
-            text: 'GLPI Versions',
-            left: 'center'
-        },
-        tooltip: {
-            trigger: 'item'
-        },
-        series: [
-            {
-            name: 'version users',
-            type: 'pie',
-            radius: ['30%', '70%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-                borderRadius: 10,
-                borderColor: '#fff',
-                borderWidth: 2
-            },
-            label: {
-                show: false,
-                position: 'center'
-            },
-            emphasis: {
-                label: {
-                show: true,
-                fontSize: 40,
-                fontWeight: 'bold'
-                }
-            },
-            labelLine: {
-                show: false
-            },
-            data: [
-                {% for row in vdata %}
-                { value: {{ row.count }}, name: '{{ row.glpi_version }}' },
-                {% endfor %}
-            ]
-            }
-        ]
-    };
-    option && myChart.setOption(option);
-
-});
-</script>
