@@ -39,6 +39,22 @@ class ReferenceRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllReferences(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT name, country, num_assets, num_helpdesk, reference.created_at as "registration_date", comment
+            FROM reference
+            INNER JOIN glpi_reference ON
+            reference.id = glpi_reference.reference_id
+            ';
+            $stmt = $conn->prepare($sql);
+            $resultSet = $stmt->executeQuery();
+
+            return $resultSet->fetchAllAssociative();
+    }
+
 //    /**
 //     * @return Reference[] Returns an array of Reference objects
 //     */

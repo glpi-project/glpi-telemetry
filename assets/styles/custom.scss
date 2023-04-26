@@ -34,3 +34,13 @@
     .icon-size {
         font-size: 2em;
     }
+
+    .table-conf {
+        table-layout: fixed;
+    }
+
+    td {
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+    }

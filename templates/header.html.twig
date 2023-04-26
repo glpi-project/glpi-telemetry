@@ -1,6 +1,25 @@
+{% if app.request.get('_route') == 'app_telemetry' %}
 <div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex align-items-center">
     <span class="material-symbols-outlined p-2 icon-size">
         monitoring
     </span>
     <h1 class="ps-2">Telemetry</h1>
 </div>
+{% endif %}
+{% if app.request.get('_route') == 'app_reference' %}
+<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex align-items-center">
+    <span class="material-symbols-outlined p-2 icon-size">
+        groups
+    </span>
+    <h1 class="ps-2">References</h1>
+</div>
+{% endif %}
+{% if app.request.get('_route') == 'app_contact' %}
+<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex align-items-center">
+    <span class="material-symbols-outlined p-2 icon-size">
+        mail
+    </span>
+    <h1 class="ps-2">Contact</h1>
+</div>
+{% endif %}
+
