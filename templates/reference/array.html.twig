@@ -1,43 +1,18 @@
-<div class="container-fluid bg-light p-3 my-3 rounded-3">
-        <table class="table table-striped text-wrap table-conf" id="references">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Country</th>
-                    <th>Number of assets</th>
-                    <th>Number of helpdesk</th>
-                    <th>Registration date</th>
-                    <th>Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for reference in references %}
-                    <tr>
-                        <td class="w-20">{{ reference.name }}</td>
-                        <td class="w-10">{{ reference.country }}</td>
-                        <td class="w-10">{{ reference.num_assets }}</td>
-                        <td class="w-5">{{ reference.num_helpdesk }}</td>
-                        <td class="w-10">{{ reference.registration_date }}</td>
-                        <td class="w-10">{{ reference.comment }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-</div>
+<div class="container-fluid bg-light p-3 my-3 rounded-3" id="tabcontainer"></div>
 
-<div class="container-fluid bg-light p-3 my-3 rounded-3">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="dataTables_paginate paging_simple_numbers">
-                <ul class="pagination">
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+<script>
+const diplayTab = new gridjs.Grid({
+    columns: ["Name", "Country", "Nb of assets", "Nb of helpdesk", "Registration date", "Comment"],
+    pagination: {
+        limit: 20
+    },
+    search: true,
+    sort: true,
+    data: [
+        {% for reference in references %}
+        ["{{ reference.name }}", "{{ reference.country }}", "{{ reference.num_assets }}", "{{ reference.num_helpdesk }}", "{{ reference.registration_date }}", "{{ reference.comment }}"],
+        {% endfor %}
+    ]
+}).render(document.getElementById("tabcontainer"));
+</script>
 
-{# <script>
-window.addEventListener("DOMContentLoaded", (event) => {
-    let table = new DataTable('#references');
-});
-</script> #}
