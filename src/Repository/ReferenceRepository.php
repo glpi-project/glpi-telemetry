@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Reference;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
+use Rinvex\Country\CountryLoader;
+use Rinvex\Country\Country;
 
 /**
  * @extends ServiceEntityRepository<Reference>
@@ -44,7 +47,8 @@ class ReferenceRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT name, country, url, num_assets, num_helpdesk, reference.created_at as "registration_date", comment
+            SELECT name, country, url, num_assets, num_helpdesk,
+            reference.created_at as "registration_date", comment
             FROM reference
             INNER JOIN glpi_reference ON
             reference.id = glpi_reference.reference_id
@@ -55,10 +59,33 @@ class ReferenceRepository extends ServiceEntityRepository
 
         foreach ($result as &$res) {
             $res['comment'] = str_replace(array('<br>', '<br />', "\n", "\r"), array(' ', ' ', ' ', ' '), $res['comment']);
-        };
+
+            if ($res['country'] == 'uk') {
+                $res['country'] == 'gb';
+            } elseif ($res['country'] == '') {
+                $res['country'] == 'NR';
+            }
+
+            $countryCode = $res['country'];
+            $flag = $this->getFlagForCountry($countryCode);
+            $res['country'] = $flag;
+        }
         return $result;
     }
+    public function getFlagForCountry(string $countryAlpha2): string
+    {
 
+        $country = new CountryLoader();
+
+        try {
+                $acountry = $country->country($countryAlpha2);
+                $returnString    = $acountry->getFlag();
+        } catch (Exception $e) {
+                $returnString = $e->getMessage();
+        }
+        //echo $returnString;
+        return $returnString;
+    }
     //    /**
     //     * @return Reference[] Returns an array of Reference objects
     //     */
