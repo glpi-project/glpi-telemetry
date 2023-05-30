@@ -66,9 +66,10 @@ class ReferenceRepository extends ServiceEntityRepository
                 $res['country'] == 'NR';
             }
 
-            $countryCode = $res['country'];
-            $flag = $this->getFlagForCountry($countryCode);
-            $res['country'] = $flag;
+            // $countryCode = $res['country'];
+
+            // $flag = $this->getFlagForCountry($countryCode);
+            // $res['country'] = $flag;
         }
         return $result;
     }
