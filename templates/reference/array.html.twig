@@ -10,7 +10,7 @@ const diplayTab = new gridjs.Grid({
     sort: true,
     data: [
         {% for reference in references %}
-        ["{{ reference.name }}", "{{ reference.country }}", "{{ reference.num_assets }}", "{{ reference.num_helpdesk }}", "{{ reference.registration_date }}", "{{ reference.comment }}"],
+        ["{{ reference.name }}", gridjs.html(`<span class="fi fi-{{ reference.country }}"></span>`), "{{ reference.num_assets }}", "{{ reference.num_helpdesk }}", "{{ reference.registration_date }}", "{{ reference.comment }}"],
         {% endfor %}
     ]
 }).render(document.getElementById("tabcontainer"));

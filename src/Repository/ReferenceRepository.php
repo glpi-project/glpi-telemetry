@@ -60,11 +60,11 @@ class ReferenceRepository extends ServiceEntityRepository
         foreach ($result as &$res) {
             $res['comment'] = str_replace(array('<br>', '<br />', "\n", "\r"), array(' ', ' ', ' ', ' '), $res['comment']);
 
-            if ($res['country'] == 'uk') {
-                $res['country'] == 'gb';
-            } elseif ($res['country'] == '') {
-                $res['country'] == 'NR';
-            }
+            // if ($res['country'] == 'uk') {
+            //     $res['country'] == 'gb';
+            // } elseif ($res['country'] == '') {
+            //     $res['country'] == 'NR';
+            // }
 
             // $countryCode = $res['country'];
 
@@ -72,20 +72,6 @@ class ReferenceRepository extends ServiceEntityRepository
             // $res['country'] = $flag;
         }
         return $result;
-    }
-    public function getFlagForCountry(string $countryAlpha2): string
-    {
-
-        $country = new CountryLoader();
-
-        try {
-                $acountry = $country->country($countryAlpha2);
-                $returnString    = $acountry->getFlag();
-        } catch (Exception $e) {
-                $returnString = $e->getMessage();
-        }
-        //echo $returnString;
-        return $returnString;
     }
     //    /**
     //     * @return Reference[] Returns an array of Reference objects
