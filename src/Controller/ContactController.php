@@ -17,21 +17,24 @@ class ContactController extends AbstractController
     {
         $form = $this->createForm(ContactFormType::class);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $contactFormData = $form->getData();
-
+            //var_dump($contactFormData);
             $message = (new Email())
                 ->from($contactFormData['Email'])
                 ->to('mail@contact.fr')
                 ->subject('New message from Telemetry'. $contactFormData['Subject'])
-                ->text($contactFormData['Message'], 'text/plain');
+                ->text($contactFormData['Message']);
+
+            //var_dump($message);
 
             $mailer->send($message);
 
             $this->addFlash('success', 'Your message has been sent');
 
-            return $this->redirectToRoute('/contact');
+            return $this->redirectToRoute('app_contact');
         }
 
         return $this->render('contact/index.html.twig', [
