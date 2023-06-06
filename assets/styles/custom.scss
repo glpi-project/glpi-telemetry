@@ -21,9 +21,21 @@
 
     .pie-size {
         width: 300px;
-        min-width: 100;
+        min-width: 100px;
         height: 300px;
         min-height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2px;
+        box-shadow: 10px 5px 5px rgb(214, 204, 248);
+    }
+
+    .bar-size {
+        width: 700px;
+        min-width: 500px;
+        height: 500px;
+        min-height: 600px;
         display: flex;
         justify-content: center;
         align-items: center;

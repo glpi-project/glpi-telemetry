@@ -59,17 +59,6 @@ class ReferenceRepository extends ServiceEntityRepository
 
         foreach ($result as &$res) {
             $res['comment'] = str_replace(array('<br>', '<br />', "\n", "\r"), array(' ', ' ', ' ', ' '), $res['comment']);
-
-            // if ($res['country'] == 'uk') {
-            //     $res['country'] == 'gb';
-            // } elseif ($res['country'] == '') {
-            //     $res['country'] == 'NR';
-            // }
-
-            // $countryCode = $res['country'];
-
-            // $flag = $this->getFlagForCountry($countryCode);
-            // $res['country'] = $flag;
         }
         return $result;
     }

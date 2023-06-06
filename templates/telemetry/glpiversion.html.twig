@@ -2,8 +2,10 @@
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
-    const chartDom = document.getElementById("glpi_version");
-    const myChart = echarts.init(chartDom);
+    var chartDom = document.getElementById("glpi_version");
+    var myChart = echarts.init(chartDom, 'westeros');
+    var option;
+
     option = {
         title: {
             text: 'GLPI Versions',

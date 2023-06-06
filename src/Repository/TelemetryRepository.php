@@ -84,12 +84,21 @@ class TelemetryRepository extends ServiceEntityRepository
             return $resultSet->fetchAllAssociative();
     }
 
-       /* foreach ($result as $res) {
-            foreach ($res as $datas) {
-                $new[] = $res;
-            }
-        }
-        return $new;*/
+    public function getPhpInfos(): array
+    {
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+            SELECT split_part(php_version, '.', 2), count(*)
+            FROM telemetry
+            GROUP BY version
+            ';
+            $stmt = $conn->prepare($sql);
+            $resultSet = $stmt->executeQuery();
+
+            return $resultSet->fetchAllAssociative();
+    }
+
 
 
 //    /**
