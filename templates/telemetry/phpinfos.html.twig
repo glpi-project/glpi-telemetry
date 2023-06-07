@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         source: [
         ['amount', 'PHP Version'],
         {% for row in phpdata %}
-        [{{ row.count}}, '{{row.php_version}}'],
+        [{{ row.count}}, '{{row.version}}'],
         {% endfor %}
         ]
     },

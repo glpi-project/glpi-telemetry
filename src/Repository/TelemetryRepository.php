@@ -88,11 +88,11 @@ class TelemetryRepository extends ServiceEntityRepository
     {
     $conn = $this->getEntityManager()->getConnection();
 
-    $sql = '
-            SELECT split_part(php_version, '.', 2), count(*)
+    $sql =  "
+            SELECT split_part(php_version, '.', 1) || '.' || split_part(php_version, '.', 2) as version, count(*)
             FROM telemetry
             GROUP BY version
-            ';
+            ";
             $stmt = $conn->prepare($sql);
             $resultSet = $stmt->executeQuery();
 
