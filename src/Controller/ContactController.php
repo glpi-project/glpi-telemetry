@@ -21,14 +21,12 @@ class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $contactFormData = $form->getData();
-            //var_dump($contactFormData);
+
             $message = (new Email())
                 ->from($contactFormData['Email'])
                 ->to('mail@contact.fr')
                 ->subject('New message from Telemetry'. $contactFormData['Subject'])
                 ->text($contactFormData['Message']);
-
-            //var_dump($message);
 
             $mailer->send($message);
 

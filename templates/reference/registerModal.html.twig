@@ -1,16 +1,27 @@
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+      <div class="modal-header header-bg">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Register your instance</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+        <div class="form-group">
+          {{ form_row(form_ref.name, {'attr': {'class': 'form-control', 'placeholder': 'Your (company) name'}}) }}
+          {{ form_row(form_ref.url, {'attr': {'class': 'form-control', 'placeholder': 'website Url'}}) }}
+          {{ form_row(form_ref.country, {'attr': {'class': 'form-select'}}) }}
+          {{ form_row(form_ref.phone, {'attr': {'class': 'form-control', 'placeholder': 'Phone number'}}) }}
+          {{ form_row(form_ref.email, {'attr': {'class': 'form-control', 'placeholder': 'Email adress'}}) }}
+          {{ form_row(form_ref.referent, {'attr': {'class': 'form-control', 'placeholder': 'Referent name'}}) }}
+          {{ form_row(form_glpiref.num_assets, {'attr': {'class': 'form-control', 'placeholder': 'Number of assets'}}) }}
+          {{ form_row(form_glpiref.num_helpdesk, {'attr': {'class': 'form-control', 'placeholder': 'Number of helpdesk'}}) }}
+          {{ form_row(form_ref.comment, {'attr': {'class': 'form-control', 'placeholder': 'Your comment about GLPI usage'}}) }}
+
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
