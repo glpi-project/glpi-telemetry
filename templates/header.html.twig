@@ -7,11 +7,18 @@
 </div>
 {% endif %}
 {% if app.request.get('_route') == 'app_reference' %}
-<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex align-items-center">
-    <span class="material-symbols-outlined p-2 icon-size">
-        groups
-    </span>
-    <h1 class="ps-2">References</h1>
+<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex flex-column align-items-start">
+    <div class="d-flex flex-row">
+        <span class="material-symbols-outlined p-2 icon-size">
+            groups
+        </span>
+        <h1 class="ps-2">References</h1>
+    </div>
+    <div class="p-2">
+        <p class="mb-0">We maintain a public database of registered GLPI installations. You may want to register your own ?</p>
+        <button type="button" class="btn btn-primary px-2 py-2 mt-2" data-bs-toggle="modal" data-bs-target="#registerModal">Register !</button>
+        {% include 'reference/registerModal.html.twig' %}
+    </div>
 </div>
 {% endif %}
 {% if app.request.get('_route') == 'app_contact' %}
