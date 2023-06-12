@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\GlpiReference;
 use App\Entity\Reference;
-use App\Form\GlpiReferenceFormType;
 use App\Form\ReferenceFormType;
 use App\Repository\ReferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,57 +20,40 @@ class ReferenceController extends AbstractController
         $references = $referenceRepository->getAllReferences();
         $nb = count($references);
 
-        $form_ref = $this->createForm(ReferenceFormType::class);
-        $form_glpiref = $this->createForm(GlpiReferenceFormType::class);
+        $form = $this->createForm(ReferenceFormType::class);
+        $form->handleRequest($request);
 
-        $form_ref->handleRequest($request);
-        $form_glpiref->handleRequest($request);
+        $reference = new Reference;
+        $glpi_reference = new GlpiReference();
 
-        $reference = new Reference();
-        $data_ref = $form_ref->getData();
-        $data_gref = $form_glpiref->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
 
-        if ($form_ref->isSubmitted() && $form_ref->isValid()) {
-            $reference = $data_ref;
+            $reference->setName($data['name']);
+            $reference->setUrl($data['url']);
+            $reference->setCountry($data['country']);
+            $reference->setPhone($data['phone']);
+            $reference->setEmail($data['email']);
+            $reference->setReferent($data['referent']);
+            $reference->setComment($data['comment']);
+            $glpi_reference->setNumAssets($data['nb_assets']);
+            $glpi_reference->setNumHelpdesk($data['nb_helpdesk']);
+
+            $manager->persist($reference);
+            $manager->persist($glpi_reference);
+            $manager->flush();
+            //
+
+            $this->addFlash('success', 'Your instance has been registered');
+
         }
-
-        $this->addFlash('sucess','your instance has been registered');
-        // $form_ref->handleRequest($request);
-        // $form_glpiref->handleRequest($request);
-
-        // if ($form_ref->isSubmitted() && $form_ref->isValid()) {
-        //         $data_rf = $form_ref->getData();
-        //         $reference->setName($data_rf['name']);
-        //         $reference->setUrl($data_rf['url']);
-        //         $reference->setCountry($data_rf['country']);
-        //         $reference->setPhone($data_rf['phone']);
-        //         $reference->setEmail($data_rf['email']);
-        //         $reference->setReferent($data_rf['referent']);
-        //         $reference->setComment($data_rf['comment']);
-
-        // }
-
-        // if ($form_glpiref->isSubmitted() && $form_glpiref->isValid()) {
-        //     $data_rfg = $form_glpiref->getData();
-        //     $glpi_reference->setNumAssets($data_rfg['num_assets']);
-        //     $glpi_reference->setNumHelpdesk($data_rfg['num_helpdesk']);
-        // }
-
-        //     print_r($reference);
-        //     print_r($glpi_reference);
-            // $manager->persist($reference);
-            // $manager->persist($glpi_reference);
-            // $manager->flush();
-
-            // $this->addFlash('success', 'Your instance has been registered');
 
         return $this->render(
             'reference/index.html.twig',
             [
                 'references'   => $references,
                 'nb_ref'       => $nb,
-                'form_ref'     => $form_ref,
-                'form_glpiref' => $form_glpiref
+                'form'         => $form
             ]
         );
     }
