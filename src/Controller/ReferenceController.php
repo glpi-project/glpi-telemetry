@@ -38,11 +38,11 @@ class ReferenceController extends AbstractController
             $reference->setComment($data['comment']);
             $glpi_reference->setNumAssets($data['nb_assets']);
             $glpi_reference->setNumHelpdesk($data['nb_helpdesk']);
-
-            $manager->persist($reference);
+            $glpi_reference->setReference($reference);
             $manager->persist($glpi_reference);
+            //$reference->setGlpiReference($glpi_reference);
+            //$manager->persist($reference);
             $manager->flush();
-            //
 
             $this->addFlash('success', 'Your instance has been registered');
 

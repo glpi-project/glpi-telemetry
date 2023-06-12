@@ -13,8 +13,8 @@ class GlpiReference
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $reference_id = null;
+    // #[ORM\Column]
+    // private ?int $reference_id = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $num_assets = null;
@@ -23,7 +23,7 @@ class GlpiReference
     private ?int $num_helpdesk = null;
 
     #[ORM\OneToOne(targetEntity: Reference::class, inversedBy: 'glpi_reference', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name:'reference', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'reference_id', referencedColumnName: 'id', nullable: false)]
     private ?Reference $reference = null;
 
     public function getId(): ?int
@@ -31,17 +31,28 @@ class GlpiReference
         return $this->id;
     }
 
-    public function getReferenceId(): ?int
+    public function getReference(): ?Reference
     {
-        return $this->reference_id;
+        return $this->reference;
     }
 
-    public function setReferenceId(int $reference_id): self
+    public function setReference(Reference $reference): self
     {
-        $this->reference_id = $reference_id;
-
+        $this->reference = $reference;
         return $this;
     }
+
+    // public function getReferenceId(): ?int
+    // {
+    //     return $this->reference_id;
+    // }
+
+    // public function setReferenceId(int $reference_id): self
+    // {
+    //     $this->reference_id = $reference_id;
+
+    //     return $this;
+    // }
 
     public function getNumAssets(): ?int
     {
