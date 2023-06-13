@@ -17,21 +17,22 @@ class ReferenceController extends AbstractController
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager): Response
     {
-        $references = $referenceRepository->getAllReferences();
+        $references = $referenceRepository->findAll();
         $nb = count($references);
-
-        $form = $this->createForm(ReferenceFormType::class);
-        $form->handleRequest($request);
 
         $reference = new Reference;
         $glpi_reference = new GlpiReference();
 
+        $form = $this->createForm(ReferenceFormType::class);
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
             $data = $form->getData();
 
             $reference->setName($data['name']);
             $reference->setUrl($data['url']);
-            $reference->setCountry($data['country']);
+            $reference->setCountry(strtolower($data['country']));
             $reference->setPhone($data['phone']);
             $reference->setEmail($data['email']);
             $reference->setReferent($data['referent']);
@@ -44,7 +45,7 @@ class ReferenceController extends AbstractController
             //$manager->persist($reference);
             $manager->flush();
 
-            $this->addFlash('success', 'Your instance has been registered');
+            return $this->redirectToRoute('app_reference');
 
         }
 

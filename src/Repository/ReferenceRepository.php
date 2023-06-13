@@ -38,26 +38,26 @@ class ReferenceRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAllReferences(): array
-    {
-        $conn = $this->getEntityManager()->getConnection();
+    // public function getAllReferences(): array
+    // {
+    //     $conn = $this->getEntityManager()->getConnection();
 
-        $sql = '
-            SELECT name, country, url, num_assets, num_helpdesk,
-            reference.created_at as "registration_date", comment
-            FROM reference
-            INNER JOIN glpi_reference ON
-            reference.id = glpi_reference.reference_id
-            ';
-        $stmt = $conn->prepare($sql);
-        $resultSet = $stmt->executeQuery();
-        $result = $resultSet->fetchAllAssociative();
+    //     $sql = '
+    //         SELECT name, country, url, num_assets, num_helpdesk,
+    //         reference.created_at as "registration_date", comment
+    //         FROM reference
+    //         INNER JOIN glpi_reference ON
+    //         reference.id = glpi_reference.reference_id
+    //         ';
+    //     $stmt = $conn->prepare($sql);
+    //     $resultSet = $stmt->executeQuery();
+    //     $result = $resultSet->fetchAllAssociative();
 
-        foreach ($result as &$res) {
-            $res['comment'] = str_replace(array('<br>', '<br />', "\n", "\r"), array(' ', ' ', ' ', ' '), $res['comment']);
-        }
-        return $result;
-    }
+    //     foreach ($result as &$res) {
+    //         $res['comment'] = str_replace(array('<br>', '<br />', "\n", "\r"), array(' ', ' ', ' ', ' '), $res['comment']);
+    //     }
+    //     return $result;
+    // }
     //    /**
     //     * @return Reference[] Returns an array of Reference objects
     //     */

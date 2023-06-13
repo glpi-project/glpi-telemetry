@@ -24,8 +24,8 @@ class ReferenceFormType extends AbstractType
             ->add('phone', TelType::class)
             ->add('email', EmailType::class)
             ->add('referent', TextType::class)
-            ->add('nb_assets', NumberType::class)
-            ->add('nb_helpdesk', NumberType::class)
+            ->add('nb_assets')
+            ->add('nb_helpdesk')
             ->add('comment', TextareaType::class, ['attr' => ['rows' => 6]])
         ;
     }

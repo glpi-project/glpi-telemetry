@@ -1,6 +1,16 @@
 <h3 class="p-3">{{ nb_ref }} users already registered their GLPI installations</h3>
 <div class="container-fluid bg-light p-3 my-3 rounded-3" id="tabcontainer"></div>
 
+{# <div>
+{% for reference in references %}
+    {% if reference.glpireference.numAssets is defined %}
+        {{ reference.glpireference.numAssets}}
+    {% else %}
+        la valeur est nulle
+    {% endif %}
+{% endfor %}
+</div> #}
+
 <script>
 const diplayTab = new gridjs.Grid({
     columns: ["Name", "Country", "Nb of assets", "Nb of helpdesk", "Registration date", "Comment"],
@@ -11,7 +21,22 @@ const diplayTab = new gridjs.Grid({
     sort: true,
     data: [
         {% for reference in references %}
-        ["{{ reference.name }}", gridjs.html(`<span class="fi fi-{{ reference.country }}"></span>`), "{{ reference.num_assets }}", "{{ reference.num_helpdesk }}", "{{ reference.registration_date }}", "{{ reference.comment }}"],
+        [
+            {{ reference.name|json_encode|raw }},
+            gridjs.html(`<span class="fi fi-{{ reference.country }}"></span>`),
+            {% if reference.glpireference.numAssets is defined %}
+            {{ reference.glpireference.numAssets }},
+            {% else %}
+            "NV",
+            {% endif %}
+            {% if reference.glpireference.numHelpdesk is defined %}
+            {{ reference.glpireference.numHelpdesk }},
+            {% else %}
+            "NV",
+            {% endif %}
+            "{{ reference.createdAt|date("Y-m-d H:i:s") }}",
+            {{ reference.comment|json_encode|raw }}
+        ],
         {% endfor %}
     ]
 }).render(document.getElementById("tabcontainer"));
