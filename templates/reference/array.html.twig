@@ -3,11 +3,13 @@
 
 {# <div>
 {% for reference in references %}
-    {% if reference.glpireference.numAssets is defined %}
-        {{ reference.glpireference.numAssets}}
-    {% else %}
-        la valeur est nulle
-    {% endif %}
+        {% if reference.glpireference.numAssets is defined %}
+    <pre>
+         {{ reference.name }} {{ reference.id }} {{ reference.glpireference.numAssets }} {{ reference.glpireference.numHelpdesk }}
+    </pre>
+        {% else %}
+        NV
+        {% endif %}
 {% endfor %}
 </div> #}
 
@@ -25,14 +27,14 @@ const diplayTab = new gridjs.Grid({
             {{ reference.name|json_encode|raw }},
             gridjs.html(`<span class="fi fi-{{ reference.country }}"></span>`),
             {% if reference.glpireference.numAssets is defined %}
-            {{ reference.glpireference.numAssets }},
+            {{ reference.glpireference.numAssets|json_encode|raw }},
             {% else %}
-            "NV",
+            0,
             {% endif %}
             {% if reference.glpireference.numHelpdesk is defined %}
-            {{ reference.glpireference.numHelpdesk }},
+            {{ reference.glpireference.numHelpdesk|json_encode|raw }},
             {% else %}
-            "NV",
+            0,
             {% endif %}
             "{{ reference.createdAt|date("Y-m-d H:i:s") }}",
             {{ reference.comment|json_encode|raw }}

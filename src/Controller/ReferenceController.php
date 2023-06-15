@@ -40,9 +40,9 @@ class ReferenceController extends AbstractController
             $glpi_reference->setNumAssets($data['nb_assets']);
             $glpi_reference->setNumHelpdesk($data['nb_helpdesk']);
             $glpi_reference->setReference($reference);
-            $manager->persist($glpi_reference);
             //$reference->setGlpiReference($glpi_reference);
             //$manager->persist($reference);
+            $manager->persist($glpi_reference);
             $manager->flush();
 
             return $this->redirectToRoute('app_reference');

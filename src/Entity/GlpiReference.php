@@ -22,8 +22,8 @@ class GlpiReference
     #[ORM\Column(nullable: true)]
     private ?int $num_helpdesk = null;
 
-    #[ORM\OneToOne(targetEntity: Reference::class, inversedBy: 'glpi_reference', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: 'reference_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: Reference::class, inversedBy: 'glpireference', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'reference_id', referencedColumnName: 'id', unique: true, nullable: false)]
     private ?Reference $reference = null;
 
     public function getId(): ?int

@@ -46,9 +46,9 @@ class Reference
     #[ORM\Column(length: 41, nullable: true)]
     private ?string $uuid = null;
 
-    #[ORM\OneToOne(targetEntity: GlpiReference::class, mappedBy: 'reference')]
-    //#[ORM\JoinColumn( nullable: false)]
-    private ?GlpiReference $glpi_reference = null;
+    #[ORM\OneToOne(targetEntity: GlpiReference::class, mappedBy: 'reference', cascade: ['persist', 'remove'])]
+    // #[ORM\JoinColumn(name: 'glpireference', nullable: false)]
+    private ?GlpiReference $glpireference = null;
 
     public function getId(): ?int
     {
@@ -189,12 +189,12 @@ class Reference
 
     public function getGlpiReference(): ?GlpiReference
     {
-        return $this->glpi_reference;
+        return $this->glpireference;
     }
 
-    public function setGlpiReference(GlpiReference $glpi_reference): self
+    public function setGlpiReference(GlpiReference $glpireference): self
     {
-        $this->glpi_reference = $glpi_reference;
+        $this->glpireference = $glpireference;
 
         return $this;
     }
