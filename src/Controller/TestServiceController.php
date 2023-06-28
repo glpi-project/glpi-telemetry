@@ -13,10 +13,12 @@ class TestServiceController extends AbstractController
     public function index(PostgresConnection $postgresConnection): Response
     {
         $newco = $postgresConnection->getPostGresConnection();
+        $newdata = $postgresConnection->getPostgresData();
 
         return $this->render('test_service/index.html.twig', [
             'controller_name' => 'TestServiceController',
-            'connection_state'=> $newco
+            'connection_state'=> $newco,
+            'data' => $newdata
         ]);
     }
 }

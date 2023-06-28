@@ -2,4 +2,9 @@
 
 {{ connection_state }}
 
+{% for d in data %}
+    {{ d.id }}
+    {{ d.name }}
+{% endfor %}
+
 {% endblock %}
