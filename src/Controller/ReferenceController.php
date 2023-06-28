@@ -6,6 +6,7 @@ use App\Entity\GlpiReference;
 use App\Entity\Reference;
 use App\Form\ReferenceFormType;
 use App\Repository\ReferenceRepository;
+use App\Service\EnvService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,10 +16,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReferenceController extends AbstractController
 {
     #[Route('/reference', name: 'app_reference')]
-    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager): Response
+    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, EnvService $envService): Response
     {
+        // $pgUser = $envService->getPgUser();
+        // var_dump($pgUser);
+
         $references = $referenceRepository->findAll();
         $nb = count($references);
+        $pg_host = $_SERVER['PG_HOST'];
+        var_dump($pg_host);
 
         $reference = new Reference;
         $glpi_reference = new GlpiReference();

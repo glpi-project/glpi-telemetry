@@ -1,13 +1,13 @@
 <?php
 
 $host = 'localhost';
-$port = 3306;
+$port = 5432;
 $dbname = 'glpitelemetry';
 $dbuser = 'postgres';
 $dbpassword = 'Vokuro0106!';
-
+var_dump($host, $port);
 //connection to Postgres database
-$dsn = "pgsql:host=$host;port=5432;dbname=$dbname;user=$dbuser;password=$dbpassword";
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;user=$dbuser;password=$dbpassword";
 
 try {
     $conn = new PDO($dsn);
