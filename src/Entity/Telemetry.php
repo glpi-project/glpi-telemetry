@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TelemetryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -121,6 +123,14 @@ class Telemetry
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $install_mode = null;
+
+    #[ORM\OneToMany(mappedBy: 'telemetry', targetEntity: TelemetryGlpiPlugin::class)]
+    private Collection $TelemetryGlpiPlugin;
+
+    public function __construct()
+    {
+        $this->TelemetryGlpiPlugin = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -548,6 +558,36 @@ class Telemetry
     public function setInstallMode(?string $install_mode): self
     {
         $this->install_mode = $install_mode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TelemetryGlpiPlugin>
+     */
+    public function getTelemetryGlpiPlugin(): Collection
+    {
+        return $this->TelemetryGlpiPlugin;
+    }
+
+    public function addTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
+    {
+        if (!$this->TelemetryGlpiPlugin->contains($telemetryGlpiPlugin)) {
+            $this->TelemetryGlpiPlugin->add($telemetryGlpiPlugin);
+            $telemetryGlpiPlugin->setTelemetry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
+    {
+        if ($this->TelemetryGlpiPlugin->removeElement($telemetryGlpiPlugin)) {
+            // set the owning side to null (unless already changed)
+            if ($telemetryGlpiPlugin->getTelemetry() === $this) {
+                $telemetryGlpiPlugin->setTelemetry(null);
+            }
+        }
 
         return $this;
     }
