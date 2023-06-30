@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MysqlConnection;
 use App\Service\PostgresConnection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

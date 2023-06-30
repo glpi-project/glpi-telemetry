@@ -19,7 +19,7 @@ class Reference
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $country = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'text', length: 655, nullable: true)]
     private ?string $comment = null;
 
     #[ORM\Column(length: 505, nullable: true)]

@@ -89,7 +89,7 @@ class Telemetry
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $php_version = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'text', length: 655, nullable: true)]
     private ?string $php_modules = null;
 
     #[ORM\Column(nullable: true)]
@@ -112,6 +112,9 @@ class Telemetry
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $os_family = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $os_distribution = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $os_version = null;
@@ -511,6 +514,11 @@ class Telemetry
     public function getOsFamily(): ?string
     {
         return $this->os_family;
+    }
+
+    public function getOsDistribution(): ?string
+    {
+        return $this->os_distribution;
     }
 
     public function setOsFamily(?string $os_family): self

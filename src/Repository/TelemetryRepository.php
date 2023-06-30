@@ -44,7 +44,7 @@ class TelemetryRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT glpi_version, COUNT(id)
+            SELECT glpi_version, COUNT(id) as count
             FROM telemetry
             GROUP BY glpi_version
             ';
@@ -59,7 +59,7 @@ class TelemetryRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT web_engine, COUNT(id)
+            SELECT web_engine, COUNT(id) as count
             FROM telemetry
             GROUP BY web_engine
             ';
@@ -74,7 +74,7 @@ class TelemetryRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT os_family, COUNT(id)
+            SELECT os_family, COUNT(id) as count
             FROM telemetry
             GROUP BY os_family
             ';
@@ -89,7 +89,7 @@ class TelemetryRepository extends ServiceEntityRepository
     $conn = $this->getEntityManager()->getConnection();
 
     $sql =  "
-            SELECT split_part(php_version, '.', 1) || '.' || split_part(php_version, '.', 2) as version, count(*)
+            SELECT SUBSTRING_INDEX(php_version, '.', 2) as version, COUNT('version') as count
             FROM telemetry
             GROUP BY version
             ";
