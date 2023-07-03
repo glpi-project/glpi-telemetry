@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TelemetryGlpiPluginRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelemetryGlpiPluginRepository::class)]
@@ -14,62 +13,30 @@ class TelemetryGlpiPlugin
     #[ORM\Column]
     private ?int $id = null;
 
-    // #[ORM\Column(type: Types::BIGINT)]
-    // private ?string $telemetry_entry_id = null;
-    #[ORM\ManyToOne(inversedBy: 'TelemetryGlpiPlugin')]
+    #[ORM\ManyToOne(targetEntity: Telemetry::class)]
     private ?Telemetry $telemetry_entry = null;
 
-    #[ORM\Column]
-    private ?int $glpi_plugin_id = null;
+    #[ORM\ManyToOne(targetEntity: GlpiPlugin::class)]
+    private ?int $glpi_plugin;
 
     #[ORM\Column(length: 50)]
     private ?string $version = null;
 
-    #[ORM\OneToOne(inversedBy: 'telemetryGlpiPlugin', targetEntity: self::class, cascade: ['persist', 'remove'])]
-    private ?self $GlpiPlugin = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\OneToOne(mappedBy: 'GlpiPlugin', targetEntity: self::class, cascade: ['persist', 'remove'])]
-    private ?self $telemetryGlpiPlugin = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updated_at = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTelemetryEntry(): ?Telemetry
-    {
-        return $this->telemetry_entry;
-    }
-
-    public function setTelemetryEntry(?Telemetry $telemetry): static
-    {
-        $this->telemetry_entry = $telemetry;
-
-        return $this;
-    }
-    // public function getTelemetryEntryId(): ?string
+    // public function getGlpiPlugin(): ?int
     // {
-    //     return $this->telemetry_entry_id;
+    //     return $this->glpi_plugin;
     // }
-
-    // public function setTelemetryEntryId(string $telemetry_entry_id): static
-    // {
-    //     $this->telemetry_entry_id = $telemetry_entry_id;
-
-    //     return $this;
-    // }
-
-    public function getGlpiPluginId(): ?int
-    {
-        return $this->glpi_plugin_id;
-    }
-
-    public function setGlpiPluginId(int $glpi_plugin_id): static
-    {
-        $this->glpi_plugin_id = $glpi_plugin_id;
-
-        return $this;
-    }
 
     public function getVersion(): ?string
     {
@@ -83,37 +50,4 @@ class TelemetryGlpiPlugin
         return $this;
     }
 
-    public function getGlpiPlugin(): ?self
-    {
-        return $this->GlpiPlugin;
-    }
-
-    public function setGlpiPlugin(?self $GlpiPlugin): static
-    {
-        $this->GlpiPlugin = $GlpiPlugin;
-
-        return $this;
-    }
-
-    public function getTelemetryGlpiPlugin(): ?self
-    {
-        return $this->telemetryGlpiPlugin;
-    }
-
-    public function setTelemetryGlpiPlugin(?self $telemetryGlpiPlugin): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($telemetryGlpiPlugin === null && $this->telemetryGlpiPlugin !== null) {
-            $this->telemetryGlpiPlugin->setGlpiPlugin(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($telemetryGlpiPlugin !== null && $telemetryGlpiPlugin->getGlpiPlugin() !== $this) {
-            $telemetryGlpiPlugin->setGlpiPlugin($this);
-        }
-
-        $this->telemetryGlpiPlugin = $telemetryGlpiPlugin;
-
-        return $this;
-    }
 }
