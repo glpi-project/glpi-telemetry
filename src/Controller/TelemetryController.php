@@ -16,14 +16,15 @@ class TelemetryController extends AbstractController
         $we_data    = $telemetryRepository->getWebEngines();
         $os_data    = $telemetryRepository->getOsFamily();
         $php_data   = $telemetryRepository->getPhpInfos();
+        $top_plugin = $telemetryRepository->getTopPlugin();
 
         return $this->render('telemetry/index.html.twig', [
             'controller_name' => 'controller-name',
             'vdata'           => $v_data,
             'wedata'          => $we_data,
             'osdata'          => $os_data,
-            'phpdata'         => $php_data
-
+            'phpdata'         => $php_data,
+            'topplugin'       => $top_plugin
         ]);
     }
 }

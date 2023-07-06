@@ -1,0 +1,46 @@
+<div id="topplugin" class="pie-size-rose p-1 col border rounded-3 bg-white"></div>
+
+<script>
+window.addEventListener("DOMContentLoaded", (event) => {
+
+    const chartDom = document.getElementById("topplugin");
+    const myChart = echarts.init(chartDom);
+
+    option = {
+        title: {
+            text: 'Top 10 plugins',
+            left: 'center',
+            top: 'center'
+        },
+        toolbox: {
+            show: true,
+            feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+            }
+        },
+        series: [
+            {
+            name: 'Nightingale Chart',
+            type: 'pie',
+            radius: [50, 160],
+            center: ['50%', '50%'],
+            roseType: 'area',
+            itemStyle: {
+                borderRadius: 8
+            },
+        data: [
+            {% for row in topplugin %}
+            { value: {{ row.number }}, name: '{{ row.pluginname }}' },
+            {% endfor %}
+        ]
+        }
+        ]
+    };
+
+    option && myChart.setOption(option);
+
+})
+</script>

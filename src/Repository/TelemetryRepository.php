@@ -63,10 +63,10 @@ class TelemetryRepository extends ServiceEntityRepository
             FROM telemetry
             GROUP BY web_engine
             ';
-            $stmt = $conn->prepare($sql);
-            $resultSet = $stmt->executeQuery();
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
 
-            return $resultSet->fetchAllAssociative();
+        return $resultSet->fetchAllAssociative();
     }
 
     public function getOsFamily(): array
@@ -78,25 +78,43 @@ class TelemetryRepository extends ServiceEntityRepository
             FROM telemetry
             GROUP BY os_family
             ';
-            $stmt = $conn->prepare($sql);
-            $resultSet = $stmt->executeQuery();
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
 
-            return $resultSet->fetchAllAssociative();
+        return $resultSet->fetchAllAssociative();
     }
 
     public function getPhpInfos(): array
     {
-    $conn = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getConnection();
 
-    $sql =  "
+        $sql =  "
             SELECT SUBSTRING_INDEX(php_version, '.', 2) as version, COUNT('version') as count
             FROM telemetry
             GROUP BY version
             ";
-            $stmt = $conn->prepare($sql);
-            $resultSet = $stmt->executeQuery();
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
 
-            return $resultSet->fetchAllAssociative();
+        return $resultSet->fetchAllAssociative();
+    }
+
+    public function getTopPlugin(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT glpi_plugin_id as pluginid, pkey as pluginname, count('pluginid') as number
+            FROM telemetry_glpi_plugin as tgp INNER JOIN glpi_plugin as gp ON
+            tgp.glpi_plugin_id = gp.id
+            GROUP BY pluginid
+            ORDER BY number desc
+            LIMIT 10
+            ";
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
     }
 
 
