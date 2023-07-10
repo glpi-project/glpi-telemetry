@@ -1,18 +1,26 @@
-<div class="row p-2">
-    <div class="col-md-6 mb-4">
-      <div class="md-form">
-        <label for="startingDate">start</label>
-        <input placeholder="Selected starting date" type="text" id="startingDate" class="form-control">
-      </div>
-    </div>
+<div class="container-fluid">
+    <div class="row g-3 mt-1">
 
-    <div class="col-md-6 mb-4">
-      <div class="md-form">
-        <label for="endingDate">end</label>
-        <input placeholder="Selected ending date" type="text" id="endingDate" class="form-control">
-      </div>
-    </div>
+        <div class="d-flex flex-row align-items-end">
+        <h2 class="mb-0">Data filter</h2>
+        <p class="mb-0 px-2">The default period is set on the last 12 months. You can change it below.</p>
+        </div>
 
+            <div class="col-md-2 mb-3">
+                <div class="form-floating">
+                    <input type="text" id="startingDate" class="form-control" placeholder="Starting date">
+                    <label for="startingDate">Starting date</label>
+                </div>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <div class="form-floating">
+                    <input type="text" id="endingDate" class="form-control" placeholder="Ending date">
+                    <label for="endingDate">Ending Date</label>
+                </div>
+            </div>
+
+    </div>
 </div>
 
 <script>
@@ -20,8 +28,22 @@ window.addEventListener("DOMContentLoaded", (event) => {
     const picker = new easepick.create({
         element: document.getElementById('startingDate'),
         css: [
-            'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css',
+            "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css",
         ],
+        plugins: [AmpPlugin, RangePlugin, PresetPlugin],
+        zIndex: 10,
+        AmpPlugin: {
+            dropdown: {
+                minYear: 2000,
+                months: true,
+                years: true
+            },
+            darkMode: false
+        },
+        RangePlugin: {
+            tooltip: true,
+            elementEnd: "#endingDate"
+        }
     });
 });
 </script>
