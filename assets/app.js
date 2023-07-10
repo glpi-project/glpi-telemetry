@@ -6,9 +6,9 @@
  */
 import * as echarts from 'echarts';
 window.echarts=echarts;
-console.log(echarts);
-import $ from "jquery";
-window.$ = $;
+
+import { easepick } from '@easepick/bundle';
+global.easepick = easepick;
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 import 'bootstrap';

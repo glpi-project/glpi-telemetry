@@ -1,18 +1,6 @@
 <h3 class="p-3">{{ nb_ref }} users already registered their GLPI installations</h3>
 <div class="container-fluid bg-light p-3 my-3 rounded-3" id="tabcontainer"></div>
 
-{# <div>
-{% for reference in references %}
-        {% if reference.glpireference.numAssets is defined %}
-    <pre>
-         {{ reference.name }} {{ reference.id }} {{ reference.glpireference.numAssets }} {{ reference.glpireference.numHelpdesk }}
-    </pre>
-        {% else %}
-        NV
-        {% endif %}
-{% endfor %}
-</div> #}
-
 <script>
 const diplayTab = new gridjs.Grid({
     columns: ["Name", "Country", "Nb of assets", "Nb of helpdesk", "Registration date", "Comment"],

@@ -1,32 +1,42 @@
 {% if app.request.get('_route') == 'app_telemetry' %}
-<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex align-items-center">
-    <span class="material-symbols-outlined p-2 icon-size">
-        monitoring
-    </span>
-    <h1 class="ps-2">Telemetry</h1>
-</div>
+    <div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex flex-column align-items-start">
+        <div class="d-flex flex-row">
+            <span class="material-symbols-outlined p-2 icon-size">
+                monitoring
+            </span>
+                <h1 class="ps-2">Telemetry</h1>
+        </div>
+                    <div class="p-2">
+                        <p class="mb-0">Since version 9.2 of GLPI, we collect anonymous data from instance of voluntary users. Here is some representations of these data.</p>
+                    </div>
+    </div>
 {% endif %}
 {% if app.request.get('_route') == 'app_reference' %}
-<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex flex-column align-items-start">
-    <div class="d-flex flex-row">
-        <span class="material-symbols-outlined p-2 icon-size">
-            groups
-        </span>
-        <h1 class="ps-2">References</h1>
+    <div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex flex-column align-items-start">
+        <div class="d-flex flex-row">
+            <span class="material-symbols-outlined p-2 icon-size">
+                groups
+            </span>
+                <h1 class="ps-2">References</h1>
+        </div>
+                    <div class="p-2">
+                        <p class="mb-0">We maintain a public database of registered GLPI installations. You may want to register your own ?</p>
+                            <button type="button" class="btn btn-primary pt-1 pb-1 mt-2" data-bs-toggle="modal" data-bs-target="#registerModal">Register !</button>
+                                {% include 'reference/registerModal.html.twig' %}
+                    </div>
     </div>
-    <div class="p-2">
-        <p class="mb-0">We maintain a public database of registered GLPI installations. You may want to register your own ?</p>
-        <button type="button" class="btn btn-primary px-2 py-2 mt-2" data-bs-toggle="modal" data-bs-target="#registerModal">Register !</button>
-        {% include 'reference/registerModal.html.twig' %}
-    </div>
-</div>
 {% endif %}
 {% if app.request.get('_route') == 'app_contact' %}
-<div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex align-items-center">
-    <span class="material-symbols-outlined p-2 icon-size">
-        mail
-    </span>
-    <h1 class="ps-2">Contact</h1>
-</div>
+    <div class="container-fluid header-bg py-5 px-4 border-top border-bottom d-flex flex-column align-items-start">
+        <div class="d-flex flex-row">
+            <span class="material-symbols-outlined p-2 icon-size">
+                mail
+            </span>
+                <h1 class="ps-2">Contact</h1>
+        </div>
+                    <div class="p-2">
+                        <p class="mb-0">Send us a message about this site, the project or anything about glpi !</div>
+                    </div>
+    </div>
 {% endif %}
 

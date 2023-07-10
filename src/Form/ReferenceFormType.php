@@ -20,7 +20,7 @@ class ReferenceFormType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('url', UrlType::class)
-            ->add('country', CountryType::class, ['placeholder' => 'Choose a Country'])
+            ->add('country', CountryType::class)
             ->add('phone', TelType::class)
             ->add('email', EmailType::class)
             ->add('referent', TextType::class)

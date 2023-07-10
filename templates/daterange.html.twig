@@ -1,0 +1,27 @@
+<div class="row p-2">
+    <div class="col-md-6 mb-4">
+      <div class="md-form">
+        <label for="startingDate">start</label>
+        <input placeholder="Selected starting date" type="text" id="startingDate" class="form-control">
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="md-form">
+        <label for="endingDate">end</label>
+        <input placeholder="Selected ending date" type="text" id="endingDate" class="form-control">
+      </div>
+    </div>
+
+</div>
+
+<script>
+window.addEventListener("DOMContentLoaded", (event) => {
+    const picker = new easepick.create({
+        element: document.getElementById('startingDate'),
+        css: [
+            'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css',
+        ],
+    });
+});
+</script>
