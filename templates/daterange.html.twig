@@ -1,32 +1,35 @@
-<div class="container-fluid">
+<div class="container-fluid px-4">
     <div class="row g-3 mt-1">
 
         <div class="d-flex flex-row align-items-end">
-        <h2 class="mb-0">Data filter</h2>
-        <p class="mb-0 px-2">The default period is set on the last 12 months. You can change it below.</p>
+            <h2 class="mb-0">Data filter</h2>
+            <p class="mb-0 px-2">The default period is set on the last 12 months. You can change it below.</p>
         </div>
 
-            <div class="col-md-2 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="form-floating">
-                    <input type="text" id="startingDate" class="form-control" placeholder="Starting date">
-                    <label for="startingDate">Starting date</label>
+                    <input type="text" id="dateRange" class="form-control" placeholder="Select">
+                    <label for="dateRange">Select</label>
                 </div>
             </div>
 
-            <div class="col-md-2 mb-3">
+            <div id="result"></div>
+
+            {# <div class="col-md-2 mb-3">
                 <div class="form-floating">
                     <input type="text" id="endingDate" class="form-control" placeholder="Ending date">
                     <label for="endingDate">Ending Date</label>
                 </div>
-            </div>
+            </div> #}
 
     </div>
 </div>
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
+
     const picker = new easepick.create({
-        element: document.getElementById('startingDate'),
+        element: document.getElementById('dateRange'),
         css: [
             "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css",
         ],
@@ -42,8 +45,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
         },
         RangePlugin: {
             tooltip: true,
-            elementEnd: "#endingDate"
         }
+    });
+
+    picker.on('select', (e) => {
+        var startDate = picker.getStartDate();
+        var endDate = picker.getEndDate();
+        document.getElementById('result').innerHTML = 'start date: '+startDate+' end date: '+endDate;
     });
 });
 </script>
