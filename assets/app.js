@@ -16,8 +16,14 @@ global.AmpPlugin = AmpPlugin;
 import { RangePlugin } from '@easepick/range-plugin';
 global.RangePlugin = RangePlugin;
 
-import { PresetPlugin } from '@easepick/bundle';
+import { PresetPlugin } from '@easepick/preset-plugin';
 global.PresetPlugin = PresetPlugin;
+
+import { DateTime } from '@easepick/datetime';
+global.datetime = DateTime;
+
+import moment from 'moment';
+global.moment = moment;
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 import 'bootstrap';

@@ -12,7 +12,7 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(TelemetryRepository $telemetryRepository): Response
     {
-        $v_data     = $telemetryRepository->getAllGlpiVersion();
+        $v_data     = $telemetryRepository->getGlpiVersion();
         $we_data    = $telemetryRepository->getWebEngines();
         $os_data    = $telemetryRepository->getOsFamily();
         $php_data   = $telemetryRepository->getPhpInfos();

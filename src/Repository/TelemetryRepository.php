@@ -39,7 +39,7 @@ class TelemetryRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAllGlpiVersion(): array
+    public function getGlpiVersion(): array
     {
         $conn = $this->getEntityManager()->getConnection();
 

@@ -12,21 +12,14 @@
                     <label for="dateRange">Select</label>
                 </div>
             </div>
-
-            <div id="result"></div>
-
-            {# <div class="col-md-2 mb-3">
-                <div class="form-floating">
-                    <input type="text" id="endingDate" class="form-control" placeholder="Ending date">
-                    <label for="endingDate">Ending Date</label>
-                </div>
-            </div> #}
-
     </div>
 </div>
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
+
+    var today = moment().format();
+    var defaultDate = moment().subtract(12, 'months').format();
 
     const picker = new easepick.create({
         element: document.getElementById('dateRange'),
@@ -45,13 +38,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
         },
         RangePlugin: {
             tooltip: true,
+            startDate: defaultDate,
+            endDate: today,
         }
     });
 
     picker.on('select', (e) => {
         var startDate = picker.getStartDate();
         var endDate = picker.getEndDate();
-        document.getElementById('result').innerHTML = 'start date: '+startDate+' end date: '+endDate;
     });
 });
+
 </script>
