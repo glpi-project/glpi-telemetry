@@ -46,6 +46,31 @@ window.addEventListener("DOMContentLoaded", (event) => {
     picker.on('select', (e) => {
         var startDate = picker.getStartDate();
         var endDate = picker.getEndDate();
+        var url = '/web/engines';
+
+        var data = {
+            startDate: startDate,
+            endDate: endDate
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(response);
+            } else {
+                console.log(response);
+            }
+        })
+        .catch(error => {
+            console.error('an error occured: ', error);
+        });
+
     });
 });
 

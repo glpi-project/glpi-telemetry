@@ -38,9 +38,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 show: false
             },
             data: [
+                {% if wedata %}
                 {% for row in wedata %}
                 { value: {{ row.count }}, name: '{{ row.web_engine }}' },
                 {% endfor %}
+                {% else %}
+                { value: 0, name: 'no data to display' },
+                {% endif %}
             ]
             }
         ]

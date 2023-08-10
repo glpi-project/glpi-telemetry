@@ -54,13 +54,14 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getWebEngines(): array
+    public function getWebEngines($startDate, $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
             SELECT web_engine, COUNT(id) as count
             FROM telemetry
+            WHERE created_at BETWEEN "'.$startDate.'" AND "'.$endDate.'"
             GROUP BY web_engine
             ';
         $stmt = $conn->prepare($sql);

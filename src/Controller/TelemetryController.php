@@ -12,8 +12,11 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(TelemetryRepository $telemetryRepository): Response
     {
+        $endDate = date('Y-m-d');
+        $startDate = date('Y-m-d', strtotime('-1 year'));
+
         $v_data     = $telemetryRepository->getGlpiVersion();
-        $we_data    = $telemetryRepository->getWebEngines();
+        $we_data    = $telemetryRepository->getWebEngines($startDate,$endDate);
         $os_data    = $telemetryRepository->getOsFamily();
         $php_data   = $telemetryRepository->getPhpInfos();
         $top_plugin = $telemetryRepository->getTopPlugin();
