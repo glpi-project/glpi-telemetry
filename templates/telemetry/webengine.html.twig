@@ -38,18 +38,39 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 show: false
             },
             data: [
-                {% if wedata %}
+                {# {% if wedata %}
                 {% for row in wedata %}
                 { value: {{ row.count }}, name: '{{ row.web_engine }}' },
                 {% endfor %}
                 {% else %}
                 { value: 0, name: 'no data to display' },
-                {% endif %}
+                {% endif %} #}
             ]
             }
         ]
     };
     option && myChart.setOption(option);
+
+    window.registerFilterCallback(function (filters) {
+        var url = 'web/engines?' + new URLSearchParams(filters)
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            console.log(json);
+        })
+        .catch(error => {
+            console.error('an error occured: ', error);
+        });
+
+    })
 
 });
 </script>

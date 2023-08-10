@@ -22,7 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('echarts', './node_modules/echarts/dist/echarts.min.js')
-
+    .addEntry('dashboard', './assets/js/dashboard.js')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+{% block javascripts %}
+            {{ parent() }}
+            {{ encore_entry_script_tags('dashboard') }}
+            <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+        {% endblock %}
 {% block body %}
 {% include 'header.html.twig' %}
 {% include 'daterange.html.twig' %}

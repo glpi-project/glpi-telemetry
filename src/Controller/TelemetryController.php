@@ -12,11 +12,11 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(TelemetryRepository $telemetryRepository): Response
     {
-        $endDate = date('Y-m-d');
-        $startDate = date('Y-m-d', strtotime('-1 year'));
+        // $endDate = date('Y-m-d');
+        // $startDate = date('Y-m-d', strtotime('-5 years'));
 
         $v_data     = $telemetryRepository->getGlpiVersion();
-        $we_data    = $telemetryRepository->getWebEngines($startDate,$endDate);
+        // $we_data    = $telemetryRepository->getWebEngines($startDate,$endDate);
         $os_data    = $telemetryRepository->getOsFamily();
         $php_data   = $telemetryRepository->getPhpInfos();
         $top_plugin = $telemetryRepository->getTopPlugin();
@@ -24,7 +24,7 @@ class TelemetryController extends AbstractController
         return $this->render('telemetry/index.html.twig', [
             'controller_name' => 'controller-name',
             'vdata'           => $v_data,
-            'wedata'          => $we_data,
+            // 'wedata'          => $we_data,
             'osdata'          => $os_data,
             'phpdata'         => $php_data,
             'topplugin'       => $top_plugin
