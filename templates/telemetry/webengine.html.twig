@@ -2,6 +2,8 @@
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
+
+    var dataSet = window.results;
     const chartDom = document.getElementById("web_engine");
     const myChart = echarts.init(chartDom);
     option = {
@@ -38,13 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 show: false
             },
             data: [
-                {# {% if wedata %}
-                {% for row in wedata %}
-                { value: {{ row.count }}, name: '{{ row.web_engine }}' },
-                {% endfor %}
-                {% else %}
-                { value: 0, name: 'no data to display' },
-                {% endif %} #}
+
             ]
             }
         ]
@@ -52,7 +48,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     option && myChart.setOption(option);
 
     window.registerFilterCallback(function (filters) {
-        var url = 'web/engines?' + new URLSearchParams(filters)
+        var url = 'web/engines?' + new URLSearchParams(filters);
+        var arrayObj = [];
 
         fetch(url, {
             method: 'GET',
@@ -64,7 +61,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
             return response.json();
         })
         .then(json => {
+            window.clearResults();
+            window.registerResults(json);
             console.log(json);
+            myChart.setOption({series:[{data:json}]});
         })
         .catch(error => {
             console.error('an error occured: ', error);

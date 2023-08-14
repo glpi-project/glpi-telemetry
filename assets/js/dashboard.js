@@ -1,6 +1,9 @@
 console.log('Hello');
 
 global.filterCallbacks = [];
+global.results = [];
+global.clearResults = function() {global.results.length = 0 };
+global.registerResults = function (response) {global.results.push(response)};
 global.registerFilterCallback = function (callback) {global.filterCallbacks.push(callback)};
 global.executeFilterCallbacks = function (filters) {
     global.filterCallbacks.forEach(callback => {
@@ -8,11 +11,10 @@ global.executeFilterCallbacks = function (filters) {
     });
 };
 
-
 window.addEventListener("DOMContentLoaded", (event) => {
 
     var today = moment().format();
-    var defaultDate = moment().subtract(5, 'years').format();
+    var defaultDate = moment().subtract(4, 'years').format();
 
     const picker = new easepick.create({
         element: document.getElementById('dateRange'),

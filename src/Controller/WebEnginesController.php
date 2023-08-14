@@ -20,6 +20,13 @@ class WebEnginesController extends AbstractController
 
             $webengine_data = $telemetryRepository->getWebEngines($startDate,$endDate);
 
+            // foreach($webengine_data as $data) {
+            //     $arrObj[] = [
+            //         'value' => $data["count"],
+            //         'name'  => $data["web_engine"]
+            //     ];
+            // }
+
             return $this->json($webengine_data);
     }
 }
