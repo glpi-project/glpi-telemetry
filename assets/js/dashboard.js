@@ -14,7 +14,7 @@ global.executeFilterCallbacks = function (filters) {
 window.addEventListener("DOMContentLoaded", (event) => {
 
     var today = moment().format();
-    var defaultDate = moment().subtract(4, 'years').format();
+    var defaultDate = moment().subtract(5, 'years').format();
 
     const picker = new easepick.create({
         element: document.getElementById('dateRange'),

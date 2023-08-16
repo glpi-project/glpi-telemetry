@@ -15,19 +15,19 @@ class TelemetryController extends AbstractController
         // $endDate = date('Y-m-d');
         // $startDate = date('Y-m-d', strtotime('-5 years'));
 
-        $v_data     = $telemetryRepository->getGlpiVersion();
+        // $v_data     = $telemetryRepository->getGlpiVersion();
         // $we_data    = $telemetryRepository->getWebEngines($startDate,$endDate);
-        $os_data    = $telemetryRepository->getOsFamily();
+        // $os_data    = $telemetryRepository->getOsFamily();
         $php_data   = $telemetryRepository->getPhpInfos();
-        $top_plugin = $telemetryRepository->getTopPlugin();
+        // $top_plugin = $telemetryRepository->getTopPlugin();
 
         return $this->render('telemetry/index.html.twig', [
             'controller_name' => 'controller-name',
-            'vdata'           => $v_data,
+            // 'vdata'           => $v_data,
             // 'wedata'          => $we_data,
-            'osdata'          => $os_data,
+            // 'osdata'          => $os_data,
             'phpdata'         => $php_data,
-            'topplugin'       => $top_plugin
+            // 'topplugin'       => $top_plugin
         ]);
     }
 }

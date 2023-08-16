@@ -39,16 +39,19 @@ class TelemetryRepository extends ServiceEntityRepository
         }
     }
 
-    public function getGlpiVersion(): array
+    public function getGlpiVersion($startDate, $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT glpi_version, COUNT(id) as count
+            SELECT glpi_version as name, COUNT(id) as value
             FROM telemetry
-            GROUP BY glpi_version
+            WHERE created_at BETWEEN :startDate AND :endDate
+            GROUP BY name
             ';
         $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
         $resultSet = $stmt->executeQuery();
 
         return $resultSet->fetchAllAssociative();
@@ -72,16 +75,19 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getOsFamily(): array
+    public function getOsFamily($startDate, $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT os_family, COUNT(id) as count
+            SELECT os_family as name, COUNT(id) as value
             FROM telemetry
+            WHERE created_at BETWEEN :startDate AND :endDate
             GROUP BY os_family
             ';
         $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
         $resultSet = $stmt->executeQuery();
 
         return $resultSet->fetchAllAssociative();
@@ -102,19 +108,22 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getTopPlugin(): array
+    public function getTopPlugin($startDate, $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = "
-            SELECT glpi_plugin_id as pluginid, pkey as pluginname, count('pluginid') as number
+            SELECT pkey as name, count('glpi_plugin_id') as value
             FROM telemetry_glpi_plugin as tgp INNER JOIN glpi_plugin as gp ON
             tgp.glpi_plugin_id = gp.id
-            GROUP BY pluginid
-            ORDER BY number desc
+            WHERE tgp.created_at BETWEEN :startDate AND :endDate
+            GROUP BY glpi_plugin_id
+            ORDER BY value desc
             LIMIT 10
             ";
         $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
         $resultSet = $stmt->executeQuery();
 
         return $resultSet->fetchAllAssociative();

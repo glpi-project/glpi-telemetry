@@ -40,14 +40,39 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 show: false
             },
             data: [
-                {% for row in vdata %}
+                {# {% for row in vdata %}
                 { value: {{ row.count }}, name: '{{ row.glpi_version }}' },
-                {% endfor %}
+                {% endfor %} #}
             ]
             }
         ]
     };
     option && myChart.setOption(option);
+
+        window.registerFilterCallback(function (filters) {
+        var url = 'glpi/version?' + new URLSearchParams(filters);
+        var arrayObj = [];
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            window.clearResults();
+            window.registerResults(json);
+            console.log(json);
+            myChart.setOption({series:[{data:json}]});
+        })
+        .catch(error => {
+            console.error('an error occured: ', error);
+        });
+
+    })
 
 });
 </script>
