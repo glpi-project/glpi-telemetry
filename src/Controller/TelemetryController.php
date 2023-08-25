@@ -6,11 +6,13 @@ use App\Repository\TelemetryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class TelemetryController extends AbstractController
 {
     #[Route('/telemetry', name: 'app_telemetry')]
-    public function index(TelemetryRepository $telemetryRepository): Response
+    public function index(TelemetryRepository $telemetryRepository, CacheInterface $cache): Response
     {
         // $endDate = date('Y-m-d');
         // $startDate = date('Y-m-d', strtotime('-5 years'));
@@ -18,7 +20,12 @@ class TelemetryController extends AbstractController
         // $v_data     = $telemetryRepository->getGlpiVersion();
         // $we_data    = $telemetryRepository->getWebEngines($startDate,$endDate);
         // $os_data    = $telemetryRepository->getOsFamily();
-        $php_data   = $telemetryRepository->getPhpInfos();
+        $php_data = $cache->get('php_data', function(ItemInterface $item) use ($telemetryRepository) {
+            $item->expiresAfter(3600);
+            $php_data   = $telemetryRepository->getPhpInfos();
+            return $php_data;
+        });
+        // $php_data   = $telemetryRepository->getPhpInfos();
         // $top_plugin = $telemetryRepository->getTopPlugin();
 
         return $this->render('telemetry/index.html.twig', [
