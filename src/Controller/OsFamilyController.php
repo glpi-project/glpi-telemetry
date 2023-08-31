@@ -21,7 +21,7 @@ class OsFamilyController extends AbstractController
         $endDate = $request->query->get('endDate');
 
             $this->osFamilyData = $cache->get('os_family_data', function(ItemInterface $item) use($telemetryRepository, $startDate, $endDate) {
-                $item->expiresAfter(3600);
+                // $item->expiresAfter(3600);
 
                 return $telemetryRepository->getOsFamily($startDate, $endDate);
             });

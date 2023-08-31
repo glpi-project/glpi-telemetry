@@ -23,7 +23,7 @@ class GlpiVersionController extends AbstractController
             $endDate   = $request->query->get('endDate');
 
                 $this->glpiVersionData = $cache->get('glpi_version_data', function(ItemInterface $item) use($telemetryRepository, $startDate, $endDate) {
-                    $item->expiresAfter(3600);
+                    // $item->expiresAfter(3600);
 
                         return $telemetryRepository->getGlpiVersion($startDate, $endDate);
                 });

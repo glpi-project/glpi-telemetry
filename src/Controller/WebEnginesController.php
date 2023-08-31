@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\TelemetryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +23,7 @@ class WebEnginesController extends AbstractController
             $endDate = $request->query->get('endDate');
 
                 $this->webEngineData = $cache->get('web_engine_data', function(ItemInterface $item) use ($telemetryRepository, $startDate, $endDate) {
-                    $item->expiresAfter(3600);
+                    // $item->expiresAfter(3600);
 
                         return $telemetryRepository->getWebEngines($startDate, $endDate);
 
