@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TopPluginController extends AbstractController
 {
-    #[Route('/top/plugin', name: 'app_top_plugin')]
+    #[Route('/top/plugin', name: 'app_top_plugin', stateless: true)]
     public function index(TelemetryRepository $telemetryRepository, Request $request): Response
     {
         $startDate = $request->query->get('startDate');

@@ -11,7 +11,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class TelemetryController extends AbstractController
 {
-    #[Route('/telemetry', name: 'app_telemetry')]
+    #[Route('/telemetry', name: 'app_telemetry', stateless: true)]
     public function index(TelemetryRepository $telemetryRepository, CacheInterface $cache): Response
     {
         // $endDate = date('Y-m-d');

@@ -14,7 +14,7 @@ class OsFamilyController extends AbstractController
 {
     public $osFamilyData;
 
-    #[Route('/os/family', name: 'app_os_family')]
+    #[Route('/os/family', name: 'app_os_family', stateless: true)]
     public function index(TelemetryRepository $telemetryRepository, Request $request, CacheInterface $cache): Response
     {
         $startDate = $request->query->get('startDate');

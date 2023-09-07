@@ -14,10 +14,11 @@ class WebEnginesController extends AbstractController
 {
     public $webEngineData;
 
-    #[Route('/web/engines', name: 'app_web_engines')]
+    #[Route('/web/engines', name: 'app_web_engines', stateless: true)]
 
     public function index(TelemetryRepository $telemetryRepository, Request $request, CacheInterface $cache): Response
     {
+        session_write_close();
 
             $startDate = $request->query->get('startDate');
             $endDate = $request->query->get('endDate');

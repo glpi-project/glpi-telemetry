@@ -1,16 +1,7 @@
 framework:
     cache:
         directory: '%kernel.project_dir%/cache'
-
-        pools:
-            glpi_version_data:
-                adapter: cache.app
-
-            web_engine_data:
-                adapter: cache.app
-
-            os_family_data:
-                adapter: cache.app
+        # app: cache.adapter.null
         # Unique name of your app: used to compute stable namespaces for cache keys.
         #prefix_seed: your_vendor_name/app_name
 
