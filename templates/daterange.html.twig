@@ -8,8 +8,12 @@
 
             <div class="col-md-3 mb-3">
                 <div class="form-floating">
-                    <input type="text" id="dateRange" class="form-control" placeholder="Select">
-                    <label for="dateRange">Select</label>
+                    <select class="form-select" id="dataPeriod" aria-label="select data period">
+                        <option value="lastYear" selected>Last 12 month</option>
+                        <option value="fiveYear">Five Last Years</option>
+                        <option value="always">Always</option>
+                        <option value="advanced">Advanced option</option>
+                    </select>
                 </div>
             </div>
     </div>

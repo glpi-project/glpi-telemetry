@@ -22,12 +22,10 @@ class RefreshGlpiVersionCache
 
     public function refreshCache($startDate, $endDate) {
 
-        if($startDate == 0 && $endDate == 0) {
-            $endDate = date('y-m-d h:i:s');
-            // echo $endDate;
-            $startDate = date('y-m-d h:i:s', strtotime('-5 year'));
-            // echo $startDate;
-        };
+        // if($startDate == 0 && $endDate == 0) {
+        //     $endDate = date('y-m-d h:i:s');
+        //     $startDate = date('y-m-d h:i:s', strtotime('-5 year'));
+        // };
 
         return $this->cache->get('glpi_version_data', function(ItemInterface $item) use($startDate, $endDate) {
 
