@@ -93,16 +93,19 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getPhpInfos(): array
+    public function getPhpInfos($startDate, $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql =  "
             SELECT SUBSTRING_INDEX(php_version, '.', 2) as version, COUNT('version') as count
             FROM telemetry
+            WHERE created_at BETWEEN :startDate AND :endDate
             GROUP BY version
             ";
         $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
         $resultSet = $stmt->executeQuery();
 
         return $resultSet->fetchAllAssociative();

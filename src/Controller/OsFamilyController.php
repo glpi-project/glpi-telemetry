@@ -2,30 +2,26 @@
 
 namespace App\Controller;
 
-use App\Repository\TelemetryRepository;
+use App\Service\RefreshOsFamilyCache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class OsFamilyController extends AbstractController
 {
     public $osFamilyData;
 
-    #[Route('/os/family', name: 'app_os_family', stateless: true)]
-    public function index(TelemetryRepository $telemetryRepository, Request $request, CacheInterface $cache): Response
+    #[Route('/os/family', name: 'app_os_family')]
+    public function index(Request $request, RefreshOsFamilyCache $refreshOsFamilyCache): JsonResponse
     {
         $startDate = $request->query->get('startDate');
-        $endDate = $request->query->get('endDate');
+        $endDate   = $request->query->get('endDate');
+        $filter    = $request->query->get('filter');
 
-            $this->osFamilyData = $cache->get('os_family_data', function(ItemInterface $item) use($telemetryRepository, $startDate, $endDate) {
-                // $item->expiresAfter(3600);
 
-                return $telemetryRepository->getOsFamily($startDate, $endDate);
-            });
+        $result = $refreshOsFamilyCache->refreshCache($startDate, $endDate, $filter);
 
-                return $this->json($this->osFamilyData);
+        return $this->json($result);
     }
 }

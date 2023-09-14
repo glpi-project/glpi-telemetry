@@ -11,31 +11,78 @@ window.addEventListener("DOMContentLoaded", (event) => {
         text: 'PHP Versions',
         left: 'center'
     },
-    dataset: {
-        source: [
-        ['amount', 'PHP Version'],
-        {% for row in phpdata %}
-        [{{ row.count}}, '{{row.version}}'],
-        {% endfor %}
-        ]
+    grid: {
+        containLabel: true
     },
-    grid: { containLabel: true },
-    xAxis: { name: 'amount' },
-    yAxis: { type: 'category' },
-
+    xAxis: [{
+        type: 'category',
+        name: 'Version',
+        axisTick: {
+        alignWithLabel: true
+        },
+        axisLabel: {
+        rotate: 30
+        },
+        data: []
+    }],
+    yAxis: [{
+        type: 'value',
+        name: 'Nb utilisateurs',
+        min: 0,
+        max: 100000
+    }],
     series: [
         {
+        name: 'Nb utilisateurs',
         type: 'bar',
-        encode: {
-            // Map the "amount" column to X axis.
-            x: 'amount',
-            // Map the "product" column to Y axis
-            y: 'category'
-        }
+        data: []
         }
     ]
     };
 
     option && myChart.setOption(option);
+
+ window.registerFilterCallback(function (filters) {
+        var url = 'php/version?' + new URLSearchParams(filters);
+        console.log(url);
+        var arrayObj = [];
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            var phpdata = {
+                "version": [],
+                "values" : []
+            }
+            json.forEach((el) => {
+                phpdata["version"].push(el.version)
+                phpdata["values"].push(el.count)
+            });
+            console.log(phpdata);
+            window.clearResults();
+            window.registerResults(json);
+            myChart.setOption({
+                xAxis: [{
+                    data: phpdata["version"]
+                    }],
+                series: [
+                    {
+                    data: phpdata["values"]
+                    }
+                ]
+                });
+        })
+        .catch(error => {
+            console.error('an error occured: ', error);
+        });
+
+    })
 });
 </script>

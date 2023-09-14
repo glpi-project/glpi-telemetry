@@ -6,7 +6,7 @@ use App\Repository\TelemetryRepository;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-class RefreshGlpiVersionCache
+class RefreshWebEnginesCache
 {
     private $telemetryRepository;
     private $cache;
@@ -25,9 +25,9 @@ class RefreshGlpiVersionCache
             $endDate = date('y-m-d h:i:s');
             $startDate = date('y-m-d h:i:s', strtotime('-1 year'));
         };
-        return $this->cache->get("glpi_version_{$filter}", function(ItemInterface $item) use($startDate, $endDate) {
+        return $this->cache->get("web_engines_{$filter}", function(ItemInterface $item) use($startDate, $endDate) {
             // $item->expiresAfter(60);
-            return $this->telemetryRepository->getGlpiVersion($startDate, $endDate);
+            return $this->telemetryRepository->getWebEngines($startDate, $endDate);
         });
 
     }

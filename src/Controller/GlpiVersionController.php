@@ -12,16 +12,17 @@ class GlpiVersionController extends AbstractController
 {
     public $glpiVersionData;
 
-    #[Route('/glpi/version', name: 'app_glpi_version', stateless: true)]
+    #[Route('/glpi/version', name: 'app_glpi_version')]
 
 
-    public function index(Request $request, RefreshGlpiVersionCache $refreshGlpiVersionCache, ): JsonResponse
+    public function index(Request $request, RefreshGlpiVersionCache $refreshGlpiVersionCache): JsonResponse
     {
-
         $startDate = $request->query->get('startDate');
         $endDate   = $request->query->get('endDate');
+        $filter    = $request->query->get('filter');
 
-        $result = $refreshGlpiVersionCache->refreshCache($startDate, $endDate);
+
+        $result = $refreshGlpiVersionCache->refreshCache($startDate, $endDate, $filter);
 
         return $this->json($result);
     }

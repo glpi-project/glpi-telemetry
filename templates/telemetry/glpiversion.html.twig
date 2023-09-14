@@ -39,11 +39,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             labelLine: {
                 show: false
             },
-            data: [
-                {# {% for row in vdata %}
-                { value: {{ row.count }}, name: '{{ row.glpi_version }}' },
-                {% endfor %} #}
-            ]
+            data: []
             }
         ]
     };
@@ -51,6 +47,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         window.registerFilterCallback(function (filters) {
         var url = 'glpi/version?' + new URLSearchParams(filters);
+        console.log(url);
         var arrayObj = [];
 
         fetch(url, {
