@@ -27,7 +27,7 @@ class RefreshOsFamilyCache
         };
         return $this->cache->get("os_family_{$filter}", function(ItemInterface $item) use($startDate, $endDate) {
             // $item->expiresAfter(60);
-            return $this->telemetryRepository->getGlpiVersion($startDate, $endDate);
+            return $this->telemetryRepository->getOsFamily($startDate, $endDate);
         });
 
     }
