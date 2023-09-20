@@ -17,12 +17,12 @@ class GlpiVersionController extends AbstractController
 
     public function index(Request $request, RefreshGlpiVersionCache $refreshGlpiVersionCache): JsonResponse
     {
-        $startDate = $request->query->get('startDate');
-        $endDate   = $request->query->get('endDate');
-        $filter    = $request->query->get('filter');
+        $startDate      = $request->query->get('startDate');
+        $endDate        = $request->query->get('endDate');
+        $filter         = $request->query->get('filter');
+        $forceUpdate    = false;
 
-
-        $result = $refreshGlpiVersionCache->refreshCache($startDate, $endDate, $filter);
+        $result = $refreshGlpiVersionCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         return $this->json($result);
     }

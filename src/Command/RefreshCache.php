@@ -30,10 +30,11 @@ class RefreshCache extends Command
         $startDate = 0;
         $endDate   = 0;
         $filter    = "lastYear";
+        $forceUpdate = true;
 
         $output->writeln('Beggining refreshing process');
 
-        $this->glpiVersionCacheInt->refreshCache($startDate, $endDate, $filter);
+        $this->glpiVersionCacheInt->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         $output->writeln('cache refreshed');
 

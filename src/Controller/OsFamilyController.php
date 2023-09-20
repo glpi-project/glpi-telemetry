@@ -15,12 +15,13 @@ class OsFamilyController extends AbstractController
     #[Route('/os/family', name: 'app_os_family')]
     public function index(Request $request, RefreshOsFamilyCache $refreshOsFamilyCache): JsonResponse
     {
-        $startDate = $request->query->get('startDate');
-        $endDate   = $request->query->get('endDate');
-        $filter    = $request->query->get('filter');
+        $startDate      = $request->query->get('startDate');
+        $endDate        = $request->query->get('endDate');
+        $filter         = $request->query->get('filter');
+        $forceUpdate    = false;
 
 
-        $result = $refreshOsFamilyCache->refreshCache($startDate, $endDate, $filter);
+        $result = $refreshOsFamilyCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         return $this->json($result);
     }

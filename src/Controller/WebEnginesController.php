@@ -16,11 +16,12 @@ class WebEnginesController extends AbstractController
 
     public function index(Request $request, RefreshWebEnginesCache $refreshWebEnginesCache): JsonResponse
     {
-        $startDate = $request->query->get('startDate');
-        $endDate   = $request->query->get('endDate');
-        $filter    = $request->query->get('filter');
+        $startDate      = $request->query->get('startDate');
+        $endDate        = $request->query->get('endDate');
+        $filter         = $request->query->get('filter');
+        $forceUpdate    = false;
 
-        $result = $refreshWebEnginesCache->refreshCache($startDate, $endDate, $filter);
+        $result = $refreshWebEnginesCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         return $this->json($result);
     }

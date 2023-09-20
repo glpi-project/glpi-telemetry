@@ -19,12 +19,17 @@ class RefreshOsFamilyCache
         $this->cache = $cache;
     }
 
-    public function refreshCache($startDate, $endDate, $filter) {
+    public function refreshCache($startDate, $endDate, $filter, $forceUpdate) {
 
         if($startDate == 0 && $endDate == 0) {
             $endDate = date('y-m-d h:i:s');
             $startDate = date('y-m-d h:i:s', strtotime('-1 year'));
         };
+
+        if($forceUpdate) {
+            $this->cache->delete("os_family_{$filter}");
+        }
+
         return $this->cache->get("os_family_{$filter}", function(ItemInterface $item) use($startDate, $endDate) {
             // $item->expiresAfter(60);
             return $this->telemetryRepository->getOsFamily($startDate, $endDate);

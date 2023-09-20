@@ -6,7 +6,7 @@ use App\Repository\TelemetryRepository;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-class RefreshWebEnginesCache
+class RefreshTopPluginCache
 {
     private $telemetryRepository;
     private $cache;
@@ -22,18 +22,19 @@ class RefreshWebEnginesCache
     public function refreshCache($startDate, $endDate, $filter, $forceUpdate) {
 
         if($startDate == 0 && $endDate == 0) {
-            $endDate = date('y-m-d h:i:s');
-            $startDate = date('y-m-d h:i:s', strtotime('-1 year'));
-        };
-
-        if($forceUpdate) {
-            $this->cache->delete("web_engines_{$filter}");
+            $endDate    = date('y-m-d h:i:s');
+            $startDate  = date('y-m-d h:i:s', strtotime('-1 year'));
         }
 
-        return $this->cache->get("web_engines_{$filter}", function(ItemInterface $item) use($startDate, $endDate) {
+        if($forceUpdate) {
+            $this->cache->delete("top_plugin_{$filter}");
+        }
+
+        return $this->cache->get("top_plugin_{$filter}", function(ItemInterface $item) use($startDate, $endDate) {
             // $item->expiresAfter(60);
-            return $this->telemetryRepository->getWebEngines($startDate, $endDate);
+            return $this->telemetryRepository->getTopPlugin($startDate, $endDate);
         });
+
 
     }
 }

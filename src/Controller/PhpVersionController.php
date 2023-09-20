@@ -16,11 +16,12 @@ class PhpVersionController extends AbstractController
 
     public function index(Request $request, RefreshPhpVersionCache $refreshPhpVersionCache): JsonResponse
     {
-        $startDate = $request->query->get('startDate');
-        $endDate   = $request->query->get('endDate');
-        $filter    = $request->query->get('filter');
+        $startDate      = $request->query->get('startDate');
+        $endDate        = $request->query->get('endDate');
+        $filter         = $request->query->get('filter');
+        $forceUpdate    = false;
 
-        $result = $refreshPhpVersionCache->refreshCache($startDate, $endDate, $filter);
+        $result = $refreshPhpVersionCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         return $this->json($result);
     }

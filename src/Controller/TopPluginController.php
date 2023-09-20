@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\TelemetryRepository;
+use App\Service\RefreshTopPluginCache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,13 +11,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class TopPluginController extends AbstractController
 {
     #[Route('/top/plugin', name: 'app_top_plugin')]
-    public function index(TelemetryRepository $telemetryRepository, Request $request): Response
+    public function index(Request $request, RefreshTopPluginCache $refreshTopPluginCache): Response
     {
-        $startDate = $request->query->get('startDate');
-        $endDate = $request->query->get('endDate');
+        $startDate      = $request->query->get('startDate');
+        $endDate        = $request->query->get('endDate');
+        $filter         = $request->query->get('filter');
+        $forceUpdate    = false;
 
-        $top_plugin = $telemetryRepository->getTopPlugin($startDate, $endDate);
+        $result = $refreshTopPluginCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
-        return $this->json($top_plugin);
+        return $this->json($result);
     }
 }
