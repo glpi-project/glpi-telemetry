@@ -20,7 +20,6 @@ class OsFamilyController extends AbstractController
         $filter         = $request->query->get('filter');
         $forceUpdate    = false;
 
-
         $result = $refreshOsFamilyCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         return $this->json($result);

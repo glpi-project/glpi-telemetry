@@ -18,23 +18,29 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RefreshCache extends Command
 {
-    private $glpiVersionCacheInt;
+    // private $refreshGlpiVersionCache;
+    // public function __construct(
+    //     RefreshGlpiVersionCache $refreshGlpiVersionCache
+    // ){
+    //     $this->refreshGlpiVersionCache = $refreshGlpiVersionCache;
+    //     parent::__construct();
+    // }
     public function __construct(
-        RefreshGlpiVersionCache $refreshGlpiVersionCache
+        private RefreshGlpiVersionCache $refreshGlpiVersionCache
     ){
-        $this->glpiVersionCacheInt = $refreshGlpiVersionCache;
         parent::__construct();
     }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $startDate = 0;
-        $endDate   = 0;
-        $filter    = "lastYear";
+        $startDate   = 0;
+        $endDate     = 0;
+        $filter      = "lastYear";
         $forceUpdate = true;
+        $date = date('y-m-d h:i:s');
 
-        $output->writeln('Beggining refreshing process');
+        $output->writeln("{$date}Beggining refreshing process");
 
-        $this->glpiVersionCacheInt->refreshCache($startDate, $endDate, $filter, $forceUpdate);
+        $this->refreshGlpiVersionCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
         $output->writeln('cache refreshed');
 
