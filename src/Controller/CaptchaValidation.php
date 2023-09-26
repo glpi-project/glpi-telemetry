@@ -26,17 +26,7 @@ class CaptchaValidation extends AbstractController
         ];
 
         $response = $client->request('POST', 'https://challenges.cloudflare.com/turnstile/v0/siteverify', $data);
-        $content  = json_decode($response->getContent());
-
-        // if($content['success'] = true) {
-        //     $msg = 'token has been validated !';
-        //     $result =  $this->json(['message' => $msg, 'data' => $response]);
-        // }
-        // if($content['success'] = false) {
-        //     $error    = $content['error-codes'];
-        //     $msg = 'An error occured';
-        //     $result = $this->json(['error_msg' => $msg, 'error_codes' => $error]);
-        // }
+        $content  = $response->getContent();
 
         return $this->json($response);
 

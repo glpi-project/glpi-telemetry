@@ -13,7 +13,7 @@ function captchaTokenValidation(token) {
             return 'captcha token ok';
         } else {
             console.error('captcha validation failed');
-            return'captcha validation failed' + data;
+            console.log(data)
         }
     })
     .catch(error => {

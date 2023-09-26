@@ -21,6 +21,7 @@ class GlpiVersionController extends AbstractController
         $endDate        = $request->query->get('endDate');
         $filter         = $request->query->get('filter');
         $forceUpdate    = false;
+        $vueName        = 'glpi_version_';
 
         $result = $refreshGlpiVersionCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
 
