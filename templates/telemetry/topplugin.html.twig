@@ -1,4 +1,4 @@
-<div id="topplugin" class="pie-size-rose p-1 col border rounded-3 bg-white"></div>
+<div id="topplugin" class="card pie-size-rose"></div>
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
@@ -12,20 +12,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
             left: 'center',
             top: 'center'
         },
-        toolbox: {
-            show: true,
-            feature: {
-            mark: { show: true },
-            dataView: { show: true, readOnly: false },
-            restore: { show: true },
-            saveAsImage: { show: true }
-            }
-        },
         series: [
             {
             name: 'Nightingale Chart',
             type: 'pie',
-            radius: [50, 160],
+            radius: [50, 100],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
