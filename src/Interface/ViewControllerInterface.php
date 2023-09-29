@@ -9,5 +9,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface ViewControllerInterface {
     function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse;
-    function getData(Request $request, TelemetryRepository $telemetryRepository): array;
+    function getData($dateParams, TelemetryRepository $telemetryRepository): array;
 }

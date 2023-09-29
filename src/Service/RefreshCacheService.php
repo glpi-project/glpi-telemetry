@@ -31,7 +31,8 @@ class RefreshCacheService
 
         return $this->cache->get("{$vueName}{$filter}", function () use ($filter, $controller) {
             $this->setPeriod($filter);
-            return $controller->getData($this->startDate, $this->endDate);
+            $dateParams = ['startDate' => $this->startDate, 'endDate' => $this->endDate];
+            return $controller->getData($dateParams, $this->telemetryRepository);
         });
     }
 

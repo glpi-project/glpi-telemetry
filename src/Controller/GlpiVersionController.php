@@ -8,7 +8,6 @@ use App\Service\RefreshCacheService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\RefreshGlpiVersionCache;
 use Symfony\Component\HttpFoundation\Request;
 
 class GlpiVersionController extends AbstractController implements ViewControllerInterface
@@ -20,21 +19,18 @@ class GlpiVersionController extends AbstractController implements ViewController
 
     public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
     {
-        // $startDate      = $request->query->get('startDate');
-        // $endDate        = $request->query->get('endDate');
         $filter         = $request->query->get('filter');
         $forceUpdate    = false;
-        //$vueName        = 'glpi_version_';
 
         $result = $refreshCacheService->refreshCache($filter, $forceUpdate, $this);
 
         return $this->json($result);
     }
 
-    public function getData(Request $request, TelemetryRepository $telemetryRepository) : array {
+    public function getData($Dateparams, TelemetryRepository $telemetryRepository) : array {
 
-        $startDate      = $request->query->get('startDate');
-        $endDate        = $request->query->get('endDate');
+        $startDate      = $Dateparams['startDate'];
+        $endDate        = $Dateparams['endDate'];
 
         $data = $telemetryRepository->getGlpiVersion($startDate, $endDate);
 
