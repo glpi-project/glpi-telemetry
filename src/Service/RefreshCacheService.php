@@ -3,6 +3,7 @@
 namespace  App\Service;
 
 use App\Repository\TelemetryRepository;
+use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -20,24 +21,34 @@ class RefreshCacheService
         $this->telemetryRepository = $telemetryRepository;
         $this->cache = $cache;
     }
-    public function RefreshCache($filter, $vueName, $forceUpdate) {
+    public function RefreshCache($filter, $forceUpdate, $controller) {
 
-        $this->assignStartDate($filter);
+        $vueName = strtolower(get_class($controller));
 
         if ($forceUpdate) {
             $this->cache->delete("{$vueName}{$filter}");
         }
+
+        return $this->cache->get("{$vueName}{$filter}", function () use ($filter, $controller) {
+            $this->setPeriod($filter);
+            return $controller->getData($this->startDate, $this->endDate);
+        });
     }
 
-    public function assignStartDate($filter) {
-        $this->startDate = match ($filter) {
-            'lastYear' => date('y-m-d h:i:s', strtotime('-1 year')),
-            'fiveYear' => date('y-m-d h:i:s', strtotime('-5 years')),
-            'always'   => date('y-m-d h:i:s', strtotime('-10 years')),
-        };
-    }
+    public function setPeriod($filter) {
+        $this->endDate = date("y-m-d h:i:s");
 
-    public function matchViewToRequest($vueName) {
-        
+        try {
+            $this->startDate = match($filter) {
+                'lastYear' => date('y-m-d h:i:s', strtotime('-1 year')),
+                'fiveYear' => date('y-m-d h:i:s', strtotime('-5 years')),
+                'always'   => date('y-m-d h:i:s', strtotime('-10 years'))
+            };
+        }
+        catch(Exception $e) {
+            $error_msg = $e->getMessage();
+            echo $error_msg;
+        }
+
     }
 }
