@@ -19,37 +19,10 @@
         transition: 0.2s;
     }
 
-    .pie-size {
-        width: 300px;
-        // min-width: 100px;
-        height: 300px;
-        // min-height: 100px;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        // margin: 2px;
-    }
+    .default-size {
+        min-width: auto;
+        min-height: 300px;
 
-    .pie-size-rose {
-        width: 500px;
-        // min-width: 100px;
-        height: 300px;
-        // min-height: 100px;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        // margin: 2px;
-    }
-
-    .bar-size {
-        width: 600px;
-        // min-width: 500px;
-        height: 400px;
-        // min-height: 600px;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        // margin: 2px;
     }
 
     .icon-size {
