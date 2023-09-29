@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Interface;
+
+use App\Repository\TelemetryRepository;
+use App\Service\RefreshCacheService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+
+interface ViewControllerInterface {
+    function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse;
+    function getData($dateParams, TelemetryRepository $telemetryRepository): array;
+}
