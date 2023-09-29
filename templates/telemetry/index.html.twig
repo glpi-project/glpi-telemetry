@@ -3,9 +3,9 @@
                 {{ parent() }}
                 {{ encore_entry_script_tags('dashboard') }}
     {% endblock %}
-    {% block body %}
-        {% include 'header.html.twig' %}
-        {% include 'daterange.html.twig' %}
-        {% include 'grid.html.twig' %}
-        {% include 'footer.html.twig' %}
-{% endblock %}
+            {% block body %}
+                {% include 'header.html.twig' %}
+                {% include 'daterange.html.twig' %}
+                {% include 'grid.html.twig' %}
+                {# {% include 'footer.html.twig' %} #}
+            {% endblock %}
