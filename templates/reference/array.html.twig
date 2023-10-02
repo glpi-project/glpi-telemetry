@@ -1,5 +1,23 @@
-<h3 class="p-3">{{ nb_ref }} users already registered their GLPI installations</h3>
-<div class="container-fluid bg-light p-3 my-3 rounded-3" id="tabcontainer"></div>
+<div class="page-header d-print-none">
+    <div class="container-xl">
+
+        <div class="row g-2 align-items-center">
+
+            <div class="col">
+                <div class="pre-title">{{ nb_ref }} users already registered their GLPI installations</div>
+                <div class="page-title">References</div>
+            </div>
+
+            <div class="col-auto ms-auto d-print-none">
+                <a class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#registerModal">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+                Add reference
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl bg-light p-3 my-3 rounded-3" id="tabcontainer"></div>
 
 <script>
 const diplayTab = new gridjs.Grid({
