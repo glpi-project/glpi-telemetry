@@ -5,7 +5,6 @@ namespace  App\Service;
 use App\Repository\TelemetryRepository;
 use Exception;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class RefreshCacheService
 {
@@ -21,7 +20,8 @@ class RefreshCacheService
         $this->telemetryRepository = $telemetryRepository;
         $this->cache = $cache;
     }
-    public function RefreshCache($filter, $forceUpdate, $controller) {
+    public function refreshCache(string $filter, bool $forceUpdate, $controller) : array
+    {
 
         $vueName = strtolower(get_class($controller));
 
@@ -36,7 +36,8 @@ class RefreshCacheService
         });
     }
 
-    public function setPeriod($filter) {
+    public function setPeriod(string $filter): string
+    {
         $this->endDate = date("y-m-d h:i:s");
 
         try {
@@ -45,10 +46,11 @@ class RefreshCacheService
                 'fiveYear' => date('y-m-d h:i:s', strtotime('-5 years')),
                 'always'   => date('y-m-d h:i:s', strtotime('-10 years'))
             };
+            return $this->startDate;
         }
         catch(Exception $e) {
             $error_msg = $e->getMessage();
-            echo $error_msg;
+            return $error_msg;
         }
 
     }
