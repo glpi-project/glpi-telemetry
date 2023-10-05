@@ -17,7 +17,7 @@
         </div>
     </div>
 </div>
-<div class="container-xl bg-light p-3 my-3 rounded-3" id="tabcontainer"></div>
+<div class="container-xl mt-2" id="tabcontainer"></div>
 
 <script>
 const diplayTab = new gridjs.Grid({
@@ -42,7 +42,7 @@ const diplayTab = new gridjs.Grid({
             {% else %}
             0,
             {% endif %}
-            "{{ reference.createdAt|date("Y-m-d H:i:s") }}",
+            "{{ reference.createdAt|date("Y-m-d") }}",
             {{ reference.comment|json_encode|raw }}
         ],
         {% endfor %}
