@@ -16,11 +16,19 @@ class RefreshCacheService
     public function __construct(
         TelemetryRepository $telemetryRepository,
         CacheInterface $cache,
-    ){
+    )
+    {
         $this->telemetryRepository = $telemetryRepository;
         $this->cache = $cache;
     }
-    public function refreshCache(string $filter, bool $forceUpdate, $controller) : array
+
+    public function refreshAllCaches(string $filter, string $forceUpdate): bool
+    {
+            //lister le contenu du dossier controller (directory iterator)
+            //vérifier que c'est bien une classe + implémente interface ViewControllerInterface
+            // pour chacune appeler la fonction refreshCache()
+    }
+    public function refreshCache($filter, $forceUpdate, $controller)
     {
 
         $vueName = strtolower(get_class($controller));

@@ -1,4 +1,11 @@
-<div id="topplugin" class="card pie-size-rose"></div>
+<div class="col-sm-6 col-lg-6">
+    <div class="card">
+        <div class="card-body default-size" id="topplugin">
+        </div>
+    </div>
+</div>
+
+{# <div id="topplugin" class="card pie-size-rose"></div> #}
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
@@ -10,17 +17,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
         title: {
             text: 'Top 10 plugins',
             left: 'center',
-            top: 'center'
         },
         series: [
             {
             name: 'Nightingale Chart',
             type: 'pie',
+            top: 30,
             radius: [50, 100],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
-                borderRadius: 8
+                borderRadius: 3
             },
         data: [
             {# {% for row in topplugin %}
