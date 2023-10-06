@@ -23,11 +23,11 @@ class GlpiVersionController extends AbstractController implements ViewController
         return $this->json($result);
     }
 
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository) : array 
+    public function getData(array $dateParams, TelemetryRepository $telemetryRepository) : array 
     {
 
-        $startDate      = $Dateparams['startDate'];
-        $endDate        = $Dateparams['endDate'];
+        $startDate      = $dateParams['startDate'];
+        $endDate        = $dateParams['endDate'];
 
         $data = $telemetryRepository->getGlpiVersion($startDate, $endDate);
 
