@@ -22,7 +22,8 @@ class PhpVersionController extends AbstractController implements ViewControllerI
         return $this->json($result);
     }
 
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository) : array {
+    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository) : array
+    {
 
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];

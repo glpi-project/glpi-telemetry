@@ -23,7 +23,7 @@ class OsFamilyController extends AbstractController implements ViewControllerInt
         return $this->json($result);
     }
 
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array 
+    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
 
         $startDate      = $Dateparams['startDate'];

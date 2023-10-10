@@ -1,0 +1,102 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://glpi-telemetry.org",
+    "type": "object",
+    "properties": {
+        "glpi": {
+            "type": "object",
+            "properties": {
+                "uuid": { "type": "string" },
+                "version": { "type": "string" },
+                "plugins": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "key": { "type": "string" },
+                            "version": { "type": "string" }
+                        },
+                        "required": ["key", "version"]
+                    }
+                },
+                "default_language": { "type": "string" },
+                "install_mode": { "type": "string" },
+                "usage": {
+                    "type": "object",
+                    "properties": {
+                        "avg_entities": { "type": "string" },
+                        "avg_computers": { "type": "string" },
+                        "avg_networkequipments": { "type": "string" },
+                        "avg_tickets": { "type": "string" },
+                        "avg_problems": { "type": "string" },
+                        "avg_changes": { "type": "string" },
+                        "avg_projects": { "type": "string" },
+                        "avg_users": { "type": "string" },
+                        "avg_groups": { "type": "string" },
+                        "ldap_enabled": { "type": "boolean" },
+                        "mailcollector_enabled": { "type": "boolean" },
+                        "notifications_modes": { "type": "array" },
+                        "notifications": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        }
+                    }
+                }
+            },
+            "required": ["uuid", "version", "plugins", "default_language", "install_mode", "usage"]
+        },
+        "system": {
+            "type": "object",
+            "properties": {
+                "db": {
+                    "type": "object",
+                    "properties": {
+                        "engine": { "type": "string" },
+                        "version": { "type": "string" },
+                        "size": { "type": "string" },
+                        "log_size": { "type": "string" },
+                        "sql_mode": { "type": "string" }
+                    }
+                },
+                "web_server": {
+                    "type": "object",
+                    "properties": {
+                        "engine": { "type": "string" },
+                        "version": { "type": "string" }
+                    }
+                },
+                "php": {
+                    "type": "object",
+                    "properties": {
+                        "version": { "type": "string" },
+                        "modules": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        },
+                        "setup": {
+                            "type": "object",
+                            "properties": {
+                                "max_execution_time": { "type": "string" },
+                                "memory_limit": { "type": "string" },
+                                "post_max_size": { "type": "string" },
+                                "safe_mode": { "type": "boolean" },
+                                "session": { "type": "string" },
+                                "upload_max_filesize": { "type": "string" }
+                            }
+                        }
+                    }
+                },
+                "os": {
+                    "type": "object",
+                    "properties": {
+                        "family": { "type": "string" },
+                        "distribution": { "type": "string" },
+                        "version": { "type": "string" }
+                    }
+                }
+            },
+            "required": ["db", "web_server", "php", "os"]
+        }
+    },
+    "required": ["glpi", "system"]
+}
