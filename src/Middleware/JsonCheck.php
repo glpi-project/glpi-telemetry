@@ -2,12 +2,13 @@
 
 namespace App\Middleware;
 
-//use opis json schema
 use Opis\JsonSchema\{
     Validator,
-    ValidationResult,
-    Errors\ErrorFormatter,
-    ValidationError
+    SchemaLoader
+};
+use Opis\JsonSchema\Errors\{
+    ErrorFormatter,
+    ValidationError,
 };
 use Psr\Log\LoggerInterface;
 
@@ -15,35 +16,41 @@ class JsonCheck
 {
     private $logger;
     private $validator;
+    private $loader;
 
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->validator = new Validator();
+        $this->loader = new SchemaLoader();
     }
 
-    public function validateJson($json)
+    public function validateJson($json): bool
     {
         //get the absolute path of the schema in the config folder
-        $urlschema = realpath(__DIR__ . '/../../config/schema.json');
-        $schema = file_get_contents($urlschema);
+        $schemaFile = __DIR__ . '/../../config/schema.json';
+        $resolver   = $this->validator->resolver();
+        $resolver->registerFile('https://example.com/schema.json', $schemaFile);
 
         $this->logger->debug('Validating JSON');
         $this->logger->debug('JSON: ' . json_encode($json));
-        $this->logger->debug('Schema: ' . $schema);
 
-        $result = $this->validator->validate($json, $schema);
+        $result = $this->validator->validate($json, 'https://example.com/schema.json');
 
         if ($result->isValid()) {
             $this->logger->debug('JSON is valid');
-            return true;
+            $valid = true;
         }
 
         if ($result->hasError()) {
             $this->logger->debug('JSON is not valid');
             $error = $result->error();
-            $this->logger->debug('Errors: ' . $error);
-            return false;
+
+            $formatter = new ErrorFormatter();
+            $this->logger->debug(json_encode($formatter->formatOutput($error, "detailed")));
+            $valid = false;
         }
+
+        return $valid;
     }
 }

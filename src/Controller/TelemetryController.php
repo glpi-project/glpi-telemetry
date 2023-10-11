@@ -28,7 +28,8 @@ class TelemetryController extends AbstractController
         }
 
         //Decode request content
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent());
+        $logger->debug('POST request content decoded', ['data' => $data]);
         $logger->debug('POST request decoded');
 
         //Validate JSON
