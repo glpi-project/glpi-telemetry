@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\GlpiPlugin;
+use App\Entity\Telemetry;
+use App\Entity\TelemetryGlpiPlugin;
 use App\Middleware\JsonCheck;
+use App\Repository\GlpiPluginRepository;
+use App\Repository\TelemetryGlpiPluginRepository;
 use App\Repository\TelemetryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 class TelemetryController extends AbstractController
 {
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
-    public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger): Response
+    public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository): Response
     {
         $logger->debug('POST request received');
         $logger->debug('POST request content: ' . $request->getContent());
@@ -22,7 +27,7 @@ class TelemetryController extends AbstractController
         //check if the content type is json
         if ($request->headers->get('Content-Type') != 'application/json') {
             $logger->debug('POST request content type is not json');
-            return new JsonResponse(['status' => 'Content-Type must be application/json'], Response::HTTP_BAD_REQUEST);
+            return new Response('status: Content-Type must be application/json', Response::HTTP_BAD_REQUEST);
         } else {
             $logger->debug('POST request content type is json');
         }
@@ -41,18 +46,30 @@ class TelemetryController extends AbstractController
             $validation = true;
         } else {
             $logger->debug('POST request middleware not validated');
-            return new JsonResponse(['status' => 'JSON is not valid'], Response::HTTP_BAD_REQUEST);
+            return new Response('status: JSON is not valid', Response::HTTP_BAD_REQUEST);
         }
 
         if ($validation) {
             $logger->debug('POST request middleware validated');
-            //Save data to database
+
+            $data = json_decode(json_encode($data), true);
+
+            $logger->debug('Save data to database');
+
+            try {
+                $this->registerData($data, $entityManager, $glpiPluginRepository);
+            } catch (\Exception $e) {
+                $logger->debug('Error saving data to database : ' . $e->getMessage());
+                return new Response('status: Error saving data to database', Response::HTTP_BAD_REQUEST);
+            }
+
+
         } else {
             $logger->debug('POST request middleware not validated');
-            return new JsonResponse(['status' => 'JSON is not valid'], Response::HTTP_BAD_REQUEST);
+            return new Response('status: JSON is not valid', Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(['status' => 'OK']);
+        return new Response('status: OK');
     }
 
     #[Route('/telemetry', name: 'app_telemetry')]
@@ -63,5 +80,88 @@ class TelemetryController extends AbstractController
 
             ]);
 
+    }
+
+    public function registerData($data, $entityManager, $glpiPluginRepository): bool
+    {
+        $entityManager->beginTransaction();
+        try {
+
+            $telemetry = new Telemetry();
+
+            $telemetry->setGlpiUuid($data['data']['glpi']['uuid']);
+            $telemetry->setGlpiVersion($data['data']['glpi']['version']);
+            $telemetry->setGlpiDefaultLanguage($data['data']['glpi']['default_language']);
+            $telemetry->setGlpiAvgEntities($data['data']['glpi']['usage']['avg_entities']);
+            $telemetry->setGlpiAvgComputers($data['data']['glpi']['usage']['avg_computers']);
+            $telemetry->setGlpiAvgNetworkequipments($data['data']['glpi']['usage']['avg_networkequipments']);
+            $telemetry->setGlpiAvgTickets($data['data']['glpi']['usage']['avg_tickets']);
+            $telemetry->setGlpiAvgProblems($data['data']['glpi']['usage']['avg_problems']);
+            $telemetry->setGlpiAvgChanges($data['data']['glpi']['usage']['avg_changes']);
+            $telemetry->setGlpiAvgProjects($data['data']['glpi']['usage']['avg_projects']);
+            $telemetry->setGlpiAvgUsers($data['data']['glpi']['usage']['avg_users']);
+            $telemetry->setGlpiAvgGroups($data['data']['glpi']['usage']['avg_groups']);
+            $telemetry->setGlpiLdapEnabled($data['data']['glpi']['usage']['ldap_enabled']);
+            $telemetry->setGlpiMailcollectorEnabled($data['data']['glpi']['usage']['mailcollector_enabled']);
+            $telemetry->setGlpiNotifications($data['data']['glpi']['usage']['notifications_modes']);
+            $telemetry->setDbEngine($data['data']['system']['db']['engine']);
+            $telemetry->setDbVersion($data['data']['system']['db']['version']);
+            $telemetry->setDbSize($data['data']['system']['db']['size']);
+            $telemetry->setDbLogSize($data['data']['system']['db']['log_size']);
+            $telemetry->setDbSqlMode($data['data']['system']['db']['sql_mode']);
+            $telemetry->setWebEngine($data['data']['system']['web_server']['engine']);
+            $telemetry->setWebVersion($data['data']['system']['web_server']['version']);
+            $telemetry->setPhpVersion($data['data']['system']['php']['version']);
+            $telemetry->setPhpModules($data['data']['system']['php']['modules']);
+            $telemetry->setPhpConfigMaxExecutionTime($data['data']['system']['setup']['max_execution_time']);
+            $telemetry->setPhpConfigMemoryLimit($data['data']['system']['setup']['memory_limit']);
+            $telemetry->setPhpConfigPostMaxSize($data['data']['system']['setup']['post_max_size']);
+            $telemetry->setPhpConfigSafeMode($data['data']['system']['setup']['safe_mode']);
+            $telemetry->setPhpConfigSession($data['data']['system']['setup']['session']);
+            $telemetry->setPhpConfigUploadMaxFilesize($data['data']['system']['setup']['upload_max_filesize']);
+            $telemetry->setOsFamily($data['data']['system']['os']['family']);
+            $telemetry->setOsVersion($data['data']['system']['os']['version']);
+            $telemetry->setInstallMode($data['data']['glpi']['install_mode']);
+
+            $entityManager->persist($telemetry);
+            $entityManager->flush();
+
+            $plugins = $data['data']['glpi']['plugins'];
+            $glpiPlugins = [];
+
+            foreach ($plugins as $pluginData) {
+                $pluginKey  = $pluginData['key'];
+
+                $glpiPlugin = $glpiPluginRepository->findOneBy(['pkey' => $pluginKey]);
+
+                if (!$glpiPlugin) {
+                    $glpiPlugin = new GlpiPlugin();
+                    $glpiPlugin->setPkey($pluginKey);
+                    $entityManager->persist($glpiPlugin);
+                    $glpiPlugins[] = $glpiPlugin;
+                }
+
+                $telemetryGlpiPlugin = new TelemetryGlpiPlugin();
+                $telemetryGlpiPlugin->setTelemetryEntry($telemetry);
+                $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);
+
+                $entityManager->persist($telemetryGlpiPlugin);
+
+            }
+
+            $entityManager->flush();
+
+            $entityManager->commit();
+
+        } catch (\Exception $e) {
+            $entityManager->rollback();
+            throw $e;
         }
+        return true;
+    }
+
+
+
+
 }
+

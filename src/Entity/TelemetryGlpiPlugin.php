@@ -33,21 +33,63 @@ class TelemetryGlpiPlugin
         return $this->id;
     }
 
-    // public function getGlpiPlugin(): ?int
-    // {
-    //     return $this->glpi_plugin;
-    // }
+    public function getTelemetryEntry(): ?Telemetry
+    {
+        return $this->telemetry_entry;
+    }
+
+    public function setTelemetryEntry(?Telemetry $telemetry_entry): self
+    {
+        $this->telemetry_entry = $telemetry_entry;
+
+        return $this;
+    }
+
+    public function getGlpiPlugin(): ?GlpiPlugin
+    {
+        return $this->glpi_plugin;
+    }
+
+    public function setGlpiPlugin(?GlpiPlugin $glpi_plugin): self
+    {
+        $this->glpi_plugin = $glpi_plugin;
+
+        return $this;
+    }
 
     public function getVersion(): ?string
     {
         return $this->version;
     }
 
-    public function setVersion(string $version): static
+    public function setVersion(string $version): self
     {
         $this->version = $version;
 
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
 }

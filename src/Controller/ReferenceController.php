@@ -43,8 +43,7 @@ class ReferenceController extends AbstractController
             $glpi_reference->setNumHelpdesk($data['nb_helpdesk']);
             $glpi_reference->setReference($reference);
             $glpi_reference->setCreatedAt(new \DateTimeImmutable());
-            //$reference->setGlpiReference($glpi_reference);
-            //$manager->persist($reference);
+
             $manager->persist($glpi_reference);
             $manager->flush();
 
