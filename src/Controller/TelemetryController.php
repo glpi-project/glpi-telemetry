@@ -103,25 +103,27 @@ class TelemetryController extends AbstractController
             $telemetry->setGlpiAvgGroups($data['data']['glpi']['usage']['avg_groups']);
             $telemetry->setGlpiLdapEnabled($data['data']['glpi']['usage']['ldap_enabled']);
             $telemetry->setGlpiMailcollectorEnabled($data['data']['glpi']['usage']['mailcollector_enabled']);
-            $telemetry->setGlpiNotifications($data['data']['glpi']['usage']['notifications_modes']);
+            $telemetry->setGlpiNotifications(json_encode($data['data']['glpi']['usage']['notifications']));
             $telemetry->setDbEngine($data['data']['system']['db']['engine']);
             $telemetry->setDbVersion($data['data']['system']['db']['version']);
             $telemetry->setDbSize($data['data']['system']['db']['size']);
-            $telemetry->setDbLogSize($data['data']['system']['db']['log_size']);
+            $telemetry->setDbLogSize(intval($data['data']['system']['db']['log_size']));
             $telemetry->setDbSqlMode($data['data']['system']['db']['sql_mode']);
             $telemetry->setWebEngine($data['data']['system']['web_server']['engine']);
             $telemetry->setWebVersion($data['data']['system']['web_server']['version']);
             $telemetry->setPhpVersion($data['data']['system']['php']['version']);
-            $telemetry->setPhpModules($data['data']['system']['php']['modules']);
-            $telemetry->setPhpConfigMaxExecutionTime($data['data']['system']['setup']['max_execution_time']);
-            $telemetry->setPhpConfigMemoryLimit($data['data']['system']['setup']['memory_limit']);
-            $telemetry->setPhpConfigPostMaxSize($data['data']['system']['setup']['post_max_size']);
-            $telemetry->setPhpConfigSafeMode($data['data']['system']['setup']['safe_mode']);
-            $telemetry->setPhpConfigSession($data['data']['system']['setup']['session']);
-            $telemetry->setPhpConfigUploadMaxFilesize($data['data']['system']['setup']['upload_max_filesize']);
+            $telemetry->setPhpModules(json_encode($data['data']['system']['php']['modules']));
+            $telemetry->setPhpConfigMaxExecutionTime($data['data']['system']['php']['setup']['max_execution_time']);
+            $telemetry->setPhpConfigMemoryLimit($data['data']['system']['php']['setup']['memory_limit']);
+            $telemetry->setPhpConfigPostMaxSize($data['data']['system']['php']['setup']['post_max_size']);
+            $telemetry->setPhpConfigSafeMode($data['data']['system']['php']['setup']['safe_mode']);
+            $telemetry->setPhpConfigSession($data['data']['system']['php']['setup']['session']);
+            $telemetry->setPhpConfigUploadMaxFilesize($data['data']['system']['php']['setup']['upload_max_filesize']);
             $telemetry->setOsFamily($data['data']['system']['os']['family']);
             $telemetry->setOsVersion($data['data']['system']['os']['version']);
             $telemetry->setInstallMode($data['data']['glpi']['install_mode']);
+            $telemetry->setCreatedAt(new \DateTimeImmutable());
+            $telemetry->setUpdatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($telemetry);
             $entityManager->flush();
@@ -144,6 +146,9 @@ class TelemetryController extends AbstractController
                 $telemetryGlpiPlugin = new TelemetryGlpiPlugin();
                 $telemetryGlpiPlugin->setTelemetryEntry($telemetry);
                 $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);
+                $telemetryGlpiPlugin->setVersion($pluginData['version']);
+                $telemetryGlpiPlugin->setCreatedAt(new \DateTimeImmutable());
+                $telemetryGlpiPlugin->setUpdatedAt(new \DateTimeImmutable());
 
                 $entityManager->persist($telemetryGlpiPlugin);
 

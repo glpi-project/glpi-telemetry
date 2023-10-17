@@ -17,7 +17,7 @@ class TelemetryGlpiPlugin
     private ?Telemetry $telemetry_entry = null;
 
     #[ORM\ManyToOne(targetEntity: GlpiPlugin::class)]
-    private ?int $glpi_plugin;
+    private ?GlpiPlugin $glpi_plugin;
 
     #[ORM\Column(length: 50)]
     private ?string $version = null;
