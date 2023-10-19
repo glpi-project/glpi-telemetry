@@ -370,24 +370,24 @@ class Telemetry
         return $this;
     }
 
-    public function getDbSize(): ?string
+    public function getDbSize(): ?int
     {
         return $this->db_size;
     }
 
-    public function setDbSize(?string $db_size): self
+    public function setDbSize(?int $db_size): self
     {
         $this->db_size = $db_size;
 
         return $this;
     }
 
-    public function getDbLogSize(): ?string
+    public function getDbLogSize(): ?int
     {
         return $this->db_log_size;
     }
 
-    public function setDbLogSize(?string $db_log_size): self
+    public function setDbLogSize(?int $db_log_size): self
     {
         $this->db_log_size = $db_log_size;
 

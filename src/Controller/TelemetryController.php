@@ -7,7 +7,6 @@ use App\Entity\Telemetry;
 use App\Entity\TelemetryGlpiPlugin;
 use App\Middleware\JsonCheck;
 use App\Repository\GlpiPluginRepository;
-use App\Repository\TelemetryGlpiPluginRepository;
 use App\Repository\TelemetryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -17,6 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 class TelemetryController extends AbstractController
 {
+    private $jsonCheck;
+
+    public function __construct(JsonCheck $jsonCheck)
+    {
+        $this->jsonCheck = $jsonCheck;
+    }
+
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
     public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository): Response
     {
@@ -69,7 +75,7 @@ class TelemetryController extends AbstractController
             return new Response('status: JSON is not valid', Response::HTTP_BAD_REQUEST);
         }
 
-        return new Response('status: OK');
+        return new Response('status: OK', Response::HTTP_OK);
     }
 
     #[Route('/telemetry', name: 'app_telemetry')]
@@ -106,7 +112,7 @@ class TelemetryController extends AbstractController
             $telemetry->setGlpiNotifications(json_encode($data['data']['glpi']['usage']['notifications']));
             $telemetry->setDbEngine($data['data']['system']['db']['engine']);
             $telemetry->setDbVersion($data['data']['system']['db']['version']);
-            $telemetry->setDbSize($data['data']['system']['db']['size']);
+            $telemetry->setDbSize(intval($data['data']['system']['db']['size']));
             $telemetry->setDbLogSize(intval($data['data']['system']['db']['log_size']));
             $telemetry->setDbSqlMode($data['data']['system']['db']['sql_mode']);
             $telemetry->setWebEngine($data['data']['system']['web_server']['engine']);

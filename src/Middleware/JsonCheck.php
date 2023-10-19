@@ -8,7 +8,6 @@ use Opis\JsonSchema\{
 };
 use Opis\JsonSchema\Errors\{
     ErrorFormatter,
-    ValidationError,
 };
 use Psr\Log\LoggerInterface;
 
