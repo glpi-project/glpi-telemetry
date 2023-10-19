@@ -22,11 +22,6 @@ jobs:
     - run: npm install
     - run: npm test
 
-    - name: Load environment variables
-      run: |
-        cp .env.example .env
-        composer dump-env prod
-
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
       with:
