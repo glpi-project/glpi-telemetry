@@ -27,5 +27,5 @@ jobs:
       with:
         php-version: ${{ matrix.php-version }}
         extensions: mbstring, pdo_mysql
-    - run: composer install
+    - uses: php-actions/composer@v6
     - run: vendor/bin/phpunit
