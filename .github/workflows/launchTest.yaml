@@ -22,13 +22,17 @@ jobs:
     - run: npm install
     - run: npm test
 
-    - name: Start web server
-      run: php -S 127.0.0.1:8000 -t ./public &
-
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         extensions: mbstring, pdo_mysql
     - uses: php-actions/composer@v6
+
+    - name: Start web server
+      run: symfony serve &
+      env:
+        APP_ENV: test
+
+    - name: Run unit tests
     - run: vendor/bin/phpunit
