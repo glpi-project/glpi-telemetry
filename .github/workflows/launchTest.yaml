@@ -23,9 +23,7 @@ jobs:
     - run: npm test
 
     - name: Start web server
-    - run: symfony serve &
-      env:
-        APP_ENV: test
+      run: symfony serve &
 
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
