@@ -23,10 +23,8 @@ jobs:
     - run: npm test
 
     - name: Start web server
-      uses: webfactory/serve@v1
-      with:
-        port: 8000
-        path: './public'
+      run: php -S 127.0.0.1:8000 -t ./public &
+      background: true
 
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
