@@ -39,9 +39,7 @@ jobs:
     - uses: php-actions/composer@v6
 
     - name: Initialize database
-      run: |
-        php bin/console doctrine:database:create --env=test &&
-        php bin/console doctrine:migrations:migrate --env=test --no-interaction
+      run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
       env:
         APP_ENV: test
         DATABASE_URL: mysql://root:password@localhost:3306/test
