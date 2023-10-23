@@ -45,7 +45,7 @@ jobs:
         php bin/console doctrine:migrations:migrate --env=test --no-interaction
       env:
         APP_ENV: test
-        DATABASE_URL: mysql://root:password@db:3306/test
+        DATABASE_URL: mysql://root:password@127.0.0.1:3306/test
 
     - name: Build application
       run: npm run build
@@ -54,6 +54,6 @@ jobs:
       run: symfony serve &
       env:
         APP_ENV: test
-        DATABASE_URL: mysql://root:password@localhost:3306/test
+        DATABASE_URL: mysql://root:password@db:${{ job.services.db.ports['3306'] }}/test
 
     - run: vendor/bin/phpunit
