@@ -21,15 +21,28 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
 
-    - name: Start web server
-      run: symfony serve &
-      env:
-        APP_ENV: test
-
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         extensions: mbstring, pdo_mysql
     - uses: php-actions/composer@v6
+
+    - name: Install Symfony CLI
+      uses: symfony/cli-action@v1
+
+    - name: Initialize database
+      run: symfony console doctrine:database:create --env=test
+      run: symfony console doctrine:migrations:migrate --env=test --no-interaction
+      env:
+        APP_ENV: test
+
+    - name: build application
+      run: npm run build
+
+    - name: Start web server
+      run: symfony serve &
+      env:
+        APP_ENV: test
+
     - run: vendor/bin/phpunit
