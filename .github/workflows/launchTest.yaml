@@ -32,8 +32,9 @@ jobs:
       uses: symfony/cli-action@v1
 
     - name: Initialize database
-      run: symfony console doctrine:database:create --env=test
-      run: symfony console doctrine:migrations:migrate --env=test --no-interaction
+      run: |
+        symfony console doctrine:database:create --env=test &&
+        symfony console doctrine:migrations:migrate --env=test --no-interaction
       env:
         APP_ENV: test
 
