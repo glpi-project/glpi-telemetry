@@ -7,6 +7,18 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: myapp_test
+          MYSQL_USER: root
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     strategy:
       matrix:
         node-version: [16.x]
@@ -34,6 +46,7 @@ jobs:
         php bin/console doctrine:migrations:migrate --env=test --no-interaction
       env:
         APP_ENV: test
+        DATABASE_URL: mysql://root@localhost:3306/test
 
     - name: build application
       run: npm run build
