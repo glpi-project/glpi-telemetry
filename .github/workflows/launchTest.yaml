@@ -28,9 +28,6 @@ jobs:
         extensions: mbstring, pdo_mysql
     - uses: php-actions/composer@v6
 
-    - name: Install Symfony CLI
-      uses: symfony/cli-action@v1
-
     - name: Initialize database
       run: |
         symfony console doctrine:database:create --env=test &&
