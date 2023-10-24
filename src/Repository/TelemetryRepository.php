@@ -51,7 +51,7 @@ class TelemetryRepository extends ServiceEntityRepository
             WHERE glpi_version NOT LIKE "%dev" AND
             created_at BETWEEN :startDate AND :endDate
             GROUP BY month_year, version
-            ORDER BY month_year, version
+            ORDER BY STR_TO_DATE(month_year, "%b-%Y"), version
             ';
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':startDate', $startDate);

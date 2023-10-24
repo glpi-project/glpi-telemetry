@@ -32,7 +32,7 @@ class RefreshCache extends Command
         $date = date('y-m-d h:i:s');
 
         $output->writeln("{$date}Beggining refreshing process");
-
+        $output->writeln($filter . $forceUpdate);
         $this->refreshCacheService->refreshAllCaches($filter, $forceUpdate);
 
         $output->writeln('cache refreshed');

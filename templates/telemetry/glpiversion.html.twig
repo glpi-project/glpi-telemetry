@@ -31,6 +31,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
         },
         xAxis: {
             type: 'category',
+            axisTick: {
+                alignWithLabel: true
+            },
+            axisLabel: {
+            rotate: 30
+        },
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         },
         series: [
@@ -100,30 +106,44 @@ window.addEventListener("DOMContentLoaded", (event) => {
     option && myChart.setOption(option);
 
         window.registerFilterCallback(function (filters) {
-        var url = 'glpi/version?' + new URLSearchParams(filters);
-        console.log(url);
-        var arrayObj = [];
+            var url = 'glpi/version?' + new URLSearchParams(filters);
+            console.log(url);
+            var arrayObj = [];
 
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => {
-            return response.json();
-        })
-        .then(json => {
-            window.clearResults();
-            window.registerResults(json);
-            console.log(json);
-            {# myChart.setOption({series:[{data:json}]}); #}
-        })
-        .catch(error => {
-            console.error('an error occured: ', error);
-        });
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json'
+                },
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    window.clearResults();
+                    window.registerResults(json);
+                    console.log(json);
+                    var keys = getUniqueKeys(json);
+                    myChart.setOption({xAxis:{data:keys}});
+                })
+                .catch(error => {
+                    console.error('an error occured: ', error);
+                });
 
-    })
+        })
+
+        function getUniqueKeys(json) {
+            const uniqueKeys = {};
+
+            for (let i = 0; i < json.length; i++) {
+            const key = json[i].month_year;
+            uniqueKeys[key] = true;
+            }
+
+            const keys = Object.keys(uniqueKeys);
+            console.log(keys);
+            return keys;
+        }
 
 });
 </script>

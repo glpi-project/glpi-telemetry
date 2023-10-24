@@ -16,15 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 class TelemetryController extends AbstractController
 {
-    private $jsonCheck;
-
-    public function __construct(JsonCheck $jsonCheck)
-    {
-        $this->jsonCheck = $jsonCheck;
-    }
 
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
-    public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository): Response
+    public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository, JsonCheck $jsonCheck): Response
     {
         $logger->debug('POST request received');
         $logger->debug('POST request content: ' . $request->getContent());
