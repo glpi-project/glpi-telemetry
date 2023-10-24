@@ -9,7 +9,7 @@ class TelemetryControllerTest extends WebTestCase
     public function testTelemetryRoute()
     {
         $client     = static::createClient();
-        $crawler    = $client->request('GET', '/telemetry');
+        $client->request('GET', '/telemetry');
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
     public function testInvalidHeaderPost()
