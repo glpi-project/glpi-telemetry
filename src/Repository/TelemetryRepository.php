@@ -44,10 +44,14 @@ class TelemetryRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT glpi_version as name, COUNT(id) as value
+            SELECT DATE_FORMAT(created_at, "%b-%Y") as month_year,
+            SUBSTRING_INDEX(glpi_version, ".", 2) as version,
+            COUNT(DISTINCT glpi_uuid) as users
             FROM telemetry
-            WHERE created_at BETWEEN :startDate AND :endDate
-            GROUP BY name
+            WHERE glpi_version NOT LIKE "%dev" AND
+            created_at BETWEEN :startDate AND :endDate
+            GROUP BY month_year, version
+            ORDER BY month_year, version
             ';
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':startDate', $startDate);
