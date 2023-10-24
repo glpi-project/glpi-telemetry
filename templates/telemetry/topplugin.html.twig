@@ -17,17 +17,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
         title: {
             text: 'Top 10 plugins',
             left: 'center',
-            top: 'center'
         },
         series: [
             {
             name: 'Nightingale Chart',
             type: 'pie',
+            top: 30,
             radius: [50, 100],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
-                borderRadius: 8
+                borderRadius: 3
             },
         data: [
             {# {% for row in topplugin %}

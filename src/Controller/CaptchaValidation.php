@@ -11,7 +11,8 @@ class CaptchaValidation extends AbstractController
 {
     #[Route('/captcha/validation', name: 'app_captcha_validation')]
 
-    public function validateCaptcha(Request $request, HttpClientInterface $client) : JsonResponse {
+    public function validateCaptcha(Request $request, HttpClientInterface $client) : JsonResponse 
+    {
 
         $token = $request->request->get('captcha_token');
         $secretKey = $this->getParameter('captcha_secret_key');

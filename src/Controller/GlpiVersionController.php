@@ -12,11 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GlpiVersionController extends AbstractController implements ViewControllerInterface
 {
-    public $glpiVersionData;
-
     #[Route('/glpi/version', name: 'app_glpi_version')]
-
-
     public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
     {
         $filter         = $request->query->get('filter');
@@ -27,10 +23,11 @@ class GlpiVersionController extends AbstractController implements ViewController
         return $this->json($result);
     }
 
-    public function getData($Dateparams, TelemetryRepository $telemetryRepository) : array {
+    public function getData(array $dateParams, TelemetryRepository $telemetryRepository) : array
+    {
 
-        $startDate      = $Dateparams['startDate'];
-        $endDate        = $Dateparams['endDate'];
+        $startDate      = $dateParams['startDate'];
+        $endDate        = $dateParams['endDate'];
 
         $data = $telemetryRepository->getGlpiVersion($startDate, $endDate);
 
