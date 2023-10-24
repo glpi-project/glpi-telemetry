@@ -22,11 +22,29 @@ class RefreshCacheService
         $this->cache = $cache;
     }
 
-    public function refreshAllCaches(string $filter, string $forceUpdate): bool
+    public function refreshAllCaches(string $filter, bool $forceUpdate): bool
     {
-            //lister le contenu du dossier controller (directory iterator)
-            //vérifier que c'est bien une classe + implémente interface ViewControllerInterface
-            // pour chacune appeler la fonction refreshCache()
+            //récupérer toutes les classes dans le dossier Controller
+            //ignorer les fichiers . et .. et .gitignore
+            //pour chacune vérifier qu'elle implémente l'interface ViewControllerInterface
+            //pour chacune appeler la méthode refreshCache avec les bons paramètres
+            //retourner true si tout s'est bien passé, false sinon
+            $controllerDir = __DIR__ . '/../Controller';
+            $controllerFiles = scandir($controllerDir);
+            $controllerFiles = array_filter($controllerFiles, function ($file) {
+                return !in_array($file, ['.', '..', '.gitignore']);
+            });
+            foreach ($controllerFiles as $controllerFile) {
+                $controllerName = str_replace('.php', '', $controllerFile);
+                $controllerClass = "App\\Controller\\$controllerName";
+                $controller = new $controllerClass();
+                if ($controller instanceof ViewControllerInterface) {
+                    $this->refreshCache($filter, $forceUpdate, $controller);
+                }
+            }
+
+            return true;
+
     }
     public function refreshCache($filter, $forceUpdate, $controller)
     {

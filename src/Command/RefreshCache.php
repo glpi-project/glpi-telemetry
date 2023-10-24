@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\RefreshGlpiVersionCache;
+use App\Service\RefreshCacheService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,15 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RefreshCache extends Command
 {
-    // private $refreshGlpiVersionCache;
-    // public function __construct(
-    //     RefreshGlpiVersionCache $refreshGlpiVersionCache
-    // ){
-    //     $this->refreshGlpiVersionCache = $refreshGlpiVersionCache;
-    //     parent::__construct();
-    // }
     public function __construct(
-        private RefreshGlpiVersionCache $refreshGlpiVersionCache
+        private RefreshCacheService $refreshCacheService
     ){
         parent::__construct();
     }
@@ -40,7 +33,7 @@ class RefreshCache extends Command
 
         $output->writeln("{$date}Beggining refreshing process");
 
-        $this->refreshGlpiVersionCache->refreshCache($startDate, $endDate, $filter, $forceUpdate);
+        $this->refreshCacheService->refreshAllCaches($filter, $forceUpdate);
 
         $output->writeln('cache refreshed');
 
