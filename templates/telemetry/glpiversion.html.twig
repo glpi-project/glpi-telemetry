@@ -4,12 +4,11 @@
         </div>
     </div>
 </div>
-{# <div id="glpi_version" class="card pie-size"></div> #}
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
     var chartDom = document.getElementById("glpi_version");
-    var myChart = echarts.init(chartDom, 'westeros');
+    var myChart = echarts.init(chartDom);
     var option;
 
     option = {
