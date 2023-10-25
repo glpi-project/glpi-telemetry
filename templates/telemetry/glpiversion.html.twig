@@ -1,4 +1,4 @@
-<div class="col-sm-6 col-lg-4">
+<div class="col-sm-6 col-lg-6">
     <div class="card">
         <div class="card-body default-size" id="glpi_version">
         </div>
@@ -37,70 +37,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             axisLabel: {
             rotate: 30
         },
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: []
         },
-        series: [
-            {
-            name: 'Direct',
-            type: 'bar',
-            stack: 'total',
-            label: {
-                show: true
-            },
-            emphasis: {
-                focus: 'series'
-            },
-            data: [320, 302, 301, 334, 390, 330, 320]
-            },
-            {
-            name: 'Mail Ad',
-            type: 'bar',
-            stack: 'total',
-            label: {
-                show: true
-            },
-            emphasis: {
-                focus: 'series'
-            },
-            data: [120, 132, 101, 134, 90, 230, 210]
-            },
-            {
-            name: 'Affiliate Ad',
-            type: 'bar',
-            stack: 'total',
-            label: {
-                show: true
-            },
-            emphasis: {
-                focus: 'series'
-            },
-            data: [220, 182, 191, 234, 290, 330, 310]
-            },
-            {
-            name: 'Video Ad',
-            type: 'bar',
-            stack: 'total',
-            label: {
-                show: true
-            },
-            emphasis: {
-                focus: 'series'
-            },
-            data: [150, 212, 201, 154, 190, 330, 410]
-            },
-            {
-            name: 'Search Engine',
-            type: 'bar',
-            stack: 'total',
-            label: {
-                show: true
-            },
-            emphasis: {
-                focus: 'series'
-            },
-            data: [820, 832, 901, 934, 1290, 1330, 1320]
-            }
-        ]
+        series: []
     };
 
     option && myChart.setOption(option);
@@ -109,7 +48,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             var url = 'glpi/version?' + new URLSearchParams(filters);
             console.log(url);
             var arrayObj = [];
-
                 fetch(url, {
                     method: 'GET',
                     headers: {
@@ -123,8 +61,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     window.clearResults();
                     window.registerResults(json);
                     console.log(json);
-                    var keys = getUniqueKeys(json);
-                    myChart.setOption({xAxis:{data:keys}});
+                    var usersByVersion = getUsersByVersion(json);
+                    var chartData = getChartData(json);
+                    myChart.setOption({
+                        xAxis: chartData.xAxis,
+                        series: chartData.series,
+                    });
+
                 })
                 .catch(error => {
                     console.error('an error occured: ', error);
@@ -132,17 +75,84 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         })
 
-        function getUniqueKeys(json) {
-            const uniqueKeys = {};
+        function getUsersByVersion(json) {
+            const result = {};
+
+            json.sort((a, b) => {
+                console.log('sorting array by date');
+                const dateA = new Date(a.month_year);
+                const dateB = new Date(b.month_year);
+                return dateA - dateB;
+            });
 
             for (let i = 0; i < json.length; i++) {
-            const key = json[i].month_year;
-            uniqueKeys[key] = true;
+                const item = json[i];
+                const version = item.version;
+                const monthYear = item.month_year;
+
+                if (!result[monthYear]) {
+                    result[monthYear] = {};
+                }
+
+                if (!result[monthYear][version]) {
+                    result[monthYear][version] = 0;
+                }
+
+                result[monthYear][version] += item.users;
             }
 
-            const keys = Object.keys(uniqueKeys);
-            console.log(keys);
-            return keys;
+            return result;
+        }
+
+        function getChartData(json) {
+            const usersByVersion = getUsersByVersion(json);
+            console.log(usersByVersion);
+            const data = [];
+            const series = [];
+
+            // Parcours des clés de usersByVersion pour construire les données de l'axe X
+            for (const monthYear in usersByVersion) {
+                data.push(monthYear);
+                console.log(monthYear);
+            }
+
+            // Parcours des versions pour construire les séries
+            for (const version of Object.keys(usersByVersion[data[0]])) {
+                console.log(version);
+                const serie = {
+                    name: version,
+                    type: 'bar',
+                    stack: 'total',
+                    label: {
+                    show: false,
+                    },
+                    emphasis: {
+                    focus: 'series',
+                    },
+                    data: [],
+                };
+
+                // Parcours des clés de usersByVersion pour construire les données de la série
+                for (const monthYear of data) {
+                    serie.data.push(usersByVersion[monthYear][version] || 0);
+                }
+
+                series.push(serie);
+            }
+
+            return {
+                xAxis: {
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true,
+                    },
+                    axisLabel: {
+                        rotate: 30,
+                    },
+                    data: data,
+                },
+                series: series,
+            };
         }
 
 });
