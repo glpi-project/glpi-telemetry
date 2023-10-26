@@ -12,18 +12,30 @@ window.addEventListener("DOMContentLoaded", (event) => {
     var option;
 
     option = {
+        title: {
+            text: 'Number of unique GLPI instances reported by version',
+            left: 'center',
+            textStyle: {
+                fontSize: 15
+            }
+        },
         tooltip: {
             trigger: 'axis',
             axisPointer: {
-            // Use axis to trigger tooltip
-            type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+            type: 'shadow'
             }
         },
-        legend: {},
+        legend: {
+            orient: 'horizontal',
+            top: 25,
+            textStyle: {
+                fontSize: 12
+            }
+        },
         grid: {
             left: '3%',
             right: '4%',
-            bottom: '3%',
+            bottom: '2%',
             containLabel: true
         },
         yAxis: {
@@ -61,11 +73,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     window.clearResults();
                     window.registerResults(json);
                     console.log(json);
-                    var usersByVersion = getUsersByVersion(json);
-                    var chartData = getChartData(json);
                     myChart.setOption({
-                        xAxis: chartData.xAxis,
-                        series: chartData.series,
+                        xAxis: {data: json.xAxis.data},
+                        series: json.series,
                     });
 
                 })
@@ -74,86 +84,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 });
 
         })
-
-        function getUsersByVersion(json) {
-            const result = {};
-
-            json.sort((a, b) => {
-                console.log('sorting array by date');
-                const dateA = new Date(a.month_year);
-                const dateB = new Date(b.month_year);
-                return dateA - dateB;
-            });
-
-            for (let i = 0; i < json.length; i++) {
-                const item = json[i];
-                const version = item.version;
-                const monthYear = item.month_year;
-
-                if (!result[monthYear]) {
-                    result[monthYear] = {};
-                }
-
-                if (!result[monthYear][version]) {
-                    result[monthYear][version] = 0;
-                }
-
-                result[monthYear][version] += item.users;
-            }
-
-            return result;
-        }
-
-        function getChartData(json) {
-            const usersByVersion = getUsersByVersion(json);
-            console.log(usersByVersion);
-            const data = [];
-            const series = [];
-
-            // Parcours des clés de usersByVersion pour construire les données de l'axe X
-            for (const monthYear in usersByVersion) {
-                data.push(monthYear);
-                console.log(monthYear);
-            }
-
-            // Parcours des versions pour construire les séries
-            for (const version of Object.keys(usersByVersion[data[0]])) {
-                console.log(version);
-                const serie = {
-                    name: version,
-                    type: 'bar',
-                    stack: 'total',
-                    label: {
-                    show: false,
-                    },
-                    emphasis: {
-                    focus: 'series',
-                    },
-                    data: [],
-                };
-
-                // Parcours des clés de usersByVersion pour construire les données de la série
-                for (const monthYear of data) {
-                    serie.data.push(usersByVersion[monthYear][version] || 0);
-                }
-
-                series.push(serie);
-            }
-
-            return {
-                xAxis: {
-                    type: 'category',
-                    axisTick: {
-                        alignWithLabel: true,
-                    },
-                    axisLabel: {
-                        rotate: 30,
-                    },
-                    data: data,
-                },
-                series: series,
-            };
-        }
-
 });
+
 </script>

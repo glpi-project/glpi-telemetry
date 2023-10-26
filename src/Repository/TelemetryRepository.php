@@ -46,7 +46,7 @@ class TelemetryRepository extends ServiceEntityRepository
         $sql = '
             SELECT DATE_FORMAT(created_at, "%b-%Y") as month_year,
             SUBSTRING_INDEX(glpi_version, ".", 2) as version,
-            COUNT(DISTINCT glpi_uuid) as users
+            COUNT(DISTINCT glpi_uuid) as nb_instance
             FROM telemetry
             WHERE glpi_version NOT LIKE "%dev" AND
             created_at BETWEEN :startDate AND :endDate

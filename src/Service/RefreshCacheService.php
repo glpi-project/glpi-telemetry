@@ -4,6 +4,7 @@ namespace  App\Service;
 
 use App\Repository\TelemetryRepository;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class RefreshCacheService
@@ -12,14 +13,17 @@ class RefreshCacheService
     public $endDate    = '';
     private $telemetryRepository;
     private $cache;
+    private $logger;
 
     public function __construct(
         TelemetryRepository $telemetryRepository,
         CacheInterface $cache,
+        LoggerInterface $logger
     )
     {
         $this->telemetryRepository = $telemetryRepository;
         $this->cache = $cache;
+        $this->logger = $logger;
     }
 
     public function refreshAllCaches(string $filter, bool $forceUpdate): bool
@@ -55,11 +59,19 @@ class RefreshCacheService
             $this->cache->delete("{$vueName}{$filter}");
         }
 
-        return $this->cache->get("{$vueName}{$filter}", function () use ($filter, $controller) {
+        $data = $this->cache->get("{$vueName}{$filter}", function () use ($filter, $controller) {
             $this->setPeriod($filter);
+
             $dateParams = ['startDate' => $this->startDate, 'endDate' => $this->endDate];
-            return $controller->getData($dateParams, $this->telemetryRepository);
+
+            $data = $controller->getData($dateParams, $this->telemetryRepository);
+            $this->logger->debug('data retreived from DB :', $data);
+
+            return $data;
         });
+
+        $this->logger->debug('data retreived from cache ' . "{$vueName}{$filter}");
+        return $data;
     }
 
     public function setPeriod(string $filter): string
@@ -80,4 +92,5 @@ class RefreshCacheService
         }
 
     }
+
 }
