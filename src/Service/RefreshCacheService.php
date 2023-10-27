@@ -2,6 +2,7 @@
 
 namespace  App\Service;
 
+use App\Interface\ViewControllerInterface;
 use App\Repository\TelemetryRepository;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -28,6 +29,7 @@ class RefreshCacheService
 
     public function refreshAllCaches(string $filter, bool $forceUpdate): bool
     {
+        $this->logger->debug('refreshAllCaches called');
             //récupérer toutes les classes dans le dossier Controller
             //ignorer les fichiers . et .. et .gitignore
             //pour chacune vérifier qu'elle implémente l'interface ViewControllerInterface
@@ -38,12 +40,26 @@ class RefreshCacheService
             $controllerFiles = array_filter($controllerFiles, function ($file) {
                 return !in_array($file, ['.', '..', '.gitignore']);
             });
+
+            $this->logger->debug('controllerFiles :', $controllerFiles);
+
             foreach ($controllerFiles as $controllerFile) {
-                $controllerName = str_replace('.php', '', $controllerFile);
-                $controllerClass = "App\\Controller\\$controllerName";
-                $controller = new $controllerClass();
-                if ($controller instanceof ViewControllerInterface) {
-                    $this->refreshCache($filter, $forceUpdate, $controller);
+                try {
+                    $controllerName = str_replace('.php', '', $controllerFile);
+                    $this->logger->debug($controllerName);
+
+                    $controllerClass = "App\\Controller\\$controllerName";
+                    $this->logger->debug("Trying to create instance of: $controllerClass");
+
+                    $controller = new $controllerClass($this->logger);
+                    $this->logger->debug("Instance created successfully: " . get_class($controller));
+
+                    if ($controller instanceof ViewControllerInterface) {
+                        $this->logger->debug($filter . $forceUpdate ."". get_class($controller));
+                        $this->refreshCache($filter, $forceUpdate, $controller);
+                    }
+                } catch (Exception $e) {
+                    $this->logger->error('Error refreshing cache for controller ' . $controllerName . ': ' . $e->getMessage());
                 }
             }
 
@@ -52,11 +68,12 @@ class RefreshCacheService
     }
     public function refreshCache($filter, $forceUpdate, $controller)
     {
-
+        $this->logger->debug('refreshCache called'. $filter. ' '. $forceUpdate);
         $vueName = strtolower(get_class($controller));
 
         if ($forceUpdate) {
             $this->cache->delete("{$vueName}{$filter}");
+            $this->logger->info('cache deleted :' . "{$vueName}{$filter}");
         }
 
         $data = $this->cache->get("{$vueName}{$filter}", function () use ($filter, $controller) {

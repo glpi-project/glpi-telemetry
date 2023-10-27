@@ -40,6 +40,7 @@ class GlpiVersionController extends AbstractController implements ViewController
         $data              = $telemetryRepository->getGlpiVersion($startDate, $endDate);
         $transformedData   = $this->transformDataForChart($data);
         $chartData         = $this->prepareChartData($transformedData);
+
         return $chartData;
     }
 
