@@ -1,6 +1,12 @@
+{% include 'telemetry/glpiversion-modal.html.twig' %}
 <div class="col-sm-6 col-lg-6">
     <div class="card">
-        <div class="card-body default-size" id="glpi_version">
+        <div class="d-flex flex-row-reverse p-2 pb-0">
+            <button type="button" class="btn p-1" id="glpi_version_large" data-bs-toggle="modal" data-bs-target="#chartModal">
+                <i class="ti ti-arrows-maximize"></i>
+            </button>
+        </div>
+        <div class="card-body default-size pt-0" id="glpi_version">
         </div>
     </div>
 </div>
@@ -82,7 +88,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     console.error('an error occured: ', error);
                 });
 
-        })
+        });
 });
 
 </script>

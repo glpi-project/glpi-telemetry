@@ -35,6 +35,8 @@ class RefreshCacheService
             //pour chacune vérifier qu'elle implémente l'interface ViewControllerInterface
             //pour chacune appeler la méthode refreshCache avec les bons paramètres
             //retourner true si tout s'est bien passé, false sinon
+            $periods = ['lastYear', 'fiveYear', 'always'];
+
             $controllerDir = __DIR__ . '/../Controller';
             $controllerFiles = scandir($controllerDir);
             $controllerFiles = array_filter($controllerFiles, function ($file) {
@@ -56,7 +58,9 @@ class RefreshCacheService
 
                     if ($controller instanceof ViewControllerInterface) {
                         $this->logger->debug($filter . $forceUpdate ."". get_class($controller));
-                        $this->refreshCache($filter, $forceUpdate, $controller);
+                        foreach ($periods as $period) {
+                            $this->refreshCache($period, $forceUpdate, $controller);
+                        }
                     }
                 } catch (Exception $e) {
                     $this->logger->error('Error refreshing cache for controller ' . $controllerName . ': ' . $e->getMessage());
