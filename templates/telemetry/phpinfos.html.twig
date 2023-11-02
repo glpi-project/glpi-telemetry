@@ -1,53 +1,65 @@
+{% include 'telemetry/phpinfos-modal.html.twig' %}
 <div class="col-sm-6 col-lg-6">
     <div class="card">
-        <div class="card-body default-size" id="php_info">
+        <div class="d-flex flex-row-reverse p-2 pb-0">
+            <button type="button" class="btn p-1" id="php_version_lg" data-bs-toggle="modal" data-bs-target="#phpversionModal">
+                <i class="ti ti-arrows-maximize"></i>
+            </button>
+        </div>
+        <div class="card-body default-size pt-0" id="php_version">
         </div>
     </div>
 </div>
 
-{# <div id="php_info" class="card bar-size"></div> #}
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
-    var chartDom = document.getElementById('php_info');
-    var myChart = echarts.init(chartDom, 'westeros.js');
+    var chartDom = document.getElementById('php_version');
+    var myChart = echarts.init(chartDom);
+
+    var largeChartDom = document.getElementById("php_version_large");
+    var largeChart = echarts.init(largeChartDom);
+
     var option;
 
     option = {
-    title: {
-        text: 'PHP Versions',
-        left: 'center'
-    },
-    grid: {
-        containLabel: true
-    },
-    xAxis: [{
-        type: 'category',
-        name: 'Version',
-        axisTick: {
-        alignWithLabel: true
+        title: {
+            text: 'PHP Versions',
+            left: 'center',
+            textStyle: {
+                fontSize: 15
+            }
         },
-        axisLabel: {
-        rotate: 30
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+            type: 'line'
+            }
         },
-        data: []
-    }],
-    yAxis: [{
-        type: 'value',
-        name: 'Nb utilisateurs',
-        min: 0,
-        max: 100000
-    }],
-    series: [
-        {
-        name: 'Nb utilisateurs',
-        type: 'bar',
-        data: []
-        }
-    ]
+        grid: {
+            left: '3%',
+            right: '3%',
+            bottom: '2%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            axisTick: {
+            alignWithLabel: true
+            },
+            axisLabel: {
+            rotate: 30
+            },
+            data: []
+        }],
+        yAxis: [{
+            type: 'value',
+        }],
+        series: []
     };
 
     option && myChart.setOption(option);
+    option && largeChart.setOption(option);
 
  window.registerFilterCallback(function (filters) {
         var url = 'php/version?' + new URLSearchParams(filters);
@@ -64,27 +76,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
             return response.json();
         })
         .then(json => {
-            var phpdata = {
-                "version": [],
-                "values" : []
-            }
-            json.forEach((el) => {
-                phpdata["version"].push(el.version)
-                phpdata["values"].push(el.count)
-            });
-            console.log(phpdata);
             window.clearResults();
             window.registerResults(json);
+            console.log(json);
             myChart.setOption({
-                xAxis: [{
-                    data: phpdata["version"]
-                    }],
-                series: [
-                    {
-                    data: phpdata["values"]
-                    }
-                ]
-                });
+                xAxis: {data: json.xAxis.data},
+                series: json.series,
+            });
+            largeChart.setOption({
+                xAxis: {data: json.xAxis.data},
+                series: json.series,
+            });
         })
         .catch(error => {
             console.error('an error occured: ', error);
