@@ -123,12 +123,12 @@ class TelemetryRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = "
-            SELECT pkey as name, count('glpi_plugin_id') as value
+            SELECT pkey as pluginname, COUNT('glpi_plugin_id') as total
             FROM telemetry_glpi_plugin as tgp INNER JOIN glpi_plugin as gp ON
             tgp.glpi_plugin_id = gp.id
             WHERE tgp.created_at BETWEEN :startDate AND :endDate
             GROUP BY glpi_plugin_id
-            ORDER BY value desc
+            ORDER BY total DESC
             LIMIT 10
             ";
         $stmt = $conn->prepare($sql);
