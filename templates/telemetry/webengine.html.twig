@@ -1,10 +1,14 @@
 <div class="col-sm-6 col-lg-3">
     <div class="card">
-        <div class="card-body default-size" id="web_engine">
+        <div class="d-flex flex-row-reverse p-2 pb-0">
+            <button type="button" class="btn p-1" id="web_engine_lg" data-bs-toggle="modal" data-bs-target="#webengineModal">
+                <i class="ti ti-arrows-maximize"></i>
+            </button>
+        </div>
+        <div class="card-body default-size pt-0" id="web_engine">
         </div>
     </div>
 </div>
-{#<div id="web_engine" class="card pie-size"></div> #}
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
@@ -37,11 +41,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 position: 'center'
             },
             emphasis: {
-                label: {
-                show: true,
-                fontSize: 40,
-                fontWeight: 'bold'
-                }
+                scale: true,
+                scaleSize: 10,
             },
             labelLine: {
                 show: false
