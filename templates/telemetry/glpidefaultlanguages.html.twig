@@ -1,12 +1,12 @@
-{% include 'telemetry/webengine-modal.html.twig' %}
+{% include 'telemetry/glpidefaultlanguages-modal.html.twig' %}
     <div class="col-sm-6 col-lg-3">
         <div class="card">
             <div class="d-flex flex-row-reverse p-2 pb-0">
-                <button type="button" class="btn p-1" id="web_engine_lg" data-bs-toggle="modal" data-bs-target="#webengineModal">
+                <button type="button" class="btn p-1" id="glpi_default_languages_lg" data-bs-toggle="modal" data-bs-target="#glpidefaultlanguagesModal">
                     <i class="ti ti-arrows-maximize"></i>
                 </button>
             </div>
-            <div class="card-body default-size pt-0" id="web_engine">
+            <div class="card-body default-size pt-0" id="glpi_default_languages">
             </div>
         </div>
     </div>
@@ -14,15 +14,15 @@
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
 
-    var chartDom = document.getElementById("web_engine");
+    var chartDom = document.getElementById("glpi_default_languages");
     var myChart = echarts.init(chartDom);
 
-    var largeChartDom = document.getElementById("web_engine_large");
+    var largeChartDom = document.getElementById("glpi_default_languages_large");
     var largeChart = echarts.init(largeChartDom);
 
     option = {
         title: {
-            text: 'Web engines',
+            text: 'GLPI Default Languages',
             left: 'center'
         },
         tooltip: {
@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         },
         series: [
             {
-            name: 'version users',
+            name: 'Language / Instances',
             type: 'pie',
             radius: ['40%', '70%'],
             avoidLabelOverlap: false,
@@ -50,9 +50,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             labelLine: {
                 show: false
             },
-            data: [
-
-            ]
+            data: []
             }
         ]
     };
@@ -60,7 +58,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     option && largeChart.setOption(option);
 
     window.registerFilterCallback(function (filters) {
-        var url = 'web/engines?' + new URLSearchParams(filters);
+        var url = 'glpi/default/languages?' + new URLSearchParams(filters);
         var arrayObj = [];
 
         fetch(url, {
@@ -77,6 +75,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             window.registerResults(json);
             console.log(json);
             myChart.setOption({series:[{data:json}]});
+            largeChart.setOption({series:[{data:json}]});
         })
         .catch(error => {
             console.error('an error occured: ', error);
@@ -84,5 +83,5 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     })
 
-});
+})
 </script>

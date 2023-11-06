@@ -139,6 +139,28 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
+    public function getDefaultLanguages($startDate, $endDate): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+        SELECT glpi_default_language as language,
+        COUNT(DISTINCT glpi_uuid) as nb_instances
+        FROM telemetry
+        WHERE created_at BETWEEN :startDate AND :endDate
+        GROUP BY language
+        ORDER BY nb_instances DESC
+        LIMIT 15
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
+    }
+
 
 
 //    /**

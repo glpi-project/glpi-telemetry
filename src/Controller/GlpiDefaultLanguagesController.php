@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-class TopPluginController extends AbstractController implements ViewControllerInterface
+class GlpiDefaultLanguagesController extends AbstractController implements ViewControllerInterface
 {
     private $logger;
 
@@ -18,7 +18,8 @@ class TopPluginController extends AbstractController implements ViewControllerIn
     {
         $this->logger = $logger;
     }
-    #[Route('/top/plugin', name: 'app_top_plugin')]
+
+    #[Route('/glpi/default/languages', name: 'app_glpi_default_languages')]
     public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
     {
         $filter         = $request->query->get('filter');
@@ -28,26 +29,26 @@ class TopPluginController extends AbstractController implements ViewControllerIn
 
         return $this->json($result);
     }
+
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array 
     {
 
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 
-        $data = $telemetryRepository->getTopPlugin($startDate, $endDate);
+        $data = $telemetryRepository->getDefaultLanguages($startDate, $endDate);
         $chartData = $this->prepareChartData($data);
 
         return $chartData;
     }
-
     public function prepareChartData(array $data): array
     {
         $chartData = [];
 
         foreach ($data as $entry) {
             $chartData[] = [
-            'name'  => $entry['pluginname'],
-            'value' => $entry['total'],
+            'name'  => $entry['language'],
+            'value' => $entry['nb_instances'],
             ];
         }
 
