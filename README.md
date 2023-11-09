@@ -15,6 +15,67 @@ Before setting up the Telemetry 2.0 application, ensure that your system meets t
 - npm version 9.8.1 or higher
 - Composer version 2.5.5 or higher
 
+## Docker development environment
+
+A docker development environment can be easilly instanciated by running the command `docker compose up -d`.
+
+By default, the HTTP port is not exposed, to prevent conflicts with other projects. You will have to define it in
+the `docker-compose.override.yml` file.
+
+```yaml
+services:
+  telemetry.glpi-project.org:
+    ports:
+      - "8001:80"
+```
+
+The default uid/gid used by the docker container is `1000`. If your host user uses different uid/gid, you may encounter
+file permissions issues. To prevent this, you can customize them using the corresponding build args in
+the `docker-compose.override.yml` file.
+
+```yaml
+services:
+  telemetry.glpi-project.org:
+    build:
+      args:
+        HOST_GROUP_ID: "${HOST_GROUP_ID:-1000}"
+        HOST_USER_ID: "${HOST_USER_ID:-1000}"
+```
+
+By default, only the application container is created. If you want to create additional services, you can add them in
+the `docker-compose.override.yml` file.
+
+```yaml
+services:
+  telemetry.glpi-project.org:
+    restart: "unless-stopped"
+    ports:
+      - "8001:80"
+  database:
+    image: "mariadb:11.0"
+    environment:
+      MYSQL_ROOT_PASSWORD: "R00tP4ssw0rd"
+      MYSQL_DATABASE: "telemetry"
+      MYSQL_USER: "telemetry"
+      MYSQL_PASSWORD: "P4ssw0rd"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "db:/var/lib/mysql"
+  mailer:
+    image: "schickling/mailcatcher"
+    ports:
+      - "1025"
+      - "1080:1080"
+
+volumes:
+  db:
+```
+
+Corresponding services could be used by defining the following variables in the `.env.local` file:
+ - `DATABASE_URL="mysql://telemetry:P4ssw0rd@database:3306/telemetry?charset=utf8mb4"`;
+ - `MAILER_DSN=smtp://mailer:1025`.
+
 ## Installation
 
 Follow these steps to install the Telemetry 2.0 application:
