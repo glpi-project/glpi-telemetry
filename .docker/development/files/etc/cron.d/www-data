@@ -1,0 +1,3 @@
+
+# Consume messenger queue every minute
+* * * * *    /usr/local/bin/php bin/console messenger:consume --time-limit 59 async &>/dev/null

@@ -43,6 +43,9 @@ RUN apt-get update \
   # Install git and zip used by composer when fetching dependencies.
   && apt-get install --assume-yes --no-install-recommends --quiet git unzip \
   \
+  # Install cron service used to consume the symfony messenger queue.
+  && apt-get install --assume-yes --no-install-recommends --quiet cron \
+  \
   # Clean sources list
   && rm -rf /var/lib/apt/lists/*
 
@@ -51,7 +54,11 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Copy files to container.
 COPY ./files/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./files/etc/cron.d/www-data /etc/cron.d/www-data
 COPY ./files/opt/startup.sh /opt/startup.sh
+
+# Install the crontab.
+RUN crontab -u www-data /etc/cron.d/www-data
 
 # Define application path as volume and working dir
 VOLUME /var/www/telemetry.glpi-project.org
