@@ -1,6 +1,6 @@
 FROM composer:latest AS composer
 
-FROM php:8.1-apache-bookworm
+FROM php:8.2-apache-bookworm
 
 # Workaround to make apache use same UID/GID as host user.
 ARG HOST_GROUP_ID=1000
