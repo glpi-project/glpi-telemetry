@@ -2,7 +2,8 @@
 
 ## Introduction
 
-Telemetry 2.0 is a comprehensive overhaul of the existing site designed to visualize telemetry data through graphs. This data is anonymously collected from GLPI instances and provides valuable insights into usage patterns.
+Telemetry 2.0 is a comprehensive overhaul of the existing site designed to visualize telemetry data through graphs.
+This data is anonymously collected from GLPI instances and provides valuable insights into usage patterns.
 
 ## System Requirements
 
@@ -80,49 +81,13 @@ Corresponding services could be used by defining the following variables in the 
 
 Follow these steps to install the Telemetry 2.0 application:
 
-### Node.js Dependencies
+- Create a `.env.local` file using the `.env.example` file and update the variables according to your environment.
+- Check that required PHP extensions are installed using the `composer check-platform-reqs` command.
+- Install the application dependencies using the `composer install` and the `npm install` commands.
+- If the database does not exists, create it using the `php bin/console doctrine:database:create` command.
+- Initialize the database structure using the `php bin/console doctrine:migrations:migrate` command.
+- Build the application assets using the `npm run build` command.
 
-First, install all Node.js dependencies by running:
-
-```bash
-npm install
-```
-
-### PHP Dependencies
-
-You need to enable at least those two PHP extensions:
-
-- `pdo_mysql`
-- `mbstring`
-
-Then, install PHP dependencies by runnning:
-
-```bash
-composer install
-```
-
-### Database Configuration
-
-Connect your database by replacing the parameters in the `DATABASE_URL` envar in the `.env` file by your owns.
-
-### Database Setup
-
-Create and set up the database by running: 
-
-```bash
-php bin/console doctrine:database:drop --if-exists --force
-php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
-```
-
-### Build the Application
-
-Finally, build the app with: 
-
-```bash
-npm run build
-```
-
-### Usage
+## Usage
 
 After installation, you can start the web server and access the Telemetry 2.0 application to begin visualizing telemetry data.
