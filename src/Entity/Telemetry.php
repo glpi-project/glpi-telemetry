@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name:"created_at_idx", columns:["created_at"])]
 #[ORM\Index(name:"os_idx", columns:["os_family"])]
 #[ORM\Index(name:"php_idx", columns:["php_version"])]
+#[ORM\Index(name:"glpi_default_language_idx", columns: ["glpi_default_language"])]
+#[ORM\Index(name:"glpi_uuid_idx", columns: ["glpi_uuid"])]
 
 class Telemetry
 {

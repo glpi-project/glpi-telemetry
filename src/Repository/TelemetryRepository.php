@@ -150,7 +150,7 @@ class TelemetryRepository extends ServiceEntityRepository
         WHERE created_at BETWEEN :startDate AND :endDate
         GROUP BY language
         ORDER BY nb_instances DESC
-        LIMIT 15
+        LIMIT 10
         ";
 
         $stmt = $conn->prepare($sql);

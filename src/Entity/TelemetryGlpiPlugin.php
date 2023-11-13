@@ -6,6 +6,7 @@ use App\Repository\TelemetryGlpiPluginRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelemetryGlpiPluginRepository::class)]
+#[ORM\Index(name:"created_at_idx", columns:["created_at"])]
 class TelemetryGlpiPlugin
 {
     #[ORM\Id]
