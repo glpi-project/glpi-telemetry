@@ -33,7 +33,7 @@
         "@easepick/bundle": "^1.2.1",
         "autoprefixer": "^10.4.14",
         "echarts": "^5.4.2",
-        "flag-icons": "^6.7.0",
+        "flag-icons": "^6.15.0",
         "jquery": "^3.6.4",
         "moment": "^2.29.4",
         "postcss-loader": "^7.1.0",
