@@ -12,6 +12,7 @@
         "doctrine/orm": "^2.14",
         "doctrine/persistence": "^3.2",
         "opis/json-schema": "^2.3",
+        "psr/log": "^3.0",
         "symfony/asset": "6.2.*",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
