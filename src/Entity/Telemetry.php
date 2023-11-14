@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TelemetryRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelemetryRepository::class)]
@@ -78,10 +77,10 @@ class Telemetry
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $db_version = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: true)]
+    #[ORM\Column(type: 'bigint', nullable: true)]
     private ?string $db_size = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: true)]
+    #[ORM\Column(type: 'bigint', nullable: true)]
     private ?string $db_log_size = null;
 
     #[ORM\Column(length: 255, nullable: true)]
