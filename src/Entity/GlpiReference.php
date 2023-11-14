@@ -13,9 +13,6 @@ class GlpiReference
     #[ORM\Column]
     private ?int $id = null;
 
-    // #[ORM\Column]
-    // private ?int $reference_id = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $num_assets = null;
 
@@ -47,18 +44,6 @@ class GlpiReference
         $this->reference = $reference;
         return $this;
     }
-
-    // public function getReferenceId(): ?int
-    // {
-    //     return $this->reference_id;
-    // }
-
-    // public function setReferenceId(int $reference_id): self
-    // {
-    //     $this->reference_id = $reference_id;
-
-    //     return $this;
-    // }
 
     public function getNumAssets(): ?int
     {

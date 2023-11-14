@@ -19,6 +19,7 @@ class TopPluginController extends AbstractController implements ViewControllerIn
     {
         $this->logger = $logger;
     }
+
     #[Route('/top/plugin', name: 'app_top_plugin')]
     public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
     {
@@ -29,9 +30,9 @@ class TopPluginController extends AbstractController implements ViewControllerIn
 
         return $this->json($result);
     }
+
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 

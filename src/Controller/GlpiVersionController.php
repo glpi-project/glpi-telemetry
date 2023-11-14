@@ -33,7 +33,6 @@ class GlpiVersionController extends AbstractController implements ViewController
 
     public function getData(array $dateParams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $dateParams['startDate'];
         $endDate        = $dateParams['endDate'];
 
@@ -133,5 +132,4 @@ class GlpiVersionController extends AbstractController implements ViewController
 
         return $chartData;
     }
-
 }

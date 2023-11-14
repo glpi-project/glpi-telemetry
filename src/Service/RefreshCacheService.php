@@ -67,8 +67,8 @@ class RefreshCacheService
         }
 
         return true;
-
     }
+
     public function refreshCache($filter, $forceUpdate, $controller)
     {
         $this->logger->debug('refreshCache called'. $filter. ' '. $forceUpdate);
@@ -109,7 +109,5 @@ class RefreshCacheService
             $error_msg = $e->getMessage();
             return $error_msg;
         }
-
     }
-
 }

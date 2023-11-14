@@ -23,6 +23,7 @@ class RefreshCache extends Command
     ) {
         parent::__construct();
     }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $startDate   = 0;

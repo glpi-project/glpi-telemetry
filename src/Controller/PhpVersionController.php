@@ -33,7 +33,6 @@ class PhpVersionController extends AbstractController implements ViewControllerI
 
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 
@@ -133,5 +132,4 @@ class PhpVersionController extends AbstractController implements ViewControllerI
 
         return $chartData;
     }
-
 }

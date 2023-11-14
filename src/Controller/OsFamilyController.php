@@ -33,7 +33,6 @@ class OsFamilyController extends AbstractController implements ViewControllerInt
 
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 

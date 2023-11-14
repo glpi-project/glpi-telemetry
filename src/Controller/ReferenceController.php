@@ -17,7 +17,6 @@ class ReferenceController extends AbstractController
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager): Response
     {
-
         $references = $referenceRepository->findAll();
         $nb = count($references);
 
@@ -60,5 +59,4 @@ class ReferenceController extends AbstractController
             ]
         );
     }
-
 }

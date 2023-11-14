@@ -33,7 +33,6 @@ class GlpiDefaultLanguagesController extends AbstractController implements ViewC
 
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 
@@ -42,6 +41,7 @@ class GlpiDefaultLanguagesController extends AbstractController implements ViewC
 
         return $chartData;
     }
+
     public function prepareChartData(array $data): array
     {
         $chartData = [];

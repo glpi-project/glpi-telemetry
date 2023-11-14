@@ -198,5 +198,4 @@ class Reference
 
         return $this;
     }
-
 }

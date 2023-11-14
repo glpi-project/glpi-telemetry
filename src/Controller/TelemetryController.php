@@ -77,16 +77,14 @@ class TelemetryController extends AbstractController
     {
         return $this->render('telemetry/index.html.twig', [
             'controller_name' => 'controller-name',
-
         ]);
-
     }
 
     public function registerData($data, $entityManager, $glpiPluginRepository): bool
     {
         $entityManager->beginTransaction();
-        try {
 
+        try {
             $telemetry = new Telemetry();
 
             $telemetry->setGlpiUuid($data['data']['glpi']['uuid']);
@@ -164,8 +162,4 @@ class TelemetryController extends AbstractController
         }
         return true;
     }
-
-
-
-
 }
