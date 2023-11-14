@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50c1616866b31ea456ba9999f38281d4",
+    "content-hash": "8de6bcf37fe86e27955d6e2dfe185b34",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4728,16 +4728,16 @@
         },
         {
             "name": "symfony/notifier",
-            "version": "v6.2.8",
+            "version": "v6.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/notifier.git",
-                "reference": "993df4464c577e7eb828324181d2a451e81619b6"
+                "reference": "2e39d4a9a96e25d127ffe30171127f6ef73934df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/notifier/zipball/993df4464c577e7eb828324181d2a451e81619b6",
-                "reference": "993df4464c577e7eb828324181d2a451e81619b6",
+                "url": "https://api.github.com/repos/symfony/notifier/zipball/2e39d4a9a96e25d127ffe30171127f6ef73934df",
+                "reference": "2e39d4a9a96e25d127ffe30171127f6ef73934df",
                 "shasum": ""
             },
             "require": {
@@ -4746,11 +4746,13 @@
             },
             "conflict": {
                 "symfony/event-dispatcher": "<5.4",
+                "symfony/event-dispatcher-contracts": "<2.5",
+                "symfony/http-client-contracts": "<2.5",
                 "symfony/http-kernel": "<5.4"
             },
             "require-dev": {
-                "symfony/event-dispatcher-contracts": "^2|^3",
-                "symfony/http-client-contracts": "^2|^3",
+                "symfony/event-dispatcher-contracts": "^2.5|^3",
+                "symfony/http-client-contracts": "^2.5|^3",
                 "symfony/http-foundation": "^5.4|^6.0",
                 "symfony/messenger": "^5.4|^6.0"
             },
@@ -4784,7 +4786,7 @@
                 "notifier"
             ],
             "support": {
-                "source": "https://github.com/symfony/notifier/tree/v6.2.8"
+                "source": "https://github.com/symfony/notifier/tree/v6.3.6"
             },
             "funding": [
                 {
@@ -4800,7 +4802,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-10T10:06:03+00:00"
+            "time": "2023-10-07T07:32:05+00:00"
         },
         {
             "name": "symfony/options-resolver",
