@@ -39,7 +39,7 @@ jobs:
         with:
           php-version: "8.2"
           extensions: "pdo_mysql"
-          tools: "composer"
+          tools: "composer, cs2pr"
       - name: "Get dependencies cache directories"
         id: "get-cache-directories"
         run: |
@@ -60,6 +60,9 @@ jobs:
           composer install --ansi --no-interaction --no-progress --prefer-dist
           npm install --no-save
           npm run dev
+      - name: "The PHP Coding Standards"
+        run: |
+          vendor/bin/php-cs-fixer check --format checkstyle | cs2pr
       - name: "Initialize database"
         run: |
           bin/console doctrine:database:create --ansi --no-interaction
