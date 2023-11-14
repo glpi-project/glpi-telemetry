@@ -5,7 +5,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TelemetryControllerTest extends WebTestCase
 {
-
     public function testTelemetryRoute()
     {
         $client     = static::createClient();

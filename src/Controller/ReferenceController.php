@@ -21,7 +21,7 @@ class ReferenceController extends AbstractController
         $references = $referenceRepository->findAll();
         $nb = count($references);
 
-        $reference = new Reference;
+        $reference = new Reference();
         $glpi_reference = new GlpiReference();
 
         $form = $this->createForm(ReferenceFormType::class);
@@ -62,4 +62,3 @@ class ReferenceController extends AbstractController
     }
 
 }
-

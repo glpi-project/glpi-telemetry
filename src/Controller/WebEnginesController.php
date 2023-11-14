@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+
 class WebEnginesController extends AbstractController implements ViewControllerInterface
 {
     private $logger;
@@ -29,7 +30,7 @@ class WebEnginesController extends AbstractController implements ViewControllerI
 
         return $this->json($result);
     }
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository) : array
+    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
 
         $startDate      = $Dateparams['startDate'];
