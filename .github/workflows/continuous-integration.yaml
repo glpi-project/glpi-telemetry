@@ -60,9 +60,12 @@ jobs:
           composer install --ansi --no-interaction --no-progress --prefer-dist
           npm install --no-save
           npm run dev
-      - name: "The PHP Coding Standards"
+      - name: "PHP Coding Standards"
         run: |
           vendor/bin/php-cs-fixer check --format checkstyle | cs2pr
+      - name: "PHP Stan"
+        run: |
+          vendor/bin/phpstan --ansi --no-interaction --no-progress
       - name: "Initialize database"
         run: |
           bin/console doctrine:database:create --ansi --no-interaction
