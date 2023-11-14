@@ -1,0 +1,70 @@
+name: "Continuous integration"
+
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+       - "*"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: "Continuous integration"
+    runs-on: "ubuntu-latest"
+    services:
+      db:
+        image: "mariadb:10.11"
+        env:
+          MYSQL_DATABASE: "telemetry"
+          MYSQL_ROOT_PASSWORD: "password"
+        ports:
+          - "3306:3306"
+        options: >-
+          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Setup environment variables"
+        run: |
+          echo "APP_ENV=test" >> $GITHUB_ENV
+          echo "DATABASE_URL=mysql://root:password@127.0.0.1:${{ job.services.db.ports['3306'] }}/telemetry" >> $GITHUB_ENV
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v4"
+        with:
+          node-version-file: "package.json"
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.2"
+          extensions: "pdo_mysql"
+          tools: "composer"
+      - name: "Get dependencies cache directories"
+        id: "get-cache-directories"
+        run: |
+          echo "composer_cache_dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+          echo "npm_cache_dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+      - name: "Restore dependencies cache"
+        uses: "actions/cache@v3"
+        with:
+          path: |
+            ${{ steps.get-cache-directories.outputs.composer_cache_dir }}
+            ${{ steps.get-cache-directories.outputs.npm_cache_dir }}
+          key: "dependencies-${{ github.job }}-${{ hashFiles('**/composer.lock', '**/package-lock.json') }}"
+          restore-keys: |
+            dependencies-${{ github.job }}-
+            dependencies-
+      - name: "Install and build dependencies"
+        run: |
+          composer install --ansi --no-interaction --no-progress --prefer-dist
+          npm install --no-save
+          npm run dev
+      - name: "Initialize database"
+        run: |
+          bin/console doctrine:database:create --ansi --no-interaction
+          bin/console doctrine:migrations:migrate --ansi --no-interaction
+      - name: "Run tests"
+        run: |
+          symfony serve &
+          vendor/bin/phpunit --colors=always
