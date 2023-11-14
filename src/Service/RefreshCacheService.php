@@ -74,7 +74,7 @@ class RefreshCacheService
     public function refreshCache($filter, $forceUpdate, $controller)
     {
         $this->logger->debug('refreshCache called'. $filter. ' '. $forceUpdate);
-        $vueName = strtolower(get_class($controller));
+        $vueName = md5(strtolower(get_class($controller)));
 
         if ($forceUpdate) {
             $this->cache->delete("{$vueName}{$filter}");
