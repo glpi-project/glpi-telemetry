@@ -9,7 +9,7 @@
         "ext-iconv": "*",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.9",
-        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.14",
         "opis/json-schema": "^2.3",
         "phpdocumentor/reflection-docblock": "^5.3",
