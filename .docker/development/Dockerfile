@@ -54,11 +54,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Copy files to container.
 COPY ./files/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY ./files/etc/cron.d/www-data /etc/cron.d/www-data
 COPY ./files/opt/startup.sh /opt/startup.sh
-
-# Install the crontab.
-RUN crontab -u www-data /etc/cron.d/www-data
 
 # Define application path as volume and working dir
 VOLUME /var/www/telemetry.glpi-project.org
