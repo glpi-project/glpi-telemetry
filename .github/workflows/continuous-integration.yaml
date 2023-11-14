@@ -29,7 +29,7 @@ jobs:
       - name: "Setup environment variables"
         run: |
           echo "APP_ENV=test" >> $GITHUB_ENV
-          echo "DATABASE_URL=mysql://root:password@db:${{ job.services.db.ports['3306'] }}/telemetry" >> $GITHUB_ENV
+          echo "DATABASE_URL=mysql://root:password@127.0.0.1:${{ job.services.db.ports['3306'] }}/telemetry" >> $GITHUB_ENV
       - name: "Setup Node.js"
         uses: "actions/setup-node@v4"
         with:
@@ -59,7 +59,7 @@ jobs:
         run: |
           composer install --ansi --no-interaction --no-progress --prefer-dist
           npm install --no-save
-          npm run build
+          npm run dev
       - name: "Initialize database"
         run: |
           bin/console doctrine:database:create --ansi --no-interaction
