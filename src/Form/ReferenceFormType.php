@@ -10,7 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReferenceFormType extends AbstractType
 {
@@ -27,12 +26,5 @@ class ReferenceFormType extends AbstractType
             ->add('nb_helpdesk', null, ['label' => false, 'required' => true])
             ->add('comment', TextareaType::class, ['attr' => ['rows' => 6], 'label' => false])
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            // Configure your form options here
-        ]);
     }
 }
