@@ -67,4 +67,4 @@ jobs:
       - name: "Run tests"
         run: |
           symfony serve &
-          vendor/bin/phpunit
+          vendor/bin/phpunit --colors=always
