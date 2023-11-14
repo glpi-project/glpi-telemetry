@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Interface\ViewControllerInterface;
+
 class PhpVersionController extends AbstractController implements ViewControllerInterface
 {
     private $logger;
@@ -30,9 +31,8 @@ class PhpVersionController extends AbstractController implements ViewControllerI
         return $this->json($result);
     }
 
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository) : array
+    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 
@@ -43,7 +43,7 @@ class PhpVersionController extends AbstractController implements ViewControllerI
         return $chartData;
     }
 
-    function transformDataForChart(array $data): array
+    public function transformDataForChart(array $data): array
     {
         $periods = [];
         $versions = [];
@@ -75,7 +75,7 @@ class PhpVersionController extends AbstractController implements ViewControllerI
         }
 
         // Étape 2 : Trier les périodes
-        usort($periods, function($a, $b) {
+        usort($periods, function ($a, $b) {
             return strtotime($a) - strtotime($b);
         });
 
@@ -89,7 +89,7 @@ class PhpVersionController extends AbstractController implements ViewControllerI
                     $result[$period][$version] = 0;
                 }
             }
-             // Sort the versions within each period
+            // Sort the versions within each period
             ksort($result[$period]);
         }
         $this->logger->debug('result :', $result);
@@ -100,7 +100,7 @@ class PhpVersionController extends AbstractController implements ViewControllerI
         ];
     }
 
-    function prepareChartData(array $transformedData): array
+    public function prepareChartData(array $transformedData): array
     {
         $chartData = [
             'xAxis' => [
@@ -132,6 +132,4 @@ class PhpVersionController extends AbstractController implements ViewControllerI
 
         return $chartData;
     }
-
 }
-

@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name:"php_idx", columns:["php_version"])]
 #[ORM\Index(name:"glpi_default_language_idx", columns: ["glpi_default_language"])]
 #[ORM\Index(name:"glpi_uuid_idx", columns: ["glpi_uuid"])]
-
 class Telemetry
 {
     #[ORM\Id]
@@ -129,15 +128,6 @@ class Telemetry
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $install_mode = null;
-
-    // #[ORM\OneToMany(mappedBy: 'TelemetryEntry', targetEntity: TelemetryGlpiPlugin::class)]
-
-    // private $TelemetryGlpiPlugin;
-    // // private Collection $TelemetryGlpiPlugin;
-    // public function __construct()
-    // {
-    //     $this->TelemetryGlpiPlugin = new ArrayCollection();
-    // }
 
     public function getId(): ?int
     {
@@ -568,34 +558,4 @@ class Telemetry
 
         return $this;
     }
-
-    // /**
-    //  * @return Collection<int, TelemetryGlpiPlugin>
-    //  */
-    // public function getTelemetryGlpiPlugin(): Collection
-    // {
-    //     return $this->TelemetryGlpiPlugin;
-    // }
-
-    // public function addTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
-    // {
-    //     if (!$this->TelemetryGlpiPlugin->contains($telemetryGlpiPlugin)) {
-    //         $this->TelemetryGlpiPlugin->add($telemetryGlpiPlugin);
-    //         $telemetryGlpiPlugin->setTelemetry($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
-    // {
-    //     if ($this->TelemetryGlpiPlugin->removeElement($telemetryGlpiPlugin)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($telemetryGlpiPlugin->getTelemetry() === $this) {
-    //             $telemetryGlpiPlugin->setTelemetry(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 }

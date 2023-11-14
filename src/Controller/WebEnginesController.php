@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+
 class WebEnginesController extends AbstractController implements ViewControllerInterface
 {
     private $logger;
@@ -18,8 +19,8 @@ class WebEnginesController extends AbstractController implements ViewControllerI
     {
         $this->logger = $logger;
     }
-    #[Route('/web/engines', name: 'app_web_engines')]
 
+    #[Route('/web/engines', name: 'app_web_engines')]
     public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
     {
         $filter         = $request->query->get('filter');
@@ -29,9 +30,9 @@ class WebEnginesController extends AbstractController implements ViewControllerI
 
         return $this->json($result);
     }
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository) : array
-    {
 
+    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
+    {
         $startDate      = $Dateparams['startDate'];
         $endDate        = $Dateparams['endDate'];
 

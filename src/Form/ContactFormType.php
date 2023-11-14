@@ -20,7 +20,7 @@ class ContactFormType extends AbstractType
                 'label' => false,
                 'attr' => ['rows' => 6],
                 'required' => true,
-            ]);
+            ])
         ;
     }
 

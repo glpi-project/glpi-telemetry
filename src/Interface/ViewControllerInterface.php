@@ -7,7 +7,8 @@ use App\Service\RefreshCacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-interface ViewControllerInterface {
-    function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse;
-    function getData(array $dateParams, TelemetryRepository $telemetryRepository): array;
+interface ViewControllerInterface
+{
+    public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse;
+    public function getData(array $dateParams, TelemetryRepository $telemetryRepository): array;
 }

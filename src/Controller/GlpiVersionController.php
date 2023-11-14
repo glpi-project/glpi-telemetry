@@ -31,9 +31,8 @@ class GlpiVersionController extends AbstractController implements ViewController
         return $this->json($result);
     }
 
-    public function getData(array $dateParams, TelemetryRepository $telemetryRepository) : array
+    public function getData(array $dateParams, TelemetryRepository $telemetryRepository): array
     {
-
         $startDate      = $dateParams['startDate'];
         $endDate        = $dateParams['endDate'];
 
@@ -44,7 +43,7 @@ class GlpiVersionController extends AbstractController implements ViewController
         return $chartData;
     }
 
-    function transformDataForChart(array $data): array
+    public function transformDataForChart(array $data): array
     {
         $periods = [];
         $versions = [];
@@ -76,7 +75,7 @@ class GlpiVersionController extends AbstractController implements ViewController
         }
 
         // Étape 2 : Trier les périodes
-        usort($periods, function($a, $b) {
+        usort($periods, function ($a, $b) {
             return strtotime($a) - strtotime($b);
         });
 
@@ -90,7 +89,7 @@ class GlpiVersionController extends AbstractController implements ViewController
                     $result[$period][$version] = 0;
                 }
             }
-             // Sort the versions within each period
+            // Sort the versions within each period
             ksort($result[$period]);
         }
         $this->logger->debug('result :', $result);
@@ -101,7 +100,7 @@ class GlpiVersionController extends AbstractController implements ViewController
         ];
     }
 
-    function prepareChartData(array $transformedData): array
+    public function prepareChartData(array $transformedData): array
     {
         $chartData = [
             'xAxis' => [
@@ -133,5 +132,4 @@ class GlpiVersionController extends AbstractController implements ViewController
 
         return $chartData;
     }
-
 }

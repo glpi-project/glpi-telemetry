@@ -62,5 +62,4 @@ class GlpiPlugin
 
         return $this;
     }
-
 }

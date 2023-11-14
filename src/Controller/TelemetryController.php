@@ -14,9 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 class TelemetryController extends AbstractController
 {
-
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
     public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository, JsonCheck $jsonCheck): Response
     {
@@ -75,18 +75,16 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(TelemetryRepository $telemetryRepository): Response
     {
-            return $this->render('telemetry/index.html.twig', [
-                'controller_name' => 'controller-name',
-
-            ]);
-
+        return $this->render('telemetry/index.html.twig', [
+            'controller_name' => 'controller-name',
+        ]);
     }
 
     public function registerData($data, $entityManager, $glpiPluginRepository): bool
     {
         $entityManager->beginTransaction();
-        try {
 
+        try {
             $telemetry = new Telemetry();
 
             $telemetry->setGlpiUuid($data['data']['glpi']['uuid']);
@@ -164,9 +162,4 @@ class TelemetryController extends AbstractController
         }
         return true;
     }
-
-
-
-
 }
-

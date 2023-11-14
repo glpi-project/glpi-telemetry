@@ -17,11 +17,10 @@ class ReferenceController extends AbstractController
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager): Response
     {
-
         $references = $referenceRepository->findAll();
         $nb = count($references);
 
-        $reference = new Reference;
+        $reference = new Reference();
         $glpi_reference = new GlpiReference();
 
         $form = $this->createForm(ReferenceFormType::class);
@@ -60,6 +59,4 @@ class ReferenceController extends AbstractController
             ]
         );
     }
-
 }
-

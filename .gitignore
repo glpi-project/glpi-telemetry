@@ -27,3 +27,8 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /docker-compose.override.yml
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###

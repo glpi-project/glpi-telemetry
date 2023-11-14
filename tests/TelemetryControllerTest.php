@@ -5,13 +5,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TelemetryControllerTest extends WebTestCase
 {
-
     public function testTelemetryRoute()
     {
         $client     = static::createClient();
         $client->request('GET', '/telemetry');
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
+
     public function testInvalidHeaderPost()
     {
         $client = static::createClient();
@@ -26,6 +26,5 @@ class TelemetryControllerTest extends WebTestCase
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'application/json'], '{"test": "test"}');
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
         $this->assertEquals('status: Error saving data to database', $client->getResponse()->getContent());
-
     }
 }
