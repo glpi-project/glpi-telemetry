@@ -1,0 +1,4 @@
+
+parameters:
+    # recipient of the contact form
+    contact_form.recipient.email: '%env(resolve:CONTACT_FORM_RECIPIENT_EMAIL)%'
