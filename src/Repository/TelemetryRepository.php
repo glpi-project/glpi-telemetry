@@ -160,4 +160,31 @@ class TelemetryRepository extends ServiceEntityRepository
 
         return $resultSet->fetchAllAssociative();
     }
+
+    public function getDbEngines($startDate, $endDate): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+        SELECT
+            CASE
+                WHEN UPPER(db_engine) LIKE '%MYSQL%' THEN 'MySQL'
+                WHEN UPPER(db_engine) LIKE '%POSTGRES%' THEN 'PostgreSQL'
+                WHEN UPPER(db_engine) LIKE '%PERCONA%' THEN 'Percona'
+                WHEN UPPER(db_engine) LIKE '%MARIA%' THEN 'MariaDB'
+                ELSE 'Autre'
+            END as dbengine,
+        COUNT(DISTINCT glpi_uuid) as nb_instances
+        FROM telemetry
+        WHERE created_at BETWEEN :startDate AND :endDate
+        GROUP BY dbengine
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
+    }
 }
