@@ -15,8 +15,8 @@ class ContactController extends AbstractController
     #[Route('/contact', name: 'app_contact')]
     public function index(Request $request, MailerInterface $mailer): Response
     {
-        $captchaSiteKey     = $this->getParameter('captcha_site_key');
-        $captchaSecretKey   = $this->getParameter(('captcha_secret_key'));
+        $captchaSiteKey     = $this->getParameter('captcha.site_key');
+        $captchaSecretKey   = $this->getParameter('captcha.secret_key');
 
         $form = $this->createForm(ContactFormType::class);
         $form->handleRequest($request);
