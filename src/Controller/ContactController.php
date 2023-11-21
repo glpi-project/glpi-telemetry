@@ -28,7 +28,7 @@ class ContactController extends AbstractController
             $message = (new Email())
                 ->from($contactFormData['Email'])
                 ->to($this->getParameter('contact_form.recipient.email'))
-                ->subject('New message from Telemetry'. $contactFormData['Subject'])
+                ->subject('New message from Telemetry: ' . $contactFormData['Subject'])
                 ->text($contactFormData['Message']);
 
             $mailer->send($message);
