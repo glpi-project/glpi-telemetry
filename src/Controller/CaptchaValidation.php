@@ -14,7 +14,7 @@ class CaptchaValidation extends AbstractController
     public function validateCaptcha(Request $request, HttpClientInterface $client): JsonResponse
     {
         $token = $request->request->get('captcha_token');
-        $secretKey = $this->getParameter('captcha_secret_key');
+        $secretKey = $this->getParameter('captcha.secret_key');
         $data = [
             'headers' => [
                 'Content-Type' => 'application/json',
