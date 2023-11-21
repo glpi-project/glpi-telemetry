@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
-{% block body %}
+
+{% block body_content %}
 <script src="{{ asset('js/captcha.js') }}"></script>
-{% include 'header.html.twig' %}
 {% include 'contact/contactForm.html.twig' %}
-{% include 'footer.html.twig' %}
 {% endblock %}
