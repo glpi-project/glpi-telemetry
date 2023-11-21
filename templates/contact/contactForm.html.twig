@@ -21,9 +21,7 @@
                                     {{ form_label(form.Message, 'Message', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_row(form.Message, {'attr': {'class': 'form-control'}}) }}
                                 </div>
-                                <div class="mb-3">
-                                    <div id="turnstileWidget"></div>
-                                </div>
+                                <div class="cf-turnstile" data-sitekey="{{ captchaSiteKey }}" data-response-field-name="captcha_token"></div>
                         </div>
                     </div>
                     <div class="card-footer text-end">
