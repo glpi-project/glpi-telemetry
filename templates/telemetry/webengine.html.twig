@@ -77,6 +77,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             window.registerResults(json);
             console.log(json);
             myChart.setOption({series:[{data:json}]});
+            largeChart.setOption({series:[{data:json}]});
         })
         .catch(error => {
             console.error('an error occured: ', error);
