@@ -26,29 +26,24 @@ window.addEventListener("DOMContentLoaded", (event) => {
             left: 'center'
         },
         tooltip: {
-            trigger: 'item'
+            trigger: 'item',
+            formatter: '{d}%'
         },
         series: [
             {
             name: 'OS / Instances',
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['30%', '70%'],
             avoidLabelOverlap: false,
             itemStyle: {
-                borderRadius: 10,
-                borderColor: '#fff',
-                borderWidth: 2
+                borderRadius: 5,
             },
-            label: {
-                show: false,
-                position: 'center'
+            tooltip: {
+                trigger: 'item'
             },
             emphasis: {
                 scale: true,
                 scaleSize: 10,
-            },
-            labelLine: {
-                show: false
             },
             data: []
             }
