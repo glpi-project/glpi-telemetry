@@ -131,7 +131,7 @@ class GlpiVersionController extends AbstractController implements ViewController
 
             foreach ($transformedData['periods'] as $period) {
                 $percentage = $totalInstancesPerPeriod[$period] > 0
-                    ? round(($transformedData['data'][$period][$version] / $totalInstancesPerPeriod[$period]) * 100, 2) 
+                    ? round(($transformedData['data'][$period][$version] / $totalInstancesPerPeriod[$period]) * 100, 2)
                     : 0;
                 $seriesData['data'][] = $percentage;
             }
