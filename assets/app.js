@@ -4,6 +4,10 @@
  * We recommend including the built version of this JavaScript file
  * (and its CSS file) in your base layout (base.html.twig).
  */
+
+import '@tabler/core';
+import '@tabler/core/src/scss/tabler.scss';
+
 import * as echarts from 'echarts';
 window.echarts=echarts;
 
