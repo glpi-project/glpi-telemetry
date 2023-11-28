@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}GLPI Telemetry{% endblock %}</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css"  />
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
         <link rel="icon" type="image/png" href="{{ asset('build/images/favicon.png') }}" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@30,700,0..1,-50..200" />
@@ -18,7 +17,6 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
             <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
             <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
         {% endblock %}
 

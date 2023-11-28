@@ -23,6 +23,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('echarts', './node_modules/echarts/dist/echarts.min.js')
     .addEntry('dashboard', './assets/js/dashboard.js')
+    .addEntry('reference', './assets/reference.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
