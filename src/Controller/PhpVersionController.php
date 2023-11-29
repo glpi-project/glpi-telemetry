@@ -99,6 +99,7 @@ class PhpVersionController extends AbstractController implements ViewControllerI
             'data' => $result
         ];
     }
+
     public function prepareChartData(array $transformedData): array
     {
         $chartData = [
