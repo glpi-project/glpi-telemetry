@@ -58,7 +58,7 @@ jobs:
       - name: "Install and build dependencies"
         run: |
           composer install --ansi --no-interaction --no-progress --prefer-dist
-          npm install --no-save
+          npm ci
           npm run dev
       - name: "PHP Coding Standards"
         run: |
