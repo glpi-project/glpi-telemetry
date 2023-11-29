@@ -22,28 +22,18 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     option = {
         title: {
-            text: 'GLPI Default Languages',
+            text: 'GLPI default languages',
             left: 'center'
         },
         tooltip: {
-            trigger: 'item',
-            formatter: '{d} %'
+            formatter: '{b}: {d}%'
         },
         series: [
             {
-            name: 'Language / Instances',
             type: 'pie',
-            radius: ['30%', '70%'],
-            avoidLabelOverlap: false,
+            radius: ['15%', '50%'],
             itemStyle: {
                 borderRadius: 5
-            },
-            tooltip: {
-            trigger: 'item'
-            },
-            emphasis: {
-                scale: true,
-                scaleSize: 10,
             },
             data: []
             }

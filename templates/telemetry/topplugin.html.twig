@@ -1,5 +1,5 @@
 {% include 'telemetry/topplugin-modal.html.twig' %}
-    <div class="col-sm-6 col-lg-6">
+    <div class="col-sm-6 col-lg-4">
         <div class="card">
             <div class="d-flex flex-row-reverse p-2 pb-0">
                 <button type="button" class="btn p-1" id="top_plugin_lg" data-bs-toggle="modal" data-bs-target="#toppluginModal">
@@ -30,7 +30,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             name: 'Nightingale Chart',
             type: 'pie',
             top: 30,
-            radius: [50, 100],
+            radius: [20, 70],
+            avoidLabelOverlap: false,
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
