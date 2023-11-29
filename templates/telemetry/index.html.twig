@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('dashboard') }}
+    <script src="{{ asset('build/js/dashboard.js') }}" defer></script>
 {% endblock %}
 
 {% block body_content %}

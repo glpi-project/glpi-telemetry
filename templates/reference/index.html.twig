@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/styles/reference.css') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/js/reference.js') }}" defer></script>
+{% endblock %}
+
 {% block body_content %}
 {% include 'reference/array.html.twig' %}
 {% include 'reference/registerModal.html.twig' %}
