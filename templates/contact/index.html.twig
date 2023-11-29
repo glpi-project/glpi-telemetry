@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+{% endblock %}
+
 {% block body_content %}
 {% include 'contact/contactForm.html.twig' %}
 {% endblock %}
