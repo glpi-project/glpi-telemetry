@@ -32,8 +32,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
         tooltip: {
             trigger: 'axis',
             axisPointer: {
-            type: 'shadow'
-            }
+            type: 'shadow',
+            },
+            valueFormatter: function (value) {
+                return value.toFixed(2) + ' %';
+            },
         },
         legend: {
             orient: 'horizontal',
@@ -49,7 +52,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
             containLabel: true
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} %'
+            },
+            min: 0,
+            max: 100,
         },
         xAxis: {
             type: 'category',

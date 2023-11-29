@@ -109,6 +109,12 @@ class GlpiVersionController extends AbstractController implements ViewController
             'series' => []
         ];
 
+        // Calculer le total des instances pour chaque période
+        $totalInstancesPerPeriod = [];
+        foreach ($transformedData['data'] as $period => $versions) {
+            $totalInstancesPerPeriod[$period] = array_sum($versions);
+        }
+
         foreach ($transformedData['versions'] as $version) {
             $seriesData = [
                 'name' => $version,
@@ -124,7 +130,10 @@ class GlpiVersionController extends AbstractController implements ViewController
             ];
 
             foreach ($transformedData['periods'] as $period) {
-                $seriesData['data'][] = $transformedData['data'][$period][$version];
+                $percentage = $totalInstancesPerPeriod[$period] > 0
+                    ? round(($transformedData['data'][$period][$version] / $totalInstancesPerPeriod[$period]) * 100, 2)
+                    : 0;
+                $seriesData['data'][] = $percentage;
             }
 
             $chartData['series'][] = $seriesData;
