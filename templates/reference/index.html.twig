@@ -2,11 +2,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('reference') }}
+    <link rel="stylesheet" href="{{ asset('build/reference.css') }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('reference') }}
+    <script src="{{ asset('build/reference.js') }}" defer></script>
 {% endblock %}
 
 {% block body_content %}
