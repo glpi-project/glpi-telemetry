@@ -1,3 +1,8 @@
+import * as echarts from 'echarts';
+import moment from 'moment';
+
+window.echarts = echarts;
+
 console.log('Hello');
 
 global.filterCallbacks = [];

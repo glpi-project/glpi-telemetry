@@ -9,11 +9,6 @@ import '@tabler/core';
 import '@tabler/core/src/scss/tabler.scss';
 import '@tabler/icons-webfont/tabler-icons.scss';
 
-import * as echarts from 'echarts';
-window.echarts=echarts;
-
-import moment from 'moment';
-global.moment = moment;
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 // import 'bootstrap';
