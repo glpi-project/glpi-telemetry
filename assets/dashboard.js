@@ -1,5 +1,5 @@
-import * as echarts from 'echarts';
-import moment from 'moment';
+import * as echarts from "echarts";
+import moment from "moment";
 
 window.echarts = echarts;
 
