@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name:"glpi_uuid_idx", columns: ["glpi_uuid"])]
 #[ORM\Index(name:"db_engine_idx", columns: ["db_engine"])]
 #[ORM\Index(name:"db_version_idx", columns: ["db_version"])]
+#[ORM\Index(name:"install_mode_idx", columns: ["install_mode"])]
 class Telemetry
 {
     #[ORM\Id]

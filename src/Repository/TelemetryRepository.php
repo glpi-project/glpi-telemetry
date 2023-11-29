@@ -190,4 +190,24 @@ class TelemetryRepository extends ServiceEntityRepository
 
         return $resultSet->fetchAllAssociative();
     }
+
+    public function getInstallMode($startDate, $endDate): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+        SELECT install_mode as mode,
+        COUNT(DISTINCT glpi_uuid) as nb_instances
+        FROM telemetry
+        WHERE created_at BETWEEN :startDate AND :endDate
+        GROUP BY mode
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
+    }
 }

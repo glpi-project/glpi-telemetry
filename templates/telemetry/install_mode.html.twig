@@ -1,0 +1,89 @@
+{% include 'telemetry/install_mode-modal.html.twig' %}
+    <div class="col-sm-6 col-lg-3">
+        <div class="card">
+            <div class="d-flex flex-row-reverse p-2 pb-0">
+                <button type="button" class="btn p-1" id="install_mode_lg" data-bs-toggle="modal" data-bs-target="#installmodeModal">
+                    <i class="ti ti-arrows-maximize"></i>
+                </button>
+            </div>
+            <div class="card-body default-size pt-0" id="install_mode">
+            </div>
+        </div>
+    </div>
+
+<script>
+window.addEventListener("DOMContentLoaded", (event) => {
+
+    var chartDom = document.getElementById("install_mode");
+    var myChart = echarts.init(chartDom);
+
+    var largeChartDom = document.getElementById("install_mode_large");
+    var largeChart = echarts.init(largeChartDom);
+
+    option = {
+        title: {
+            text: 'Install Mode',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        series: [
+            {
+            name: 'Mode / Instances',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+                borderRadius: 10,
+                borderColor: '#fff',
+                borderWidth: 2
+            },
+            label: {
+                show: false,
+                position: 'center'
+            },
+            emphasis: {
+                scale: true,
+                scaleSize: 10,
+            },
+            labelLine: {
+                show: false
+            },
+            data: [
+
+            ]
+            }
+        ]
+    };
+    option && myChart.setOption(option);
+    option && largeChart.setOption(option);
+
+    window.registerFilterCallback(function (filters) {
+        var url = 'install/mode?' + new URLSearchParams(filters);
+        var arrayObj = [];
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            window.clearResults();
+            window.registerResults(json);
+            console.log(json);
+            myChart.setOption({series:[{data:json}]});
+            largeChart.setOption({series:[{data:json}]});
+        })
+        .catch(error => {
+            console.error('an error occured: ', error);
+        });
+
+    })
+
+});
+</script>
