@@ -22,7 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('echarts', './node_modules/echarts/dist/echarts.min.js')
-    .addEntry('dashboard', './assets/js/dashboard.js')
+    .addEntry('dashboard', './assets/dashboard.js')
     .addEntry('reference', './assets/reference.js')
 
     // will require an extra script tag for runtime.js
