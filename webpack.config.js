@@ -14,15 +14,14 @@ Encore
     // only needed for CDN's or subdirectory deploy
     //.setManifestKeyPrefix('build/')
 
-    /*
-     * ENTRY CONFIG
-     *
-     * Each entry will result in one JavaScript file (e.g. app.js)
-     * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
-     */
-    .addEntry('app', './assets/app.js')
-    .addEntry('dashboard', './assets/dashboard.js')
-    .addEntry('reference', './assets/reference.js')
+    // Javascript entries
+    .addEntry('js/app', './assets/js/app.js')
+    .addEntry('js/dashboard', './assets/js/dashboard.js')
+    .addEntry('js/reference', './assets/js/reference.js')
+
+    // Style entries
+    .addEntry('styles/app', './assets/styles/app.scss')
+    .addEntry('styles/reference', './assets/styles/reference.scss')
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
@@ -43,6 +42,11 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
+
+    // embed small images as base64 in complied CSS
+    .configureImageRule({
+        type: 'asset',
+    })
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
