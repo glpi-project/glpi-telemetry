@@ -55,6 +55,12 @@ class GlpiVersionController extends AbstractController implements ViewController
             $version = $entry['version'];
             $nbInstance = $entry['nb_instance'];
 
+            if (preg_match('/^(9|10)\.\d+$/', $version) !== 1) {
+                // ignore invalid versions (e.g. `1.6`, `V1`, ...)
+                // TODO Validate version against Github releases when telemetry data is received
+                continue;
+            }
+
             // Add the period to the $periods array if it's not already there
             if (!in_array($monthYear, $periods)) {
                 $periods[] = $monthYear;
