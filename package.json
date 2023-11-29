@@ -6,7 +6,6 @@
     "devDependencies": {
         "@popperjs/core": "^2.11.7",
         "@symfony/webpack-encore": "^4.0.0",
-        "file-loader": "^6.2.0",
         "sass": "^1.69.5",
         "sass-loader": "^13.2.2",
         "webpack": "^5.74.0",
