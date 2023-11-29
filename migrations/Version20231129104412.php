@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231129104235 extends AbstractMigration
+final class Version20231129104412 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -19,13 +19,13 @@ final class Version20231129104235 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE INDEX db_engine_idx ON telemetry (db_engine)');
+        $this->addSql('CREATE INDEX db_version_idx ON telemetry (db_version)');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP INDEX db_engine_idx ON telemetry');
+        $this->addSql('DROP INDEX db_version_idx ON telemetry');
     }
 }
