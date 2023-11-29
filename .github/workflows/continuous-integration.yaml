@@ -69,6 +69,9 @@ jobs:
       - name: "ComposerRequireChecker"
         run: |
           vendor/bin/composer-require-checker --ansi --no-interaction
+      - name: "ESLint"
+        run: |
+          node_modules/.bin/eslint --color .
       - name: "Initialize database"
         run: |
           bin/console doctrine:database:create --ansi --no-interaction
