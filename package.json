@@ -24,7 +24,6 @@
         "echarts": "^5.4.3",
         "flag-icons": "^6.7.0",
         "gridjs": "^6.0.6",
-        "jquery": "^3.7.1",
         "moment": "^2.29.4"
     }
 }
