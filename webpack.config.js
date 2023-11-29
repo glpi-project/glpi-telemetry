@@ -54,7 +54,7 @@ Encore
         pattern: /\.(png|jpg|jpeg)$/
     })
 
-    .cleanupOutputBeforeBuild();
+    .cleanupOutputBeforeBuild()
 ;
 
 module.exports = Encore.getWebpackConfig();
