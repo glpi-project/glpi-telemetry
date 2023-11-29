@@ -5,6 +5,12 @@
     },
     "devDependencies": {
         "@symfony/webpack-encore": "^4.0.0",
+        "@tabler/core": "^1.0.0-beta20",
+        "@tabler/icons-webfont": "^2.42.0",
+        "echarts": "^5.4.3",
+        "flag-icons": "^7.0.2",
+        "gridjs": "^6.0.6",
+        "moment": "^2.29.4",
         "sass": "^1.69.5",
         "sass-loader": "^13.2.2",
         "webpack": "^5.74.0",
@@ -17,13 +23,5 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
-    },
-    "dependencies": {
-        "@tabler/core": "^1.0.0-beta20",
-        "@tabler/icons-webfont": "^2.42.0",
-        "echarts": "^5.4.3",
-        "flag-icons": "^6.7.0",
-        "gridjs": "^6.0.6",
-        "moment": "^2.29.4"
     }
 }
