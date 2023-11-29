@@ -172,7 +172,10 @@ class TelemetryRepository extends ServiceEntityRepository
                 WHEN UPPER(db_engine) LIKE '%POSTGRES%' THEN 'PostgreSQL'
                 WHEN UPPER(db_engine) LIKE '%PERCONA%' THEN 'Percona'
                 WHEN UPPER(db_engine) LIKE '%MARIA%' THEN 'MariaDB'
-                ELSE 'Autre'
+                WHEN UPPER(db_version) LIKE '%POSTGRES%' THEN 'PostgreSQL'
+                WHEN UPPER(db_version) LIKE '%PERCONA%' THEN 'Percona'
+                WHEN UPPER(db_version) LIKE '%MARIA%' THEN 'MariaDB'
+                ELSE 'MySQL'
             END as dbengine,
         COUNT(DISTINCT glpi_uuid) as nb_instances
         FROM telemetry
