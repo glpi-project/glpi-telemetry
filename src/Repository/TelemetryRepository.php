@@ -70,6 +70,7 @@ class TelemetryRepository extends ServiceEntityRepository
             FROM telemetry
             WHERE created_at BETWEEN :startDate AND :endDate
             GROUP BY webengine
+            ORDER BY nb_instance
             ';
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':startDate', $startDate);
@@ -88,6 +89,7 @@ class TelemetryRepository extends ServiceEntityRepository
             FROM telemetry
             WHERE created_at BETWEEN :startDate AND :endDate
             GROUP BY os
+            ORDER BY nb_instance
             ';
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':startDate', $startDate);
@@ -181,6 +183,7 @@ class TelemetryRepository extends ServiceEntityRepository
         FROM telemetry
         WHERE created_at BETWEEN :startDate AND :endDate
         GROUP BY dbengine
+        ORDER BY nb_instances
         ";
 
         $stmt = $conn->prepare($sql);
@@ -201,6 +204,7 @@ class TelemetryRepository extends ServiceEntityRepository
         FROM telemetry
         WHERE created_at BETWEEN :startDate AND :endDate
         GROUP BY mode
+        ORDER BY nb_instances
         ";
 
         $stmt = $conn->prepare($sql);
