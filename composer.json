@@ -23,7 +23,7 @@
         "symfony/http-client-contracts": "^3.3",
         "symfony/http-foundation": "6.2.*",
         "symfony/http-kernel": "6.2.*",
-        "symfony/intl": "6.2.*",
+        "symfony/intl": "7.0.*",
         "symfony/mailer": "6.2.*",
         "symfony/mime": "6.2.*",
         "symfony/monolog-bundle": "^3.0",
