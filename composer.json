@@ -13,7 +13,7 @@
         "doctrine/persistence": "^3.2",
         "opis/json-schema": "^2.3",
         "psr/log": "^3.0",
-        "symfony/asset": "6.2.*",
+        "symfony/asset": "6.4.*",
         "symfony/cache-contracts": "^3.3",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
