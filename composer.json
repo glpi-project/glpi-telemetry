@@ -14,7 +14,7 @@
         "opis/json-schema": "^2.3",
         "psr/log": "^3.0",
         "symfony/asset": "6.2.*",
-        "symfony/cache-contracts": "^3.3",
+        "symfony/cache-contracts": "^3.4",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
         "symfony/form": "6.2.*",
