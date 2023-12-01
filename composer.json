@@ -78,7 +78,7 @@
         "symfony/symfony": "*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.38",
+        "friendsofphp/php-cs-fixer": "^3.40",
         "maglnet/composer-require-checker": "^4.6",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
