@@ -21,8 +21,36 @@
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
+    const translator = new Intl.DisplayNames(['en'], {type: 'region'});
+    const namesMap = new Map();
     const diplayTab = new gridjs.Grid({
-        columns: ["Name", "Country", "Nb of assets", "Nb of helpdesk", "Registration date", "Comment"],
+        columns: [
+            "Name",
+            {
+                name: "Country",
+                formatter: (cell, row) => {
+                    if (!namesMap.has(cell)) {
+                        namesMap.set(cell, translator.of(cell.toUpperCase()));
+                    }
+                    return gridjs.html(`<span class="fi fi-${cell}" title="${namesMap.get(cell)}"></span>`);
+                },
+                sort: {
+                    compare: (a, b) => {
+                        if (!namesMap.has(a)) {
+                            namesMap.set(a, translator.of(a.toUpperCase()));
+                        }
+                        if (!namesMap.has(b)) {
+                            namesMap.set(b, translator.of(b.toUpperCase()));
+                        }
+                        return namesMap.get(a).localeCompare(namesMap.get(b));
+                    }
+                },
+            },
+            "Nb of assets",
+            "Nb of helpdesk",
+            "Registration date",
+            "Comment"
+        ],
         pagination: {
             limit: 20
         },
@@ -32,7 +60,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             {% for reference in references %}
             [
                 {{ reference.name|json_encode|raw }},
-                gridjs.html(`<span class="fi fi-{{ reference.country }}"></span>`),
+                "{{ reference.country }}",
                 {% if reference.glpireference.numAssets is defined %}
                 {{ reference.glpireference.numAssets|json_encode|raw }},
                 {% else %}
