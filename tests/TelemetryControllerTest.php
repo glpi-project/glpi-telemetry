@@ -16,7 +16,7 @@ class TelemetryControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'text/html']);
-        $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
         $this->assertEquals('status: Content-Type must be application/json', $client->getResponse()->getContent());
     }
 
@@ -24,7 +24,7 @@ class TelemetryControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'application/json'], '{"test": "test"}');
-        $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
         $this->assertEquals('status: JSON is not valid', $client->getResponse()->getContent());
     }
 }
