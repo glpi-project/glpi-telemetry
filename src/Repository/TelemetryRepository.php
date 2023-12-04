@@ -65,13 +65,14 @@ class TelemetryRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = '
+        $sql = "
             SELECT web_engine as webengine, COUNT(DISTINCT glpi_uuid) as nb_instance
             FROM telemetry
             WHERE created_at BETWEEN :startDate AND :endDate
+            AND web_engine IS NOT NULL AND web_engine != ''
             GROUP BY webengine
             ORDER BY nb_instance
-            ';
+            ";
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':startDate', $startDate);
         $stmt->bindValue(':endDate', $endDate);
