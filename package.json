@@ -1,4 +1,7 @@
 {
+    "name": "telemetry.glpi-project.org",
+    "license": "MIT",
+    "private": true,
     "engines": {
         "node": ">= 18.12",
         "npm": ">= 8.19"
@@ -18,8 +21,6 @@
         "webpack": "^5.89.0",
         "webpack-cli": "^5.1.4"
     },
-    "license": "MIT",
-    "private": true,
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
