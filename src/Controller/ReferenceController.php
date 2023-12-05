@@ -6,6 +6,7 @@ use App\Entity\GlpiReference;
 use App\Entity\Reference;
 use App\Form\ReferenceFormType;
 use App\Repository\ReferenceRepository;
+use App\Service\CaptchaValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class ReferenceController extends AbstractController
 {
     #[Route('/reference', name: 'app_reference')]
-    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, HttpClientInterface $client): Response
+    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, HttpClientInterface $client, CaptchaValidator $captchaValidator): Response
     {
         $references = $referenceRepository->findAll();
         $nb = count($references);
@@ -36,25 +37,7 @@ class ReferenceController extends AbstractController
             if ($captcha_token === null) {
                 $captcha_is_ok = false;
             } else {
-                try {
-                    $response = $client->request(
-                        'POST',
-                        'https://www.google.com/recaptcha/api/siteverify',
-                        [
-                            'headers' => [
-                                'Content-Type' => 'application/json',
-                            ],
-                            'body' => [
-                                'secret' => $captchaSecretKey,
-                                'response' => $request->request->get('captcha_token'),
-                            ]
-                        ]
-                    );
-
-                    $captcha_is_ok = $response->toArray()['success'] ?? false;
-                } catch (\Throwable $e) {
-                    $captcha_is_ok = true;
-                }
+                $captcha_is_ok = $captchaValidator->validateToken($captcha_token, $captchaSecretKey);
             }
 
             $success = false;
