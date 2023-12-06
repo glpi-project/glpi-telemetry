@@ -2,17 +2,19 @@
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-
 class CaptchaValidator
 {
-    private $client;
     private $secretKey;
-
-    public function __construct(HttpClientInterface $client)
-    {
+    private $client;
+    public function __construct(
+        HttpClientInterface $client,
+        #[Autowire(param: 'captcha.secret_key')]
+        string $secretKey
+    ) {
         $this->client = $client;
-
+        $this->secretKey = $secretKey;
     }
 
     public function validateToken(string $token, string $secretKey): bool
