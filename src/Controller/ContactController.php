@@ -22,17 +22,10 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $captcha_token = $request->request->get('captcha_token');
-
-            if ($captcha_token === null) {
-                $captcha_is_ok = false;
-            } else {
-                $captcha_is_ok = $captchaValidator->validateToken($captcha_token);
-            }
-
             $success = false;
 
-            if ($captcha_is_ok) {
+            $captcha_token = $request->request->get('captcha_token');
+            if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
                 try {
                     $contactFormData = $form->getData();
 
@@ -46,7 +39,6 @@ class ContactController extends AbstractController
 
                     $success = true;
                 } catch (\Throwable $e) {
-                    // do not block contact form if there is a network issue while calling turnstile server
                     $success = false;
                 }
             }

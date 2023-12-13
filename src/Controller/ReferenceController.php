@@ -30,16 +30,10 @@ class ReferenceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $captcha_token = $request->request->get('captcha_token');
-
-            if ($captcha_token === null) {
-                $captcha_is_ok = false;
-            } else {
-                $captcha_is_ok = $captchaValidator->validateToken($captcha_token);
-            }
-
             $success = false;
-            if ($captcha_is_ok) {
+
+            $captcha_token = $request->request->get('captcha_token');
+            if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
                 try {
                     $data = $form->getData();
 
