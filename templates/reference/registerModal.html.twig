@@ -44,6 +44,7 @@
                 {{ form_label(form.comment, 'Comment', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_row(form.comment, {'attr': {'class': 'form-control'}}) }}
               </div>
+              <div class="cf-turnstile" data-sitekey="{{ captchaSiteKey }}" data-response-field-name="captcha_token"></div>
         </div>
       </div>
       <div class="modal-footer">

@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Form\ContactFormType;
+use App\Service\CaptchaValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -14,45 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'app_contact')]
-    public function index(Request $request, HttpClientInterface $client, MailerInterface $mailer): Response
+    public function index(Request $request, MailerInterface $mailer, CaptchaValidator $captchaValidator): Response
     {
         $captchaSiteKey     = $this->getParameter('captcha.site_key');
-        $captchaSecretKey   = $this->getParameter('captcha.secret_key');
 
         $form = $this->createForm(ContactFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $captcha_token = $request->request->get('captcha_token');
-
-            if ($captcha_token === null) {
-                $captcha_is_ok = false;
-            } else {
-                try {
-                    $response = $client->request(
-                        'POST',
-                        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-                        [
-                            'headers' => [
-                                'Content-Type' => 'application/json',
-                            ],
-                            'body' => [
-                                'secret'   => $captchaSecretKey,
-                                'response' => $request->request->get('captcha_token'),
-                            ]
-                        ]
-                    );
-
-                    $captcha_is_ok = $response->toArray()['success'] ?? false;
-                } catch (\Throwable $e) {
-                    // do not block contact form if there is a network issue while calling turnstile server
-                    $captcha_is_ok = true;
-                }
-            }
-
             $success = false;
 
-            if ($captcha_is_ok) {
+            $captcha_token = $request->request->get('captcha_token');
+            if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
                 try {
                     $contactFormData = $form->getData();
 
@@ -66,7 +39,6 @@ class ContactController extends AbstractController
 
                     $success = true;
                 } catch (\Throwable $e) {
-                    // do not block contact form if there is a network issue while calling turnstile server
                     $success = false;
                 }
             }
