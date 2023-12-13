@@ -25,6 +25,6 @@ class TelemetryControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'application/json'], '{"test": "test"}');
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
-        $this->assertEquals('status: Error saving data to database', $client->getResponse()->getContent());
+        $this->assertEquals('status: JSON is not valid', $client->getResponse()->getContent());
     }
 }

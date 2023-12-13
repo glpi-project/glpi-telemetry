@@ -1,7 +1,0 @@
-
-parameters:
-    captcha.site_key: '%env(resolve:CAPTCHA_SITE_KEY)%'
-    captcha.secret_key: '%env(resolve:CAPTCHA_SECRET_KEY)%'
-
-    # recipient of the contact form
-    contact_form.recipient.email: '%env(resolve:CONTACT_FORM_RECIPIENT_EMAIL)%'
