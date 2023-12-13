@@ -26,7 +26,6 @@ class ReferenceController extends AbstractController
         $glpi_reference = new GlpiReference();
 
         $captchaSiteKey     = $this->getParameter('captcha.site_key');
-        $captchaSecretKey   = $this->getParameter('captcha.secret_key');
 
         $form = $this->createForm(ReferenceFormType::class);
         $form->handleRequest($request);
@@ -37,7 +36,7 @@ class ReferenceController extends AbstractController
             if ($captcha_token === null) {
                 $captcha_is_ok = false;
             } else {
-                $captcha_is_ok = $captchaValidator->validateToken($captcha_token, $captchaSecretKey);
+                $captcha_is_ok = $captchaValidator->validateToken($captcha_token);
             }
 
             $success = false;

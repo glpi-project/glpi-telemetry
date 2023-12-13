@@ -18,7 +18,6 @@ class ContactController extends AbstractController
     public function index(Request $request, HttpClientInterface $client, MailerInterface $mailer, CaptchaValidator $captchaValidator): Response
     {
         $captchaSiteKey     = $this->getParameter('captcha.site_key');
-        $captchaSecretKey   = $this->getParameter('captcha.secret_key');
 
         $form = $this->createForm(ContactFormType::class);
         $form->handleRequest($request);
@@ -29,7 +28,7 @@ class ContactController extends AbstractController
             if ($captcha_token === null) {
                 $captcha_is_ok = false;
             } else {
-                $captcha_is_ok = $captchaValidator->validateToken($captcha_token, $captchaSecretKey);
+                $captcha_is_ok = $captchaValidator->validateToken($captcha_token);
             }
 
             $success = false;

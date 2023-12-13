@@ -17,7 +17,7 @@ class CaptchaValidator
         $this->secretKey = $secretKey;
     }
 
-    public function validateToken(string $token, string $secretKey): bool
+    public function validateToken(string $token): bool
     {
         try {
             $response = $this->client->request(
@@ -28,8 +28,8 @@ class CaptchaValidator
                         'Content-Type' => 'application/json',
                     ],
                     'body' => [
-                        'secret' => $secretKey,
-                        'response' => $token
+                        'secret' => $this->secretKey,
+                        'response' => $token,
                     ]
                 ]
             );
