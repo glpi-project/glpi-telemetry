@@ -68,7 +68,7 @@ class ReferenceController extends AbstractController
             if ($success) {
                 $this->addFlash('success', 'Your reference has been added successfully');
             } else {
-                $this->addFlash('error', 'An error occurred while adding your reference');
+                $this->addFlash('danger', 'An error occurred while adding your reference');
             }
 
             return $this->redirectToRoute('app_reference');
