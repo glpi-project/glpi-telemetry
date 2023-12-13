@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\GlpiPlugin;
 use App\Entity\Telemetry;
 use App\Entity\TelemetryGlpiPlugin;
-use App\Middleware\JsonCheck;
 use App\Repository\GlpiPluginRepository;
 use App\Repository\TelemetryRepository;
+use App\Service\TelemetryJsonValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,8 +18,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class TelemetryController extends AbstractController
 {
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
-    public function post(Request $request, TelemetryRepository $telemetryRepository, LoggerInterface $logger, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository, JsonCheck $jsonCheck): Response
-    {
+    public function post(
+        Request $request,
+        TelemetryRepository $telemetryRepository,
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager,
+        GlpiPluginRepository $glpiPluginRepository,
+        TelemetryJsonValidator $jsonValidator
+    ): Response {
         $logger->debug('POST request received');
         $logger->debug('POST request content: ' . $request->getContent());
         $validation = false;
@@ -38,10 +44,9 @@ class TelemetryController extends AbstractController
         $logger->debug('POST request decoded');
 
         //Validate JSON
-        $middleware = new JsonCheck($logger);
         $logger->debug('POST request middleware created');
 
-        if ($middleware->validateJson($data)) {
+        if ($jsonValidator->validateJson($request->getContent())) {
             $logger->debug('POST request middleware validated');
             $validation = true;
         } else {
@@ -52,7 +57,7 @@ class TelemetryController extends AbstractController
         if ($validation) {
             $logger->debug('POST request middleware validated');
 
-            $data = json_decode(json_encode($data), true);
+            $data = json_decode($request->getContent(), true);
 
             $logger->debug('Save data to database');
 

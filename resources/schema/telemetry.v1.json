@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema#",
-    "$id": "https://example.com/schemas/my-schema",
+    "$id": "https://telemetry.glpi-project.org/schema/v1.json",
     "type": "object",
     "properties": {
         "data": {
@@ -103,5 +103,6 @@
             },
             "required": ["glpi", "system"]
         }
-    }
+    },
+    "required": ["data"]
 }
