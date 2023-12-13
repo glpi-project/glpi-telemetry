@@ -4,10 +4,19 @@ namespace App\Service;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 class CaptchaValidator
 {
-    private $secretKey;
-    private $client;
+    /**
+     * Turnstile service secret key.
+     */
+    private string $secretKey;
+
+    /**
+     * HTTP client.
+     */
+    private HttpClientInterface $client;
+
     public function __construct(
         HttpClientInterface $client,
         #[Autowire(param: 'captcha.secret_key')]
@@ -17,6 +26,12 @@ class CaptchaValidator
         $this->secretKey = $secretKey;
     }
 
+    /**
+     * Validate token against the captcha service.
+     *
+     * @param string $token
+     * @return bool
+     */
     public function validateToken(string $token): bool
     {
         try {
