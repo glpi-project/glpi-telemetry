@@ -22,7 +22,7 @@ class CaptchaValidator
         try {
             $response = $this->client->request(
                 'POST',
-                'https://www.google.com/recaptcha/api/siteverify',
+                'https://challenges.cloudflare.com/turnstile/v0/siteverify',
                 [
                     'headers' => [
                         'Content-Type' => 'application/json',
