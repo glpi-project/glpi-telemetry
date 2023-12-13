@@ -58,6 +58,8 @@ class ReferenceController extends AbstractController
 
                     $manager->persist($glpi_reference);
                     $manager->flush();
+
+                    $success = true;
                 } catch (\Throwable $e) {
                     $success = false;
                 }
