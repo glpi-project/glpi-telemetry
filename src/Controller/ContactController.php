@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Form\ContactFormType;
 use App\Service\CaptchaValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -15,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'app_contact')]
-    public function index(Request $request, HttpClientInterface $client, MailerInterface $mailer, CaptchaValidator $captchaValidator): Response
+    public function index(Request $request, MailerInterface $mailer, CaptchaValidator $captchaValidator): Response
     {
         $captchaSiteKey     = $this->getParameter('captcha.site_key');
 

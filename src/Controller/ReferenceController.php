@@ -12,12 +12,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ReferenceController extends AbstractController
 {
     #[Route('/reference', name: 'app_reference')]
-    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, HttpClientInterface $client, CaptchaValidator $captchaValidator): Response
+    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
     {
         $references = $referenceRepository->findAll();
         $nb = count($references);
