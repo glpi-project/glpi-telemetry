@@ -12,3 +12,48 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var elements = document.querySelectorAll('.ti-arrows-maximize');
+
+    elements.forEach(function(element) {
+        element.addEventListener('click', function() {
+            console.log('Clique sur l\'élément agrandir');
+
+            let chartContainer = this.closest('.card').querySelector('.card-body');
+            let chartId = chartContainer.id;
+            let modalId = chartId + '_large';
+
+            let modal = document.createElement('div');
+            modal.innerHTML = `
+                <div class="modal modal-blur fade" id="${modalId}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Modal</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="chart-container" style="width: 675px; height: 500px"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            let modalChartContainer = modal.querySelector('.chart-container');
+            let modalChartContainerOptions = echarts.getInstanceByDom(modalChartContainer).getOption();
+            echarts.init(modalChartContainer.setOption(modalChartContainerOptions));
+
+            let bootstrapModal = new bootstrap.Modal(document.getElementById(modalId));
+            bootstrapModal.show();
+        });
+    });
+});
+
+</script>
