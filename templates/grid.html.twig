@@ -15,15 +15,17 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var elements = document.querySelectorAll('.ti-arrows-maximize');
+    var modalButtons = document.querySelectorAll('.openModal');
 
-    elements.forEach(function(element) {
-        element.addEventListener('click', function() {
-            console.log('Clique sur l\'élément agrandir');
-
-            let chartContainer = this.closest('.card').querySelector('.card-body');
+    modalButtons.forEach(function(button) {
+            let chartContainer = button.closest('.card').querySelector('.card-body');
             let chartId = chartContainer.id;
             let modalId = chartId + '_large';
+
+            button.setAttribute('data-bs-toggle', 'modal');
+            button.setAttribute('data-bs-target', '#' + modalId);
+
+        button.addEventListener('click', function() {
 
             let modal = document.createElement('div');
             modal.innerHTML = `
@@ -46,12 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             document.body.appendChild(modal);
 
+            let chart = echarts.getInstanceByDom(chartContainer);
             let modalChartContainer = modal.querySelector('.chart-container');
-            let modalChartContainerOptions = echarts.getInstanceByDom(modalChartContainer).getOption();
-            echarts.init(modalChartContainer.setOption(modalChartContainerOptions));
+            let modalChart = echarts.init(modalChartContainer);
+            modalChart.setOption(chart.getOption());
 
-            let bootstrapModal = new bootstrap.Modal(document.getElementById(modalId));
-            bootstrapModal.show();
         });
     });
 });
