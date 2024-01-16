@@ -21,11 +21,10 @@ document.addEventListener('DOMContentLoaded', function() {
             let chartContainer = button.closest('.card').querySelector('.card-body');
             let chartId = chartContainer.id;
             let modalId = chartId + '_large';
+            console.log(modalId);
 
             button.setAttribute('data-bs-toggle', 'modal');
             button.setAttribute('data-bs-target', '#' + modalId);
-
-        button.addEventListener('click', function() {
 
             let modal = document.createElement('div');
             modal.innerHTML = `
@@ -48,10 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             document.body.appendChild(modal);
 
+            button.addEventListener('click', function() {
+
             let chart = echarts.getInstanceByDom(chartContainer);
             let modalChartContainer = modal.querySelector('.chart-container');
             let modalChart = echarts.init(modalChartContainer);
             modalChart.setOption(chart.getOption());
+
 
         });
     });

@@ -1,24 +1,20 @@
-{% include 'telemetry/webengine-modal.html.twig' %}
-    <div class="col-sm-6 col-lg-4">
-        <div class="card">
-            <div class="d-flex flex-row-reverse p-2 pb-0">
-                <button type="button" class="btn p-1" id="web_engine_lg" data-bs-toggle="modal" data-bs-target="#webengineModal">
-                    <i class="ti ti-arrows-maximize"></i>
-                </button>
-            </div>
-            <div class="card-body default-size pt-0" id="web_engine">
-            </div>
+<div class="col-sm-6 col-lg-4">
+    <div class="card">
+        <div class="d-flex flex-row-reverse p-2 pb-0">
+            <button type="button" class="btn p-1 openModal">
+                <i class="ti ti-arrows-maximize"></i>
+            </button>
+        </div>
+        <div class="card-body default-size pt-0" id="web_engine">
         </div>
     </div>
+</div>
 
 <script>
 window.addEventListener("DOMContentLoaded", (event) => {
 
     var chartDom = document.getElementById("web_engine");
     var myChart = echarts.init(chartDom);
-
-    var largeChartDom = document.getElementById("web_engine_large");
-    var largeChart = echarts.init(largeChartDom);
 
     option = {
         title: {
@@ -40,7 +36,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
         ]
     };
     option && myChart.setOption(option);
-    option && largeChart.setOption(option);
 
     window.registerFilterCallback(function (filters) {
         var url = 'web/engines?' + new URLSearchParams(filters);
@@ -58,9 +53,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         .then(json => {
             window.clearResults();
             window.registerResults(json);
-            console.log(json);
             myChart.setOption({series:[{data:json}]});
-            largeChart.setOption({series:[{data:json}]});
         })
         .catch(error => {
             console.error('an error occured: ', error);
