@@ -1,1 +1,1 @@
-import "@tabler/core";
+import "@tabler/core/dist/js/tabler";
