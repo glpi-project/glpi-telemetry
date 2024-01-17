@@ -57,14 +57,14 @@ window.addEventListener("DOMContentLoaded", () => {
             modal.setAttribute('class', 'modal modal-blur fade');
             modal.setAttribute('role', 'dialog');
             modal.innerHTML = `
-                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">${title}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="chart-container" style="width: 675px; height: 500px"></div>
+                            <div class="chart-container" style="width: 100%; height: 80vh; max-height: 700px;"></div>
                         </div>
                     </div>
                 </div>
