@@ -43,19 +43,15 @@ window.addEventListener("DOMContentLoaded", () => {
         global.executeFilterCallbacks(params);
     }
 
-    var modalButtons = document.querySelectorAll('.openModal');
-
-    modalButtons.forEach(function(button) {
-        let chartContainer = button.closest('.card').querySelector('.card-body');
-
-        button.addEventListener('click', function() {
-
-            let chart = echarts.getInstanceByDom(chartContainer);
-            let options = chart.getOption();
+    const modalButtons = document.querySelectorAll('.openModal');
+    modalButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const chartContainer = button.closest('.card').querySelector('.card-body');
+            const chart = echarts.getInstanceByDom(chartContainer);
+            const options = chart.getOption();
             const title = typeof(options.title) !== 'undefined' && typeof(options.title[0]) !== 'undefined' && typeof(options.title[0].text) !== 'undefined'
                 ? options.title[0].text
                 : '';
-            options.title = {show:false};
 
             const modal = document.createElement('div');
             modal.setAttribute('class', 'modal modal-blur fade');
@@ -74,16 +70,19 @@ window.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            let modalChartContainer = modal.querySelector('.chart-container');
-            let modalChart = echarts.init(modalChartContainer);
-            modalChart.setOption(options);
+            modal.addEventListener('shown.bs.modal', () => {
+                options.title = {show:false};
 
-            let bootstrapModal = new window.bootstrap.Modal(modal);
-            bootstrapModal.show();
-
+                const modalChartContainer = modal.querySelector('.chart-container');
+                const modalChart = echarts.init(modalChartContainer);
+                modalChart.setOption(options);
+            });
             modal.addEventListener('hidden.bs.modal', () => {
                 modal.remove();
             });
+
+            const bootstrapModal = new window.bootstrap.Modal(modal);
+            bootstrapModal.show();
         });
     });
 });
