@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             button.addEventListener('click', function() {
 
-                let modal = document.createElement('div');
-                modal.innerHTML = `
+                let container = document.createElement('div');
+                container.innerHTML = `
                     <div class="modal modal-blur fade" id="${modalId}" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 `;
-                document.body.appendChild(modal);
+                const modal = container.firstElementChild;
 
                 let bootstrapModal = new bootstrap.Modal(modal);
                 bootstrapModal.show();
