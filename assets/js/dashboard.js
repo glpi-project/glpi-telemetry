@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 const modal = document.createElement('div');
                 modal.setAttribute('class', 'modal modal-blur fade');
-+               modal.setAttribute('role', 'dialog');
+                modal.setAttribute('role', 'dialog');
                 modal.innerHTML = `
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
