@@ -1,8 +1,7 @@
-{% include 'telemetry/glpiversion-modal.html.twig' %}
 <div class="col-sm-6 col-lg-6">
     <div class="card">
         <div class="d-flex flex-row-reverse p-2 pb-0">
-            <button type="button" class="btn p-1" id="glpi_version_lg" data-bs-toggle="modal" data-bs-target="#chartModal">
+            <button type="button" class="btn p-1 openModal">
                 <i class="ti ti-arrows-maximize"></i>
             </button>
         </div>
@@ -15,9 +14,6 @@
 window.addEventListener("DOMContentLoaded", (event) => {
     var chartDom = document.getElementById("glpi_version");
     var myChart = echarts.init(chartDom);
-
-    var largeChartDom = document.getElementById("glpi_version_large");
-    var largeChart = echarts.init(largeChartDom);
 
     var option;
 
@@ -73,7 +69,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
     };
 
     option && myChart.setOption(option);
-    option && largeChart.setOption(option);
 
         window.registerFilterCallback(function (filters) {
             var url = 'glpi/version?' + new URLSearchParams(filters);
@@ -91,12 +86,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 .then(json => {
                     window.clearResults();
                     window.registerResults(json);
-                    console.log(json);
                     myChart.setOption({
-                        xAxis: {data: json.xAxis.data},
-                        series: json.series,
-                    });
-                    largeChart.setOption({
                         xAxis: {data: json.xAxis.data},
                         series: json.series,
                     });
