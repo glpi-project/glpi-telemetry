@@ -52,7 +52,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 let chart = echarts.getInstanceByDom(chartContainer);
                 let options = chart.getOption();
-                const title = options.title[0].text ?? '';
+                const title = typeof(options.title) !== 'undefined' && typeof(options.title[0]) !== 'undefined' && typeof(options.title[0].text) !== 'undefined'
+                    ? options.title[0].text
+                    : '';
                 options.title = {show:false};
 
                 const modal = document.createElement('div');
