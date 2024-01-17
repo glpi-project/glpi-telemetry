@@ -42,6 +42,48 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         global.executeFilterCallbacks(params);
     }
+
+    var modalButtons = document.querySelectorAll('.openModal');
+
+    modalButtons.forEach(function(button) {
+            let chartContainer = button.closest('.card').querySelector('.card-body');
+
+            button.addEventListener('click', function() {
+
+                let chart = echarts.getInstanceByDom(chartContainer);
+                let options = chart.getOption();
+                const title = options.title[0].text ?? '';
+                options.title = {show:false};
+
+                const modal = document.createElement('div');
+                modal.setAttribute('class', 'modal modal-blur fade');
++               modal.setAttribute('role', 'dialog');
+                modal.innerHTML = `
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">${title}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="chart-container" style="width: 675px; height: 500px"></div>
+                                </div>
+                            </div>
+                        </div>
+                `;
+
+                let modalChartContainer = modal.querySelector('.chart-container');
+                let modalChart = echarts.init(modalChartContainer);
+                modalChart.setOption(options);
+
+                let bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.show();
+
+                modal.addEventListener('hidden.bs.modal', event => {
+                modal.remove();
+                });
+            });
+        });
 });
 
 
