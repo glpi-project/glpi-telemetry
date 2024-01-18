@@ -18,7 +18,7 @@ class ReferenceController extends AbstractController
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
     {
-        $references = $referenceRepository->findAll();
+        $references = $referenceRepository->findBy([], ['created_at' => 'DESC']);
         $nb = count($references);
 
         $reference = new Reference();
