@@ -22,7 +22,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
     const namesMap = new Map();
     const diplayTab = new gridjs.Grid({
         columns: [
-            "Name",
+            {
+                name: "Name",
+                formatter: (cell, row) => {
+                const url = row.cells[6].data;
+                const name = cell;
+                return gridjs.h('a', { href: url, target: '_blank' }, name);
+                }
+            },
             {
                 name: "Country",
                 formatter: (cell, row) => {
@@ -46,7 +53,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
             "Nb of assets",
             "Nb of helpdesk",
             "Registration date",
-            "Comment"
+            "Comment",
+            {
+                name: "URL",
+                hidden: true,
+            },
         ],
         pagination: {
             limit: 20
@@ -69,7 +80,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 0,
                 {% endif %}
                 "{{ reference.createdAt|date("Y-m-d") }}",
-                {{ reference.comment|json_encode|raw }}
+                {{ reference.comment|json_encode|raw }},
+                {{ reference.url|json_encode|raw}},
             ],
             {% endfor %}
         ]
