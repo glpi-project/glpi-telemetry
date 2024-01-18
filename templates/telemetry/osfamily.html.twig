@@ -39,7 +39,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     window.registerFilterCallback(function (filters) {
         var url = 'os/family?' + new URLSearchParams(filters);
-        var arrayObj = [];
 
         fetch(url, {
             method: 'GET',
@@ -51,8 +50,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             return response.json();
         })
         .then(json => {
-            window.clearResults();
-            window.registerResults(json);
             myChart.setOption({series:[{data:json}]});
         })
         .catch(error => {

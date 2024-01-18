@@ -29,11 +29,6 @@ class RefreshCacheService
     public function refreshAllCaches(string $filter, bool $forceUpdate): bool
     {
         $this->logger->debug('refreshAllCaches called');
-        //récupérer toutes les classes dans le dossier Controller
-        //ignorer les fichiers . et .. et .gitignore
-        //pour chacune vérifier qu'elle implémente l'interface ViewControllerInterface
-        //pour chacune appeler la méthode refreshCache avec les bons paramètres
-        //retourner true si tout s'est bien passé, false sinon
         $periods = ['lastYear', 'fiveYear', 'always'];
 
         $controllerDir = __DIR__ . '/../Controller';

@@ -66,8 +66,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
  window.registerFilterCallback(function (filters) {
         var url = 'php/version?' + new URLSearchParams(filters);
-        console.log(url);
-        var arrayObj = [];
 
         fetch(url, {
             method: 'GET',
@@ -79,8 +77,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             return response.json();
         })
         .then(json => {
-            window.clearResults();
-            window.registerResults(json);
             myChart.setOption({
                 xAxis: {data: json.xAxis.data},
                 series: json.series,
