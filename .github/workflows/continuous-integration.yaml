@@ -72,6 +72,9 @@ jobs:
       - name: "ESLint"
         run: |
           node_modules/.bin/eslint --color .
+      - name: "Twigcs"
+        run: |
+          vendor/bin/twigcs --ansi --no-interaction
       - name: "Initialize database"
         run: |
           bin/console doctrine:database:create --ansi --no-interaction

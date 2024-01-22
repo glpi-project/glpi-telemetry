@@ -4,60 +4,56 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
             <a href=".">
                 <img src="{{ asset('build/images/logo.png') }}" width="110" height="32" alt="GLPI" class="navbar-brand-image">
             </a>
-            </h1>
+        </h1>
 
-                <div class="collapse navbar-collapse" id="navbar-menu">
-                    <div class="d-flex flex-column flex-md-row flex-fill align-item-stretch align-item-md-center">
-                        <ul class= "navbar-nav">
-                            <li class="nav-item {{ app.request.get('_route') == 'app_telemetry' ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ path('app_telemetry') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-histogram" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M3 3v18h18"></path>
-                                            <path d="M20 18v3"></path>
-                                            <path d="M16 16v5"></path>
-                                            <path d="M12 13v8"></path>
-                                            <path d="M8 16v5"></path>
-                                            <path d="M3 11c6 0 5 -5 9 -5s3 5 9 5"></path>
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title"> Telemetry </span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ app.request.get('_route') == 'app_reference' ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ path('app_reference') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
-                                            </svg>
-                                    </span>
-                                    <span class="nav-link-title"> References </span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ app.request.get('_route') == 'app_contact' ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ path('app_contact') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path>
-                                            <path d="M3 7l9 6l9 -6"></path>
-                                        </svg>
-                                    </span>
-                                    <span class="nav-link-title"> Contact </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            {# <div class="p-2">
-                    <p class="mb-0">Since version 9.2 of GLPI, we collect anonymous data from instance of voluntary users. Here is some representations of these data.</p>
-            </div> #}
+        <div class="collapse navbar-collapse" id="navbar-menu">
+            <div class="d-flex flex-column flex-md-row flex-fill align-item-stretch align-item-md-center">
+                <ul class= "navbar-nav">
+                    <li class="nav-item {{ app.request.get('_route') == 'app_telemetry' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ path('app_telemetry') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-histogram" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M3 3v18h18"></path>
+                                    <path d="M20 18v3"></path>
+                                    <path d="M16 16v5"></path>
+                                    <path d="M12 13v8"></path>
+                                    <path d="M8 16v5"></path>
+                                    <path d="M3 11c6 0 5 -5 9 -5s3 5 9 5"></path>
+                                </svg>
+                            </span>
+                            <span class="nav-link-title"> Telemetry </span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ app.request.get('_route') == 'app_reference' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ path('app_reference') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-star" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+                                </svg>
+                            </span>
+                            <span class="nav-link-title"> References </span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ app.request.get('_route') == 'app_contact' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ path('app_contact') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path>
+                                    <path d="M3 7l9 6l9 -6"></path>
+                                </svg>
+                            </span>
+                            <span class="nav-link-title"> Contact </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </header>
-
