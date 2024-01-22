@@ -25,14 +25,21 @@ window.addEventListener("DOMContentLoaded", (event) => {
             {
                 name: "Name",
                 formatter: (cell, row) => {
-                const url = row.cells[6].data;
-                const name = cell;
-                try {
-                    new URL(url);
-                    return gridjs.h('a', { href: url, target: '_blank' }, name);
-                } catch (e) {
-                    return name;
-                }
+                    const url = row.cells[6].data;
+                    const name = cell;
+                    try {
+                        new URL(url);
+                        return gridjs.h(
+                            'a',
+                            {
+                                href: url,
+                                target: '_blank',
+                            },
+                            name
+                        );
+                    } catch (e) {
+                        return name;
+                    }
                 }
             },
             {
