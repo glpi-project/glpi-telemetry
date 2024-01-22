@@ -1,5 +1,4 @@
 import * as echarts from "echarts";
-// import moment from "moment";
 
 window.echarts = echarts;
 
@@ -15,8 +14,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let select = document.getElementById('dataPeriod');
     let selectedOption = select.value;
-    // var today = moment().format('Y-MM-DD hh:mm:ss');
-    // var defaultStartDate = moment().subtract(1, 'year').format('Y-MM-DD hh:mm:ss');
     var params = {};
     setValue(selectedOption);
 
