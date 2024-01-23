@@ -54,16 +54,16 @@ class TelemetryController extends AbstractController
             return new Response('status: JSON is not valid', Response::HTTP_BAD_REQUEST);
         }
 
-            $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
-            $logger->debug('Save data to database');
+        $logger->debug('Save data to database');
 
-            try {
-                $this->registerData($data, $entityManager, $glpiPluginRepository);
-            } catch (\Exception $e) {
-                $logger->debug('Error saving data to database : ' . $e->getMessage());
-                return new Response('status: Error saving data to database', Response::HTTP_BAD_REQUEST);
-            }
+        try {
+            $this->registerData($data, $entityManager, $glpiPluginRepository);
+        } catch (\Exception $e) {
+            $logger->debug('Error saving data to database : ' . $e->getMessage());
+            return new Response('status: Error saving data to database', Response::HTTP_BAD_REQUEST);
+        }
 
         return new Response('status: OK', Response::HTTP_OK);
     }
