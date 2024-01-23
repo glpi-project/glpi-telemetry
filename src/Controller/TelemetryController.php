@@ -54,9 +54,6 @@ class TelemetryController extends AbstractController
             return new Response('status: JSON is not valid', Response::HTTP_BAD_REQUEST);
         }
 
-        if ($validation) {
-            $logger->debug('POST request middleware validated');
-
             $data = json_decode($request->getContent(), true);
 
             $logger->debug('Save data to database');
@@ -67,12 +64,6 @@ class TelemetryController extends AbstractController
                 $logger->debug('Error saving data to database : ' . $e->getMessage());
                 return new Response('status: Error saving data to database', Response::HTTP_BAD_REQUEST);
             }
-
-
-        } else {
-            $logger->debug('POST request middleware not validated');
-            return new Response('status: JSON is not valid', Response::HTTP_BAD_REQUEST);
-        }
 
         return new Response('status: OK', Response::HTTP_OK);
     }

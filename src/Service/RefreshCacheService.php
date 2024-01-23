@@ -39,6 +39,7 @@ class RefreshCacheService
 
         $this->logger->debug('controllerFiles :', $controllerFiles);
 
+        $controllerName = '';
         foreach ($controllerFiles as $controllerFile) {
             try {
                 $controllerName = str_replace('.php', '', $controllerFile);
@@ -97,7 +98,8 @@ class RefreshCacheService
             $this->startDate = match($filter) {
                 'lastYear' => date('y-m-d h:i:s', strtotime('-1 year')),
                 'fiveYear' => date('y-m-d h:i:s', strtotime('-5 years')),
-                'always'   => date('y-m-d h:i:s', strtotime('-10 years'))
+                'always'   => date('y-m-d h:i:s', strtotime('-10 years')),
+                default    => throw new Exception("Invalid filter value")
             };
             return $this->startDate;
         } catch(Exception $e) {
