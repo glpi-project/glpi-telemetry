@@ -12,7 +12,7 @@ class TestController extends AbstractController
 {
     #[Route('/test', name: 'app_test', methods: ['POST'])]
     public function test(
-        #[MapRequestPayload]
+        #[MapRequestPayload(serializationContext:['json_decode_associative' => false])]
         Telemetry $telemetry,
     ): Response {
 

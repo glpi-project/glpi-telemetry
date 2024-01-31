@@ -23,12 +23,12 @@ class TelemetryJsonValidator
     }
 
     /**
-     * Validate a Telemetry JSON string against the expected schema.
+     * Validate a Telemetry request contents against the expected schema.
      *
-     * @param string $json
+     * @param mixed $contents
      * @return bool
      */
-    public function validateJson(string $json): bool
+    public function validateJson(mixed $contents): bool
     {
         $this->validator
             ->resolver()
@@ -37,7 +37,7 @@ class TelemetryJsonValidator
                 $this->schemaDir . '/telemetry.v1.json'
             );
 
-        $result = $this->validator->validate(json_decode($json), 'https://telemetry.glpi-project.org/schema/v1.json');
+        $result = $this->validator->validate($contents, 'https://telemetry.glpi-project.org/schema/v1.json');
 
         return $result->isValid();
     }

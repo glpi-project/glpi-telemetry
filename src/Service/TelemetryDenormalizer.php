@@ -4,14 +4,18 @@ namespace App\Service;
 
 use App\Entity\Telemetry;
 use App\Service\TelemetryJsonValidator;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class TelemetryDenormalizer implements DenormalizerInterface
 {
+    private PropertyAccessor $propertyAccessor;
     private TelemetryJsonValidator $TelemetryJsonValidator;
 
     public function __construct(TelemetryJsonValidator $telemetryJsonValidator)
     {
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
         $this->TelemetryJsonValidator = $telemetryJsonValidator;
     }
 
@@ -22,8 +26,8 @@ class TelemetryDenormalizer implements DenormalizerInterface
         }
 
         $telemetry = new Telemetry();
-        $telemetry = new Telemetry();
-        $telemetry->setGlpiUuid($data['glpi']['uuid']);
+        $telemetry->setGlpiUuid($this->propertyAccessor->getValue($data, 'data.glpi.uuid'));
+        /*
         $telemetry->setGlpiVersion($data['glpi']['version']);
         $telemetry->setGlpiDefaultLanguage($data['glpi']['default_language']);
         $telemetry->setGlpiAvgEntities($data['glpi']['usage']['avg_entities']);
@@ -58,6 +62,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setInstallMode($data['glpi']['install_mode']);
         $telemetry->setCreatedAt(new \DateTimeImmutable());
         $telemetry->setUpdatedAt(new \DateTimeImmutable());
+        */
 
         return $telemetry;
     }
