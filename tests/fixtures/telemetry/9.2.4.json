@@ -2,22 +2,23 @@
     "data": {
         "glpi": {
             "uuid": "IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6",
-            "version": "9.2",
+            "version": "9.2.4",
             "plugins": [
                 {
                     "key": "fields",
-                    "version": "1.7.0"
+                    "version": "1.7.3"
                 },
                 {
                     "key": "formcreator",
-                    "version": "2.6.0"
+                    "version": "2.6.4"
                 },
                 {
                     "key": "fusioninventory",
-                    "version": "9.2+1.0"
+                    "version": "9.2+2.1"
                 }
             ],
             "default_language": "fr_FR",
+            "install_mode": "TARBALL",
             "usage": {
                 "avg_entities": "0-500",
                 "avg_computers": "0-500",

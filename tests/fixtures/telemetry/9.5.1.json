@@ -1,23 +1,24 @@
 {
     "data": {
         "glpi": {
-            "uuid": "IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6",
-            "version": "9.2",
+            "uuid": "FIEttOyzhKyj6bL7nvFBSc1laedyJ2VLUILLnEMW",
+            "version": "9.5.1",
             "plugins": [
                 {
                     "key": "fields",
-                    "version": "1.7.0"
+                    "version": "1.11.0"
                 },
                 {
                     "key": "formcreator",
-                    "version": "2.6.0"
+                    "version": "2.10.1"
                 },
                 {
                     "key": "fusioninventory",
-                    "version": "9.2+1.0"
+                    "version": "9.5.0+1.0"
                 }
             ],
             "default_language": "fr_FR",
+            "install_mode": "TARBALL",
             "usage": {
                 "avg_entities": "0-500",
                 "avg_computers": "0-500",
@@ -37,16 +38,16 @@
             "db": {
                 "engine": "MySQL Community Server - GPL",
                 "version": "8.0.35",
-                "size": "10.1",
+                "size": "39.3",
                 "log_size": "",
                 "sql_mode": ""
             },
             "web_server": {
                 "engine": "Apache",
-                "version": "2.4.25"
+                "version": "2.4.54"
             },
             "php": {
-                "version": "7.0.33",
+                "version": "7.4.33",
                 "modules": [
                     "Core",
                     "date",
@@ -61,27 +62,38 @@
                     "fileinfo",
                     "filter",
                     "ftp",
-                    "gd",
                     "hash",
                     "iconv",
                     "json",
                     "mbstring",
                     "SPL",
                     "PDO",
-                    "session",
+                    "pdo_sqlite",
+                    "bz2",
                     "posix",
                     "Reflection",
-                    "standard",
+                    "session",
                     "SimpleXML",
-                    "pdo_sqlite",
-                    "Phar",
+                    "standard",
                     "tokenizer",
                     "xml",
                     "xmlreader",
                     "xmlwriter",
                     "mysqlnd",
                     "apache2handler",
+                    "Phar",
+                    "exif",
+                    "gd",
+                    "intl",
+                    "ldap",
+                    "memcached",
                     "mysqli",
+                    "pcntl",
+                    "redis",
+                    "soap",
+                    "sodium",
+                    "xmlrpc",
+                    "zip",
                     "Zend OPcache"
                 ],
                 "setup": {
