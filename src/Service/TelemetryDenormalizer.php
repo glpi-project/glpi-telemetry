@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Telemetry;
-use App\Service\TelemetryJsonValidator;
+use DateTimeImmutable;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -11,14 +11,14 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class TelemetryDenormalizer implements DenormalizerInterface
 {
     private PropertyAccessorInterface $propertyAccessor;
-    private TelemetryJsonValidator $TelemetryJsonValidator;
+    private TelemetryJsonValidator $telemetryJsonValidator;
 
     public function __construct(TelemetryJsonValidator $telemetryJsonValidator)
     {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidPropertyPath()
             ->getPropertyAccessor();
-        $this->TelemetryJsonValidator = $telemetryJsonValidator;
+        $this->telemetryJsonValidator = $telemetryJsonValidator;
     }
 
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
@@ -61,17 +61,17 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setPhpConfigUploadMaxFilesize($data['system']['php']['setup']['upload_max_filesize']);
         $telemetry->setOsFamily($data['system']['os']['family']);
         $telemetry->setOsVersion($data['system']['os']['version']);
-        $telemetry->setInstallMode($data['glpi']['install_mode']);
+        */
+        $telemetry->setInstallMode($this->propertyAccessor->getValue($data, 'data.glpi.install_mode'));
         $telemetry->setCreatedAt(new \DateTimeImmutable());
         $telemetry->setUpdatedAt(new \DateTimeImmutable());
-        */
 
         return $telemetry;
     }
 
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        return Telemetry::class === $type && $this->TelemetryJsonValidator->validateJson($data);
+        return Telemetry::class === $type && $this->telemetryJsonValidator->validateJson($data);
     }
 
     public function getSupportedTypes(?string $format): array
