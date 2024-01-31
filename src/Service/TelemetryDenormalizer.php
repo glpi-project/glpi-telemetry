@@ -15,7 +15,9 @@ class TelemetryDenormalizer implements DenormalizerInterface
 
     public function __construct(TelemetryJsonValidator $telemetryJsonValidator)
     {
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->disableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor();
         $this->TelemetryJsonValidator = $telemetryJsonValidator;
     }
 
