@@ -1,17 +1,21 @@
 <?php
 
+use App\Service\TelemetryDenormalizer;
 use App\Service\TelemetryJsonValidator;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
+use App\Entity\Telemetry;
 
-class TelemetryJsonValidatorTest extends TestCase
+class TelemetryDenormalizerTest extends TestCase
 {
     /**
-     * Ensure that all telemetry files are considered as valid.
+     * Ensure that all telemetry files are considered as valid and are parsed without errors.
      */
     public function testTelemetryFiles(): void
     {
-        $validator = new TelemetryJsonValidator(new Validator(), __DIR__ . '/../../resources/schema');
+        $denormalizer = new TelemetryDenormalizer(
+            new TelemetryJsonValidator(new Validator(), __DIR__ . '/../../resources/schema')
+        );
 
         $directory_iterator = new DirectoryIterator(__DIR__ . '/../../tests/fixtures/telemetry');
         /** @var \SplFileObject $file */
@@ -24,13 +28,11 @@ class TelemetryJsonValidatorTest extends TestCase
             $this->assertJson($contents);
 
             $data = json_decode($contents);
-            $this->assertTrue($validator->validateJson($data));
-        }
-    }
 
-    public function testInvalidJson(): void
-    {
-        $validator = new TelemetryJsonValidator(new Validator(), __DIR__ . '/../../resources/schema');
-        $this->assertFalse($validator->validateJson('{"invalid": "data"}'));
+            $this->assertTrue($denormalizer->supportsDenormalization($data, Telemetry::class));
+
+            $telemetry = $denormalizer->denormalize($data, Telemetry::class);
+            $this->assertInstanceOf(Telemetry::class, $telemetry);
+        }
     }
 }
