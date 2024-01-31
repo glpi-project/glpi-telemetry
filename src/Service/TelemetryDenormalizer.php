@@ -5,12 +5,12 @@ namespace App\Service;
 use App\Entity\Telemetry;
 use App\Service\TelemetryJsonValidator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class TelemetryDenormalizer implements DenormalizerInterface
 {
-    private PropertyAccessor $propertyAccessor;
+    private PropertyAccessorInterface $propertyAccessor;
     private TelemetryJsonValidator $TelemetryJsonValidator;
 
     public function __construct(TelemetryJsonValidator $telemetryJsonValidator)
