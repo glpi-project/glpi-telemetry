@@ -46,7 +46,7 @@ jobs:
           echo "composer_cache_dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
           echo "npm_cache_dir=$(npm config get cache)" >> $GITHUB_OUTPUT
       - name: "Restore dependencies cache"
-        uses: "actions/cache@v3"
+        uses: "actions/cache@v4"
         with:
           path: |
             ${{ steps.get-cache-directories.outputs.composer_cache_dir }}
