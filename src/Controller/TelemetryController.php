@@ -48,7 +48,8 @@ class TelemetryController extends AbstractController
     public function index(TelemetryRepository $telemetryRepository): Response
     {
         return $this->render(
-            'telemetry/index.html.twig', [
+            'telemetry/index.html.twig',
+            [
             'controller_name' => 'controller-name',
             ]
         );

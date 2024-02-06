@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Telemetry;
+use App\Entity\GlpiPlugin;
 use App\Entity\TelemetryGlpiPlugin;
 use App\Repository\GlpiPluginRepository;
 use DateTimeImmutable;
@@ -76,20 +77,25 @@ class TelemetryDenormalizer implements DenormalizerInterface
 
             $glpiPlugin = $this->_pluginRepository->findOneBy(['pkey' => $plugin->key]);
 
-            if ($glpiPlugin) {
-                $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);
-                $telemetryGlpiPlugin->setTelemetryEntry($telemetry);
-                $telemetryGlpiPlugin->setVersion($plugin->version);
-                $telemetryGlpiPlugin->setCreatedAt(new DateTimeImmutable());
-                $telemetryGlpiPlugin->setUpdatedAt(new DateTimeImmutable());
+            if ($glpiPlugin === null) {
+                $glpiPlugin = new GlpiPlugin();
+                $glpiPlugin->setPkey($plugin->key);
+                $glpiPlugin->setCreatedAt(new DateTimeImmutable());
+                $glpiPlugin->setUpdatedAt(new DateTimeImmutable());
 
-                $telemetry->addTelemetryGlpiPlugin($telemetryGlpiPlugin);
-
+                $this->_pluginRepository->save($glpiPlugin, true);
             }
 
+            $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);
+            $telemetryGlpiPlugin->setTelemetryEntry($telemetry);
+            $telemetryGlpiPlugin->setVersion($plugin->version);
+            $telemetryGlpiPlugin->setCreatedAt(new DateTimeImmutable());
+            $telemetryGlpiPlugin->setUpdatedAt(new DateTimeImmutable());
+
+            $telemetry->addTelemetryGlpiPlugin($telemetryGlpiPlugin);
         }
 
-            return $telemetry;
+        return $telemetry;
     }
 
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
