@@ -591,7 +591,7 @@ class Telemetry
 
     public function removeTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
     {
-        if ($this->TelemtryGlpiPlugin->removeElement($telemetryGlpiPlugin)) {
+        if ($this->TelemetryGlpiPlugin->removeElement($telemetryGlpiPlugin)) {
             // set the owning side to null (unless already changed)
             if ($telemetryGlpiPlugin->getTelemetryEntry() === $this) {
                 $telemetryGlpiPlugin->setTelemetryEntry(null);

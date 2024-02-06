@@ -1,16 +1,25 @@
 <?php
 
 use App\Entity\Telemetry;
+use App\Repository\GlpiPluginRepository;
 use App\Service\TelemetryDenormalizer;
 use App\Service\TelemetryJsonValidator;
+use Doctrine\ORM\EntityManager;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 
 class TelemetryDenormalizerTest extends TestCase
 {
+    private GlpiPluginRepository $_pluginRepository;
     /**
      * Ensure that all telemetry files are considered as valid and are parsed without errors.
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->_pluginRepository = $this->createMock(GlpiPluginRepository::class);
+    }
     public function testTelemetryFiles(): void
     {
         $directory_iterator = new DirectoryIterator(__DIR__ . '/../../tests/fixtures/telemetry');
@@ -80,8 +89,10 @@ class TelemetryDenormalizerTest extends TestCase
      */
     private function getDenormalizedData(mixed $data): Telemetry
     {
+
         $denormalizer = new TelemetryDenormalizer(
-            new TelemetryJsonValidator(new Validator(), __DIR__ . '/../../resources/schema')
+            new TelemetryJsonValidator(new Validator(), __DIR__ . '/../../resources/schema'),
+            $this->_pluginRepository
         );
 
         $this->assertTrue($denormalizer->supportsDenormalization($data, Telemetry::class));
