@@ -82,8 +82,6 @@ class TelemetryDenormalizer implements DenormalizerInterface
                 $glpiPlugin->setPkey($plugin->key);
                 $glpiPlugin->setCreatedAt(new DateTimeImmutable());
                 $glpiPlugin->setUpdatedAt(new DateTimeImmutable());
-
-                $this->_pluginRepository->save($glpiPlugin, true);
             }
 
             $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);

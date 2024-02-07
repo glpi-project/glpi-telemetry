@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Telemetry;
-use App\Repository\GlpiPluginRepository;
 use App\Repository\TelemetryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -20,28 +19,16 @@ class TelemetryController extends AbstractController
         Telemetry $telemetry,
         LoggerInterface $logger,
         EntityManagerInterface $entityManager,
-        GlpiPluginRepository $glpiPluginRepository
     ): Response {
         $logger->debug('Telemetry received : ' . print_r($telemetry, true));
         try {
-            $this->registerTelemetryData($logger, $telemetry, $entityManager, $glpiPluginRepository);
-            return new Response(
-                'Status: OK',
-                Response::HTTP_OK
-            );
+            $entityManager->persist($telemetry);
+            $entityManager->flush();
+            return $this->json(['message' => 'OK']);
         } catch (\Exception $e) {
             $logger->debug('Error saving data to database : ' . $e->getMessage());
-            return new Response(
-                'Status: Error',
-                Response::HTTP_BAD_REQUEST
-            );
+            return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-    public function registerTelemetryData(LoggerInterface $logger, Telemetry $telemetry, EntityManagerInterface $entityManager, GlpiPluginRepository $glpiPluginRepository)
-    {
-        $logger->debug('telemetry data from denormalizer: ' . print_r($telemetry, true));
-        $entityManager->persist($telemetry);
-        $entityManager->flush();
     }
 
     #[Route('/telemetry', name: 'app_telemetry')]

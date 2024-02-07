@@ -18,7 +18,7 @@ class TelemetryGlpiPlugin
     #[ORM\ManyToOne(inversedBy: 'TelemetryGlpiPlugin')]
     private ?Telemetry $telemetry_entry = null;
 
-    #[ORM\ManyToOne(targetEntity: GlpiPlugin::class)]
+    #[ORM\ManyToOne(targetEntity: GlpiPlugin::class, cascade: ['persist'])]
     private ?GlpiPlugin $glpi_plugin;
 
     #[ORM\Column(length: 50)]
