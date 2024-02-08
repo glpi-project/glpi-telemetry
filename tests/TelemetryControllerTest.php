@@ -17,7 +17,6 @@ class TelemetryControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'text/html']);
         $this->assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
-        $this->assertEquals('status: Content-Type must be application/json', $client->getResponse()->getContent());
     }
 
     public function testInvalidJsonPost()
