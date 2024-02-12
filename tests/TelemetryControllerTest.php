@@ -23,7 +23,7 @@ class TelemetryControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'application/json'], '{"test": "test"}');
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('error', $client->getResponse()->getContent());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+        $this->assertJsonStringEqualsJsonString($client->getResponse()->getContent(), '{"error":"Bad request"}');
     }
 }

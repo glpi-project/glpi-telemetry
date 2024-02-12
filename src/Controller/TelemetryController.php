@@ -16,10 +16,14 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
     public function post(
         #[MapRequestPayload(serializationContext:['json_decode_associative' => false])]
-        Telemetry $telemetry,
+        ?Telemetry $telemetry,
         LoggerInterface $logger,
         EntityManagerInterface $entityManager,
     ): Response {
+        if ($telemetry === null) {
+            return $this->json(['error' => 'Bad request'], Response::HTTP_BAD_REQUEST);
+        }
+
         $logger->debug('Telemetry received : ' . print_r($telemetry, true));
         try {
             $entityManager->persist($telemetry);

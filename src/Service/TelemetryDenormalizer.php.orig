@@ -31,9 +31,6 @@ class TelemetryDenormalizer implements DenormalizerInterface
         if (!$this->supportsDenormalization($data, $type, $format, $context)) {
             throw new \Symfony\Component\Serializer\Exception\InvalidArgumentException();
         }
-        if (!$this->_telemetryJsonValidator->validateJson($data)) {
-            return null;
-        }
 
         $telemetry = new Telemetry();
         $telemetry->setGlpiUuid($this->_propertyAccessor->getValue($data, 'data.glpi.uuid'));
@@ -102,7 +99,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
 
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        return Telemetry::class === $type;
+        return Telemetry::class === $type && $this->_telemetryJsonValidator->validateJson($data);
     }
 
     public function getSupportedTypes(?string $format): array
