@@ -46,7 +46,7 @@
                             }
                         }
                     },
-                    "required": ["uuid", "version", "plugins", "default_language", "install_mode", "usage"]
+                    "required": ["uuid", "version", "plugins", "default_language", "usage"]
                 },
                 "system": {
                     "type": "object",

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TelemetryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelemetryRepository::class)]
@@ -130,6 +132,14 @@ class Telemetry
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $install_mode = null;
+
+    #[ORM\OneToMany(mappedBy: 'telemetry', targetEntity: TelemetryGlpiPlugin::class, cascade: ['persist', 'remove'])]
+    private Collection $telemetryGlpiPlugins;
+
+    public function __construct()
+    {
+        $this->telemetryGlpiPlugins = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -525,14 +535,20 @@ class Telemetry
         return $this->os_family;
     }
 
+    public function setOsFamily(?string $os_family): self
+    {
+        $this->os_family = $os_family;
+
+        return $this;
+    }
     public function getOsDistribution(): ?string
     {
         return $this->os_distribution;
     }
 
-    public function setOsFamily(?string $os_family): self
+    public function setOsDistribution(?string $os_distribution): self
     {
-        $this->os_family = $os_family;
+        $this->os_distribution = $os_distribution;
 
         return $this;
     }
@@ -557,6 +573,36 @@ class Telemetry
     public function setInstallMode(?string $install_mode): self
     {
         $this->install_mode = $install_mode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TelemetryGlpiPlugin>
+     */
+    public function getTelemetryGlpiPlugins(): Collection
+    {
+        return $this->telemetryGlpiPlugins;
+    }
+
+    public function addTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
+    {
+        if (!$this->telemetryGlpiPlugins->contains($telemetryGlpiPlugin)) {
+            $this->telemetryGlpiPlugins->add($telemetryGlpiPlugin);
+            $telemetryGlpiPlugin->setTelemetryEntry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
+    {
+        if ($this->telemetryGlpiPlugins->removeElement($telemetryGlpiPlugin)) {
+            // set the owning side to null (unless already changed)
+            if ($telemetryGlpiPlugin->getTelemetryEntry() === $this) {
+                $telemetryGlpiPlugin->setTelemetryEntry(null);
+            }
+        }
 
         return $this;
     }

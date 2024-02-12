@@ -14,10 +14,10 @@ class TelemetryGlpiPlugin
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Telemetry::class)]
+    #[ORM\ManyToOne(inversedBy: 'telemetryGlpiPlugins')]
     private ?Telemetry $telemetry_entry = null;
 
-    #[ORM\ManyToOne(targetEntity: GlpiPlugin::class)]
+    #[ORM\ManyToOne(targetEntity: GlpiPlugin::class, cascade: ['persist'])]
     private ?GlpiPlugin $glpi_plugin;
 
     #[ORM\Column(length: 50)]
