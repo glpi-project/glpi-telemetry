@@ -249,9 +249,7 @@ class TelemetryDenormalizerTest extends TestCase
     /**
      * Returns a `TelemetryDenormalizer` instance.
      *
-     * @param mixed $data
-     *
-     * @return Telemetry
+     * @return TelemetryDenormalizer
      */
     private function getDenormalizerInstance(): TelemetryDenormalizer
     {
