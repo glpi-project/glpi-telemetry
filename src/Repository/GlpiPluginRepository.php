@@ -38,4 +38,16 @@ class GlpiPluginRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * Returns the GlpiPlugin entity corresponding to given key.
+     *
+     * @param string $key
+     *
+     * @return GlpiPlugin|null
+     */
+    public function findOneByPluginKey(string $key): GlpiPlugin|null
+    {
+        return $this->findOneBy(['pkey' => $key]);
+    }
 }
