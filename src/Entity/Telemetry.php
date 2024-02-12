@@ -580,7 +580,7 @@ class Telemetry
     /**
      * @return Collection<int, TelemetryGlpiPlugin>
      */
-    public function getTelemetryGlpiPlugin(): Collection
+    public function getTelemetryGlpiPlugins(): Collection
     {
         return $this->telemetryGlpiPlugins;
     }

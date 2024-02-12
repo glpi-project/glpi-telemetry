@@ -1,6 +1,8 @@
 <?php
 
+use App\Entity\GlpiPlugin;
 use App\Entity\Telemetry;
+use App\Entity\TelemetryGlpiPlugin;
 use App\Repository\GlpiPluginRepository;
 use App\Service\TelemetryDenormalizer;
 use Doctrine\ORM\EntityManager;
@@ -106,6 +108,23 @@ class TelemetryDenormalizerTest extends TestCase
             $this->assertEquals('Linux', $telemetry->getOsFamily());
             $this->assertEquals('', $telemetry->getOsDistribution());
             $this->assertEquals('5.15.0-91-generic', $telemetry->getOsVersion());
+
+            $this->assertIsIterable($telemetry->getTelemetryGlpiPlugins());
+            $plugins_keys = [];
+            foreach ($telemetry->getTelemetryGlpiPlugins() as $plugin) {
+                $this->assertInstanceOf(TelemetryGlpiPlugin::class, $plugin);
+                $this->assertInstanceOf(GlpiPlugin::class, $plugin->getGlpiPlugin());
+                $this->assertFalse(strlen($plugin->getVersion()) === 0);
+                $plugins_keys[] = $plugin->getGlpiPlugin()->getPkey();
+            }
+            $this->assertEquals(
+                $plugins_keys,
+                [
+                    'fields',
+                    'formcreator',
+                    version_compare($telemetry->getGlpiVersion(), '10.0.0', '<') ? 'fusioninventory' : 'glpiinventory'
+                ]
+            );
         }
     }
 
