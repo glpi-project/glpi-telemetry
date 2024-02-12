@@ -134,11 +134,11 @@ class Telemetry
     private ?string $install_mode = null;
 
     #[ORM\OneToMany(mappedBy: 'telemetry', targetEntity: TelemetryGlpiPlugin::class, cascade: ['persist', 'remove'])]
-    private Collection $telemetryGlpiPlugin;
+    private Collection $telemetryGlpiPlugins;
 
     public function __construct()
     {
-        $this->telemetryGlpiPlugin = new ArrayCollection();
+        $this->telemetryGlpiPlugins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -553,7 +553,6 @@ class Telemetry
         return $this;
     }
 
-
     public function getOsVersion(): ?string
     {
         return $this->os_version;
@@ -583,13 +582,13 @@ class Telemetry
      */
     public function getTelemetryGlpiPlugin(): Collection
     {
-        return $this->telemetryGlpiPlugin;
+        return $this->telemetryGlpiPlugins;
     }
 
     public function addTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
     {
-        if (!$this->telemetryGlpiPlugin->contains($telemetryGlpiPlugin)) {
-            $this->telemetryGlpiPlugin->add($telemetryGlpiPlugin);
+        if (!$this->telemetryGlpiPlugins->contains($telemetryGlpiPlugin)) {
+            $this->telemetryGlpiPlugins->add($telemetryGlpiPlugin);
             $telemetryGlpiPlugin->setTelemetryEntry($this);
         }
 
@@ -598,7 +597,7 @@ class Telemetry
 
     public function removeTelemetryGlpiPlugin(TelemetryGlpiPlugin $telemetryGlpiPlugin): static
     {
-        if ($this->telemetryGlpiPlugin->removeElement($telemetryGlpiPlugin)) {
+        if ($this->telemetryGlpiPlugins->removeElement($telemetryGlpiPlugin)) {
             // set the owning side to null (unless already changed)
             if ($telemetryGlpiPlugin->getTelemetryEntry() === $this) {
                 $telemetryGlpiPlugin->setTelemetryEntry(null);

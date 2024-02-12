@@ -14,8 +14,7 @@ class TelemetryGlpiPlugin
     #[ORM\Column]
     private ?int $id = null;
 
-
-    #[ORM\ManyToOne(inversedBy: 'TelemetryGlpiPlugin')]
+    #[ORM\ManyToOne(inversedBy: 'telemetryGlpiPlugins')]
     private ?Telemetry $telemetry_entry = null;
 
     #[ORM\ManyToOne(targetEntity: GlpiPlugin::class, cascade: ['persist'])]
@@ -29,7 +28,6 @@ class TelemetryGlpiPlugin
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
-
 
     public function getId(): ?int
     {
@@ -95,5 +93,4 @@ class TelemetryGlpiPlugin
 
         return $this;
     }
-
 }
