@@ -94,7 +94,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $plugins = $this->propertyAccessor->getValue($data, 'data.glpi.plugins');
 
         foreach ($plugins as $plugin) {
-            $glpiPlugin = $this->glpiPluginRepository->findOneBy(['pkey' => $plugin->key]);
+            $glpiPlugin = $this->glpiPluginRepository->findOneByPluginKey($plugin->key);
 
             if ($glpiPlugin === null) {
                 $glpiPlugin = new GlpiPlugin();
