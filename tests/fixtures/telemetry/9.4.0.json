@@ -1,7 +1,7 @@
 {
     "data": {
         "glpi": {
-            "uuid": "FIEttOyzhKyj6bL7nvFBSc1laedyJ2VLUILLnEMW",
+            "uuid": "IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6",
             "version": "9.4.0",
             "plugins": [
                 {
@@ -44,7 +44,7 @@
             },
             "web_server": {
                 "engine": "Apache",
-                "version": "2.4.52"
+                "version": "2.4.25"
             },
             "php": {
                 "version": "7.3.33",

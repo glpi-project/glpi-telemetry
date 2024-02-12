@@ -44,7 +44,7 @@
             },
             "web_server": {
                 "engine": "Apache",
-                "version": "2.4.38"
+                "version": "2.4.25"
             },
             "php": {
                 "version": "7.2.34",

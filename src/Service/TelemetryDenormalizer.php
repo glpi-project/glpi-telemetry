@@ -7,23 +7,41 @@ use App\Entity\GlpiPlugin;
 use App\Entity\TelemetryGlpiPlugin;
 use App\Repository\GlpiPluginRepository;
 use DateTimeImmutable;
+use Opis\JsonSchema\Validator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class TelemetryDenormalizer implements DenormalizerInterface
 {
-    private PropertyAccessorInterface $propertyAccessor;
-    private TelemetryJsonValidator $telemetryJsonValidator;
-    private GlpiPluginRepository $pluginRepository;
+    /**
+     * Directory containing schema files.
+     */
+    private string $schemaDir;
 
-    public function __construct(TelemetryJsonValidator $telemetryJsonValidator, GlpiPluginRepository $pluginRepository)
+    /**
+     * JSON data/schema validator.
+     */
+    private Validator $validator;
+
+    /**
+     * Property accessor.
+     */
+    private PropertyAccessorInterface $propertyAccessor;
+
+    /**
+     * GlpiPlugin entity repository.
+     */
+    private GlpiPluginRepository $glpiPluginRepository;
+
+    public function __construct(Validator $validator, string $schemaDir, GlpiPluginRepository $glpiPluginRepository)
     {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidPropertyPath()
             ->getPropertyAccessor();
-        $this->telemetryJsonValidator = $telemetryJsonValidator;
-        $this->pluginRepository = $pluginRepository;
+        $this->validator = $validator;
+        $this->schemaDir = $schemaDir;
+        $this->glpiPluginRepository = $glpiPluginRepository;
     }
 
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
@@ -31,7 +49,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         if (!$this->supportsDenormalization($data, $type, $format, $context)) {
             throw new \Symfony\Component\Serializer\Exception\InvalidArgumentException();
         }
-        if (!$this->telemetryJsonValidator->validateJson($data)) {
+        if (!$this->validateTelemetryJson($data)) {
             return null;
         }
 
@@ -50,7 +68,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setGlpiAvgGroups($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_groups'));
         $telemetry->setGlpiLdapEnabled($this->propertyAccessor->getValue($data, 'data.glpi.usage.ldap_enabled'));
         $telemetry->setGlpiMailcollectorEnabled($this->propertyAccessor->getValue($data, 'data.glpi.usage.mailcollector_enabled'));
-        $telemetry->setGlpiNotifications(json_encode($this->propertyAccessor->getValue($data, 'data.glpi.usage.notifications')));
+        $telemetry->setGlpiNotifications(json_encode($this->propertyAccessor->getValue($data, 'data.glpi.usage.notifications_modes')));
         $telemetry->setDbEngine($this->propertyAccessor->getValue($data, 'data.system.db.engine'));
         $telemetry->setDbVersion($this->propertyAccessor->getValue($data, 'data.system.db.version'));
         $telemetry->setDbSize(intval($this->propertyAccessor->getValue($data, 'data.system.db.size')));
@@ -76,7 +94,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $plugins = $this->propertyAccessor->getValue($data, 'data.glpi.plugins');
 
         foreach ($plugins as $plugin) {
-            $glpiPlugin = $this->pluginRepository->findOneBy(['pkey' => $plugin->key]);
+            $glpiPlugin = $this->glpiPluginRepository->findOneBy(['pkey' => $plugin->key]);
 
             if ($glpiPlugin === null) {
                 $glpiPlugin = new GlpiPlugin();
@@ -108,5 +126,25 @@ class TelemetryDenormalizer implements DenormalizerInterface
         return [
             Telemetry::class => true,
         ];
+    }
+
+    /**
+     * Validate a Telemetry request contents against the expected schema.
+     *
+     * @param mixed $contents
+     * @return bool
+     */
+    private function validateTelemetryJson(mixed $contents): bool
+    {
+        $this->validator
+            ->resolver()
+            ->registerFile(
+                'https://telemetry.glpi-project.org/schema/v1.json',
+                $this->schemaDir . '/telemetry.v1.json'
+            );
+
+        $result = $this->validator->validate($contents, 'https://telemetry.glpi-project.org/schema/v1.json');
+
+        return $result->isValid();
     }
 }

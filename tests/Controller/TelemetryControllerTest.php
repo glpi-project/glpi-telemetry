@@ -16,7 +16,8 @@ class TelemetryControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'text/html']);
-        $this->assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
+        $this->assertJsonStringEqualsJsonString($client->getResponse()->getContent(), '{"error":"Bad request"}');
     }
 
     public function testInvalidJsonPost()

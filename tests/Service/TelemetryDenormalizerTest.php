@@ -3,23 +3,51 @@
 use App\Entity\Telemetry;
 use App\Repository\GlpiPluginRepository;
 use App\Service\TelemetryDenormalizer;
-use App\Service\TelemetryJsonValidator;
 use Doctrine\ORM\EntityManager;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 
 class TelemetryDenormalizerTest extends TestCase
 {
-    private GlpiPluginRepository $_pluginRepository;
     /**
-     * Ensure that all telemetry files are considered as valid and are parsed without errors.
+     * Ensure that all telemetry files are considered as valid.
      */
-    protected function setUp(): void
+    public function testValidateTelemetryJsonForTelemetryFiles(): void
     {
-        parent::setUp();
+        $directory_iterator = new DirectoryIterator(__DIR__ . '/../../tests/fixtures/telemetry');
+        /** @var \SplFileObject $file */
+        foreach ($directory_iterator as $file) {
+            if ($file->getExtension() !== 'json') {
+                continue;
+            }
 
-        $this->_pluginRepository = $this->createMock(GlpiPluginRepository::class);
+            $contents = file_get_contents($file->getRealPath());
+            $this->assertJson($contents);
+
+            $denormalizer = $this->getDenormalizerInstance();
+            $reflection = new ReflectionClass($denormalizer);
+            $method = $reflection->getMethod('validateTelemetryJson');
+            $method->setAccessible(true);
+
+            $data = json_decode($contents);
+            $this->assertTrue($method->invokeArgs($denormalizer, [$data]));
+        }
     }
+
+    public function testValidateTelemetryJsonWithInvalidData(): void
+    {
+        $denormalizer = $this->getDenormalizerInstance();
+        $reflection = new ReflectionClass($denormalizer);
+        $method = $reflection->getMethod('validateTelemetryJson');
+        $method->setAccessible(true);
+
+        $data = json_decode('{"invalid": "data"}');
+        $this->assertFalse($method->invokeArgs($denormalizer, [$data]));
+    }
+
+    /**
+     * Ensure that all telemetry files are processed as expected.
+     */
     public function testTelemetryFiles(): void
     {
         $directory_iterator = new DirectoryIterator(__DIR__ . '/../../tests/fixtures/telemetry');
@@ -45,68 +73,40 @@ class TelemetryDenormalizerTest extends TestCase
             }
             $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getCreatedAt());
             $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getUpdatedAt());
-            $this->assertIsString($telemetry->getGlpiUuid());
-            $this->assertIsString($telemetry->getGlpiVersion());
-            $this->assertIsString($telemetry->getGlpiDefaultLanguage());
-            $this->assertIsString($telemetry->getGlpiAvgEntities());
-            $this->assertIsString($telemetry->getGlpiAvgComputers());
-            $this->assertIsString($telemetry->getGlpiAvgNetworkequipments());
-            $this->assertIsString($telemetry->getGlpiAvgTickets());
-            $this->assertIsString($telemetry->getGlpiAvgProblems());
-            $this->assertIsString($telemetry->getGlpiAvgChanges());
-            $this->assertIsString($telemetry->getGlpiAvgProjects());
-            $this->assertIsString($telemetry->getGlpiAvgUsers());
-            $this->assertIsString($telemetry->getGlpiAvgGroups());
-            $this->assertIsBool($telemetry->isGlpiLdapEnabled());
-            $this->assertIsBool($telemetry->isGlpiMailcollectorEnabled());
-            $this->assertIsString($telemetry->getGlpiNotifications());
-            $this->assertIsString($telemetry->getDbEngine());
-            $this->assertIsString($telemetry->getDbVersion());
+            $this->assertEquals('IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6', $telemetry->getGlpiUuid());
+            $this->assertMatchesRegularExpression('/^\d+(\.\d+)+$/', $telemetry->getGlpiVersion());
+            $this->assertEquals('fr_FR', $telemetry->getGlpiDefaultLanguage());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgEntities());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgComputers());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgNetworkequipments());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgTickets());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgProblems());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgChanges());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgProjects());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgUsers());
+            $this->assertEquals('0-500', $telemetry->getGlpiAvgGroups());
+            $this->assertFalse($telemetry->isGlpiLdapEnabled());
+            $this->assertFalse($telemetry->isGlpiMailcollectorEnabled());
+            $this->assertEquals('[]', $telemetry->getGlpiNotifications());
+            $this->assertEquals('MySQL Community Server - GPL', $telemetry->getDbEngine());
+            $this->assertEquals('8.0.35', $telemetry->getDbVersion());
             $this->assertIsInt($telemetry->getDbSize());
             $this->assertIsInt($telemetry->getDbLogSize());
             $this->assertIsString($telemetry->getDbSqlMode());
-            $this->assertIsString($telemetry->getWebEngine());
-            $this->assertIsString($telemetry->getWebVersion());
-            $this->assertIsString($telemetry->getPhpVersion());
-            $this->assertIsString($telemetry->getPhpModules());
-            $this->assertIsInt($telemetry->getPhpConfigMaxExecutionTime());
-            $this->assertIsString($telemetry->getPhpConfigMemoryLimit());
-            $this->assertIsString($telemetry->getPhpConfigPostMaxSize());
-            $this->assertIsBool($telemetry->isPhpConfigSafeMode());
-            $this->assertIsString($telemetry->getPhpConfigSession());
-            $this->assertIsString($telemetry->getPhpConfigUploadMaxFilesize());
-            $this->assertIsString($telemetry->getOsFamily());
-            $this->assertIsString($telemetry->getOsDistribution());
-            $this->assertIsString($telemetry->getOsVersion());
-            $this->assertIsString($telemetry->getInstallMode());
-
-
-            // TODO Add some more basic assertions
+            $this->assertEquals('Apache', $telemetry->getWebEngine());
+            $this->assertEquals('2.4.25', $telemetry->getWebVersion());
+            $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $telemetry->getPhpVersion());
+            $this->assertJson($telemetry->getPhpModules());
+            $this->assertEquals(30, $telemetry->getPhpConfigMaxExecutionTime());
+            $this->assertEquals('128M', $telemetry->getPhpConfigMemoryLimit());
+            $this->assertEquals('8M', $telemetry->getPhpConfigPostMaxSize());
+            $this->assertFalse($telemetry->isPhpConfigSafeMode());
+            $this->assertEquals('files', $telemetry->getPhpConfigSession());
+            $this->assertEquals('2M', $telemetry->getPhpConfigUploadMaxFilesize());
+            $this->assertEquals('Linux', $telemetry->getOsFamily());
+            $this->assertEquals('', $telemetry->getOsDistribution());
+            $this->assertEquals('5.15.0-91-generic', $telemetry->getOsVersion());
         }
-    }
-
-    /**
-     * @dataProvider installModeProvider
-     */
-    public function testInstallModeValues(string $value): void
-    {
-        $data = $this->getBaseTelemetryV1Data();
-        $data->data->glpi->install_mode = $value;
-
-        $telemetry = $this->getDenormalizedData($data);
-
-        $this->assertEquals($value, $telemetry->getInstallMode());
-    }
-
-    public function testGlpiDefaultLanguageValues(): void
-    {
-        $data = $this->getBaseTelemetryV1Data();
-
-        $pattern = '/^[a-z]{2}_[A-Z]{2}$/';
-
-        $telemetry = $this->getDenormalizedData($data);
-
-        $this->assertMatchesRegularExpression($pattern, $telemetry->getGlpiDefaultLanguage());
     }
 
     /**
@@ -127,7 +127,124 @@ class TelemetryDenormalizerTest extends TestCase
     }
 
     /**
+     * @dataProvider installModeProvider
+     */
+    public function testInstallModeValues(string $value): void
+    {
+        $data = $this->getBaseTelemetryV1Data();
+        $data->data->glpi->install_mode = $value;
+
+        $telemetry = $this->getDenormalizedData($data);
+
+        $this->assertEquals($value, $telemetry->getInstallMode());
+    }
+
+    /**
+     * @return array<array{value: string}>
+     */
+    public static function defaultLanguageProvider(): iterable
+    {
+        // Known values exported from GLPI 10.0.
+        $values = [
+           'ar_SA',
+           'bg_BG',
+           'id_ID',
+           'ms_MY',
+           'ca_ES',
+           'cs_CZ',
+           'de_DE',
+           'da_DK',
+           'et_EE',
+           'en_GB',
+           'en_US',
+           'es_AR',
+           'es_EC',
+           'es_CO',
+           'es_ES',
+           'es_419',
+           'es_MX',
+           'es_VE',
+           'eu_ES',
+           'fr_FR',
+           'fr_CA',
+           'fr_BE',
+           'gl_ES',
+           'el_GR',
+           'he_IL',
+           'hi_IN',
+           'hr_HR',
+           'hu_HU',
+           'it_IT',
+           'kn',
+           'lv_LV',
+           'lt_LT',
+           'mn_MN',
+           'nl_NL',
+           'nl_BE',
+           'nb_NO',
+           'nn_NO',
+           'fa_IR',
+           'pl_PL',
+           'pt_PT',
+           'pt_BR',
+           'ro_RO',
+           'ru_RU',
+           'sk_SK',
+           'sl_SI',
+           'sr_RS',
+           'fi_FI',
+           'sv_SE',
+           'vi_VN',
+           'th_TH',
+           'tr_TR',
+           'uk_UA',
+           'ja_JP',
+           'zh_CN',
+           'zh_TW',
+           'ko_KR',
+           'zh_HK',
+           'be_BY',
+           'is_IS',
+           'eo',
+           'es_CL',
+        ];
+
+        foreach ($values as $value) {
+            yield ['value' => $value];
+        }
+    }
+
+    /**
+     * @dataProvider defaultLanguageProvider
+     */
+    public function testGlpiDefaultLanguageValues(string $value): void
+    {
+        $data = $this->getBaseTelemetryV1Data();
+        $data->data->glpi->default_language = $value;
+
+        $telemetry = $this->getDenormalizedData($data);
+
+        $this->assertMatchesRegularExpression('/^[a-z]{2}(_[A-Z0-9]{2,3})?$/', $telemetry->getGlpiDefaultLanguage());
+    }
+
+    /**
      * Returns a `TelemetryDenormalizer` instance.
+     *
+     * @param mixed $data
+     *
+     * @return Telemetry
+     */
+    private function getDenormalizerInstance(): TelemetryDenormalizer
+    {
+        return new TelemetryDenormalizer(
+            new Validator(),
+            __DIR__ . '/../../resources/schema',
+            $this->createMock(GlpiPluginRepository::class)
+        );
+    }
+
+    /**
+     * Returns denormalized data.
      *
      * @param mixed $data
      *
@@ -135,11 +252,7 @@ class TelemetryDenormalizerTest extends TestCase
      */
     private function getDenormalizedData(mixed $data): Telemetry
     {
-
-        $denormalizer = new TelemetryDenormalizer(
-            new TelemetryJsonValidator(new Validator(), __DIR__ . '/../../resources/schema'),
-            $this->_pluginRepository
-        );
+        $denormalizer = $this->getDenormalizerInstance();
 
         $this->assertTrue($denormalizer->supportsDenormalization($data, Telemetry::class));
 
@@ -159,7 +272,7 @@ class TelemetryDenormalizerTest extends TestCase
         $data = [
             'data' => [
                 'glpi' => [
-                    'uuid' => 'FIEttOyzhKyj6bL7nvFBSc1laedyJ2VLUILLnEMW',
+                    'uuid' => 'IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6',
                     'version' => '10.0.3',
                     'plugins' => [
                         [
