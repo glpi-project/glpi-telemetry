@@ -3,7 +3,7 @@ import * as echarts from "echarts";
 window.echarts = echarts;
 
 global.filterCallbacks = [];
-global.registerFilterCallback = function (callback) { global.filterCallbacks.push(callback); };
+global.registerFilterCallback = function (callback) {global.filterCallbacks.push(callback);};
 global.executeFilterCallbacks = function (filters) {
     global.filterCallbacks.forEach(callback => {
         callback(filters);
@@ -17,7 +17,7 @@ window.addEventListener("DOMContentLoaded", () => {
     var params = {};
     setValue(selectedOption);
 
-    select.onchange = function () { setValue(); };
+    select.onchange = function () {setValue();};
 
     function setValue() {
         selectedOption = document.getElementById('dataPeriod').value;
@@ -31,7 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
             const chartContainer = button.closest('.card').querySelector('.card-body');
             const chart = echarts.getInstanceByDom(chartContainer);
             const options = chart.getOption();
-            const title = typeof (options.title) !== 'undefined' && typeof (options.title[0]) !== 'undefined' && typeof (options.title[0].text) !== 'undefined'
+            const title = typeof(options.title) !== 'undefined' && typeof(options.title[0]) !== 'undefined' && typeof(options.title[0].text) !== 'undefined'
                 ? options.title[0].text
                 : '';
 
@@ -53,7 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
             `;
 
             modal.addEventListener('shown.bs.modal', () => {
-                options.title = { show: false };
+                options.title = {show:false};
 
                 const modalChartContainer = modal.querySelector('.chart-container');
                 const modalChart = echarts.init(modalChartContainer);
