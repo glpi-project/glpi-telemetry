@@ -535,17 +535,24 @@ class Telemetry
         return $this->os_family;
     }
 
-    public function getOsDistribution(): ?string
-    {
-        return $this->os_distribution;
-    }
-
     public function setOsFamily(?string $os_family): self
     {
         $this->os_family = $os_family;
 
         return $this;
     }
+    public function getOsDistribution(): ?string
+    {
+        return $this->os_distribution;
+    }
+
+    public function setOsDistribution(?string $os_distribution): self
+    {
+        $this->os_distribution = $os_distribution;
+
+        return $this;
+    }
+
 
     public function getOsVersion(): ?string
     {

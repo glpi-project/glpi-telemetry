@@ -64,6 +64,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setPhpConfigSession($this->_propertyAccessor->getValue($data, 'data.system.php.setup.session'));
         $telemetry->setPhpConfigUploadMaxFilesize($this->_propertyAccessor->getValue($data, 'data.system.php.setup.upload_max_filesize'));
         $telemetry->setOsFamily($this->_propertyAccessor->getValue($data, 'data.system.os.family'));
+        $telemetry->setOsDistribution($this->_propertyAccessor->getValue($data, 'data.system.os.distribution'));
         $telemetry->setOsVersion($this->_propertyAccessor->getValue($data, 'data.system.os.version'));
         $telemetry->setInstallMode($this->_propertyAccessor->getValue($data, 'data.glpi.install_mode'));
         $telemetry->setCreatedAt(new DateTimeImmutable());

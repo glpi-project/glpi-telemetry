@@ -45,6 +45,41 @@ class TelemetryDenormalizerTest extends TestCase
             }
             $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getCreatedAt());
             $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getUpdatedAt());
+            $this->assertIsString($telemetry->getGlpiUuid());
+            $this->assertIsString($telemetry->getGlpiVersion());
+            $this->assertIsString($telemetry->getGlpiDefaultLanguage());
+            $this->assertIsString($telemetry->getGlpiAvgEntities());
+            $this->assertIsString($telemetry->getGlpiAvgComputers());
+            $this->assertIsString($telemetry->getGlpiAvgNetworkequipments());
+            $this->assertIsString($telemetry->getGlpiAvgTickets());
+            $this->assertIsString($telemetry->getGlpiAvgProblems());
+            $this->assertIsString($telemetry->getGlpiAvgChanges());
+            $this->assertIsString($telemetry->getGlpiAvgProjects());
+            $this->assertIsString($telemetry->getGlpiAvgUsers());
+            $this->assertIsString($telemetry->getGlpiAvgGroups());
+            $this->assertIsBool($telemetry->isGlpiLdapEnabled());
+            $this->assertIsBool($telemetry->isGlpiMailcollectorEnabled());
+            $this->assertIsString($telemetry->getGlpiNotifications());
+            $this->assertIsString($telemetry->getDbEngine());
+            $this->assertIsString($telemetry->getDbVersion());
+            $this->assertIsInt($telemetry->getDbSize());
+            $this->assertIsInt($telemetry->getDbLogSize());
+            $this->assertIsString($telemetry->getDbSqlMode());
+            $this->assertIsString($telemetry->getWebEngine());
+            $this->assertIsString($telemetry->getWebVersion());
+            $this->assertIsString($telemetry->getPhpVersion());
+            $this->assertIsString($telemetry->getPhpModules());
+            $this->assertIsInt($telemetry->getPhpConfigMaxExecutionTime());
+            $this->assertIsString($telemetry->getPhpConfigMemoryLimit());
+            $this->assertIsString($telemetry->getPhpConfigPostMaxSize());
+            $this->assertIsBool($telemetry->isPhpConfigSafeMode());
+            $this->assertIsString($telemetry->getPhpConfigSession());
+            $this->assertIsString($telemetry->getPhpConfigUploadMaxFilesize());
+            $this->assertIsString($telemetry->getOsFamily());
+            $this->assertIsString($telemetry->getOsDistribution());
+            $this->assertIsString($telemetry->getOsVersion());
+            $this->assertIsString($telemetry->getInstallMode());
+
 
             // TODO Add some more basic assertions
         }
@@ -61,6 +96,17 @@ class TelemetryDenormalizerTest extends TestCase
         $telemetry = $this->getDenormalizedData($data);
 
         $this->assertEquals($value, $telemetry->getInstallMode());
+    }
+
+    public function testGlpiDefaultLanguageValues(): void
+    {
+        $data = $this->getBaseTelemetryV1Data();
+
+        $pattern = '/^[a-z]{2}_[A-Z]{2}$/';
+
+        $telemetry = $this->getDenormalizedData($data);
+
+        $this->assertMatchesRegularExpression($pattern, $telemetry->getGlpiDefaultLanguage());
     }
 
     /**
