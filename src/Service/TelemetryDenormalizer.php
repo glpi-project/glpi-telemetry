@@ -13,17 +13,17 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class TelemetryDenormalizer implements DenormalizerInterface
 {
-    private PropertyAccessorInterface $_propertyAccessor;
-    private TelemetryJsonValidator $_telemetryJsonValidator;
-    private GlpiPluginRepository $_pluginRepository;
+    private PropertyAccessorInterface $propertyAccessor;
+    private TelemetryJsonValidator $telemetryJsonValidator;
+    private GlpiPluginRepository $pluginRepository;
 
-    public function __construct(TelemetryJsonValidator $_telemetryJsonValidator, GlpiPluginRepository $_pluginRepository)
+    public function __construct(TelemetryJsonValidator $telemetryJsonValidator, GlpiPluginRepository $pluginRepository)
     {
-        $this->_propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidPropertyPath()
             ->getPropertyAccessor();
-        $this->_telemetryJsonValidator = $_telemetryJsonValidator;
-        $this->_pluginRepository = $_pluginRepository;
+        $this->telemetryJsonValidator = $telemetryJsonValidator;
+        $this->pluginRepository = $pluginRepository;
     }
 
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
@@ -31,55 +31,52 @@ class TelemetryDenormalizer implements DenormalizerInterface
         if (!$this->supportsDenormalization($data, $type, $format, $context)) {
             throw new \Symfony\Component\Serializer\Exception\InvalidArgumentException();
         }
-        if (!$this->_telemetryJsonValidator->validateJson($data)) {
+        if (!$this->telemetryJsonValidator->validateJson($data)) {
             return null;
         }
 
         $telemetry = new Telemetry();
-        $telemetry->setGlpiUuid($this->_propertyAccessor->getValue($data, 'data.glpi.uuid'));
-        $telemetry->setGlpiVersion($this->_propertyAccessor->getValue($data, 'data.glpi.version'));
-        $telemetry->setGlpiDefaultLanguage($this->_propertyAccessor->getValue($data, 'data.glpi.default_language'));
-        $telemetry->setGlpiAvgEntities($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_entities'));
-        $telemetry->setGlpiAvgComputers($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_computers'));
-        $telemetry->setGlpiAvgNetworkequipments($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_networkequipments'));
-        $telemetry->setGlpiAvgTickets($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_tickets'));
-        $telemetry->setGlpiAvgProblems($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_problems'));
-        $telemetry->setGlpiAvgChanges($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_changes'));
-        $telemetry->setGlpiAvgProjects($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_projects'));
-        $telemetry->setGlpiAvgUsers($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_users'));
-        $telemetry->setGlpiAvgGroups($this->_propertyAccessor->getValue($data, 'data.glpi.usage.avg_groups'));
-        $telemetry->setGlpiLdapEnabled($this->_propertyAccessor->getValue($data, 'data.glpi.usage.ldap_enabled'));
-        $telemetry->setGlpiMailcollectorEnabled($this->_propertyAccessor->getValue($data, 'data.glpi.usage.mailcollector_enabled'));
-        $telemetry->setGlpiNotifications(json_encode($this->_propertyAccessor->getValue($data, 'data.glpi.usage.notifications')));
-        $telemetry->setDbEngine($this->_propertyAccessor->getValue($data, 'data.system.db.engine'));
-        $telemetry->setDbVersion($this->_propertyAccessor->getValue($data, 'data.system.db.version'));
-        $telemetry->setDbSize(intval($this->_propertyAccessor->getValue($data, 'data.system.db.size')));
-        $telemetry->setDbLogSize(intval($this->_propertyAccessor->getValue($data, 'data.system.db.log_size')));
-        $telemetry->setDbSqlMode($this->_propertyAccessor->getValue($data, 'data.system.db.sql_mode'));
-        $telemetry->setWebEngine($this->_propertyAccessor->getValue($data, 'data.system.web_server.engine'));
-        $telemetry->setWebVersion($this->_propertyAccessor->getValue($data, 'data.system.web_server.version'));
-        $telemetry->setPhpVersion($this->_propertyAccessor->getValue($data, 'data.system.php.version'));
-        $telemetry->setPhpModules(json_encode($this->_propertyAccessor->getValue($data, 'data.system.php.modules')));
-        $telemetry->setPhpConfigMaxExecutionTime($this->_propertyAccessor->getValue($data, 'data.system.php.setup.max_execution_time'));
-        $telemetry->setPhpConfigMemoryLimit($this->_propertyAccessor->getValue($data, 'data.system.php.setup.memory_limit'));
-        $telemetry->setPhpConfigPostMaxSize($this->_propertyAccessor->getValue($data, 'data.system.php.setup.post_max_size'));
-        $telemetry->setPhpConfigSafeMode($this->_propertyAccessor->getValue($data, 'data.system.php.setup.safe_mode'));
-        $telemetry->setPhpConfigSession($this->_propertyAccessor->getValue($data, 'data.system.php.setup.session'));
-        $telemetry->setPhpConfigUploadMaxFilesize($this->_propertyAccessor->getValue($data, 'data.system.php.setup.upload_max_filesize'));
-        $telemetry->setOsFamily($this->_propertyAccessor->getValue($data, 'data.system.os.family'));
-        $telemetry->setOsDistribution($this->_propertyAccessor->getValue($data, 'data.system.os.distribution'));
-        $telemetry->setOsVersion($this->_propertyAccessor->getValue($data, 'data.system.os.version'));
-        $telemetry->setInstallMode($this->_propertyAccessor->getValue($data, 'data.glpi.install_mode'));
+        $telemetry->setGlpiUuid($this->propertyAccessor->getValue($data, 'data.glpi.uuid'));
+        $telemetry->setGlpiVersion($this->propertyAccessor->getValue($data, 'data.glpi.version'));
+        $telemetry->setGlpiDefaultLanguage($this->propertyAccessor->getValue($data, 'data.glpi.default_language'));
+        $telemetry->setGlpiAvgEntities($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_entities'));
+        $telemetry->setGlpiAvgComputers($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_computers'));
+        $telemetry->setGlpiAvgNetworkequipments($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_networkequipments'));
+        $telemetry->setGlpiAvgTickets($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_tickets'));
+        $telemetry->setGlpiAvgProblems($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_problems'));
+        $telemetry->setGlpiAvgChanges($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_changes'));
+        $telemetry->setGlpiAvgProjects($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_projects'));
+        $telemetry->setGlpiAvgUsers($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_users'));
+        $telemetry->setGlpiAvgGroups($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_groups'));
+        $telemetry->setGlpiLdapEnabled($this->propertyAccessor->getValue($data, 'data.glpi.usage.ldap_enabled'));
+        $telemetry->setGlpiMailcollectorEnabled($this->propertyAccessor->getValue($data, 'data.glpi.usage.mailcollector_enabled'));
+        $telemetry->setGlpiNotifications(json_encode($this->propertyAccessor->getValue($data, 'data.glpi.usage.notifications')));
+        $telemetry->setDbEngine($this->propertyAccessor->getValue($data, 'data.system.db.engine'));
+        $telemetry->setDbVersion($this->propertyAccessor->getValue($data, 'data.system.db.version'));
+        $telemetry->setDbSize(intval($this->propertyAccessor->getValue($data, 'data.system.db.size')));
+        $telemetry->setDbLogSize(intval($this->propertyAccessor->getValue($data, 'data.system.db.log_size')));
+        $telemetry->setDbSqlMode($this->propertyAccessor->getValue($data, 'data.system.db.sql_mode'));
+        $telemetry->setWebEngine($this->propertyAccessor->getValue($data, 'data.system.web_server.engine'));
+        $telemetry->setWebVersion($this->propertyAccessor->getValue($data, 'data.system.web_server.version'));
+        $telemetry->setPhpVersion($this->propertyAccessor->getValue($data, 'data.system.php.version'));
+        $telemetry->setPhpModules(json_encode($this->propertyAccessor->getValue($data, 'data.system.php.modules')));
+        $telemetry->setPhpConfigMaxExecutionTime($this->propertyAccessor->getValue($data, 'data.system.php.setup.max_execution_time'));
+        $telemetry->setPhpConfigMemoryLimit($this->propertyAccessor->getValue($data, 'data.system.php.setup.memory_limit'));
+        $telemetry->setPhpConfigPostMaxSize($this->propertyAccessor->getValue($data, 'data.system.php.setup.post_max_size'));
+        $telemetry->setPhpConfigSafeMode($this->propertyAccessor->getValue($data, 'data.system.php.setup.safe_mode'));
+        $telemetry->setPhpConfigSession($this->propertyAccessor->getValue($data, 'data.system.php.setup.session'));
+        $telemetry->setPhpConfigUploadMaxFilesize($this->propertyAccessor->getValue($data, 'data.system.php.setup.upload_max_filesize'));
+        $telemetry->setOsFamily($this->propertyAccessor->getValue($data, 'data.system.os.family'));
+        $telemetry->setOsDistribution($this->propertyAccessor->getValue($data, 'data.system.os.distribution'));
+        $telemetry->setOsVersion($this->propertyAccessor->getValue($data, 'data.system.os.version'));
+        $telemetry->setInstallMode($this->propertyAccessor->getValue($data, 'data.glpi.install_mode'));
         $telemetry->setCreatedAt(new DateTimeImmutable());
         $telemetry->setUpdatedAt(new DateTimeImmutable());
 
-        $plugins = $this->_propertyAccessor->getValue($data, 'data.glpi.plugins');
+        $plugins = $this->propertyAccessor->getValue($data, 'data.glpi.plugins');
 
         foreach ($plugins as $plugin) {
-
-            $telemetryGlpiPlugin = new TelemetryGlpiPlugin();
-
-            $glpiPlugin = $this->_pluginRepository->findOneBy(['pkey' => $plugin->key]);
+            $glpiPlugin = $this->pluginRepository->findOneBy(['pkey' => $plugin->key]);
 
             if ($glpiPlugin === null) {
                 $glpiPlugin = new GlpiPlugin();
@@ -88,6 +85,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
                 $glpiPlugin->setUpdatedAt(new DateTimeImmutable());
             }
 
+            $telemetryGlpiPlugin = new TelemetryGlpiPlugin();
             $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);
             $telemetryGlpiPlugin->setTelemetryEntry($telemetry);
             $telemetryGlpiPlugin->setVersion($plugin->version);
