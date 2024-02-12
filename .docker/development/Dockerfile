@@ -43,9 +43,6 @@ RUN apt-get update \
   # Install git and zip used by composer when fetching dependencies.
   && apt-get install --assume-yes --no-install-recommends --quiet git unzip \
   \
-  # Install cron service used to consume the symfony messenger queue.
-  && apt-get install --assume-yes --no-install-recommends --quiet cron \
-  \
   # Clean sources list
   && rm -rf /var/lib/apt/lists/*
 
