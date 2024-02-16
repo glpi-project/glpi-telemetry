@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WebEnginesController extends AbstractController implements ViewControllerInterface
 {
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -31,6 +31,11 @@ class WebEnginesController extends AbstractController implements ViewControllerI
         return $this->json($result);
     }
 
+    /**
+     * @param array<string,string> $Dateparams
+     * @return array<array<string,mixed>>
+     */
+
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
         $startDate      = $Dateparams['startDate'];
@@ -42,6 +47,10 @@ class WebEnginesController extends AbstractController implements ViewControllerI
         return $chartData;
     }
 
+    /**
+     * @param array<array<string,mixed>> $data
+     * @return array<array<string,mixed>>
+     */
     public function prepareChartData(array $data): array
     {
         $chartData = [];

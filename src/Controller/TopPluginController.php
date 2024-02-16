@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TopPluginController extends AbstractController implements ViewControllerInterface
 {
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -31,6 +31,10 @@ class TopPluginController extends AbstractController implements ViewControllerIn
         return $this->json($result);
     }
 
+    /**
+     * @param array<string,string> $Dateparams
+     * @return array<array<string,mixed>>
+     */
     public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
     {
         $startDate      = $Dateparams['startDate'];
@@ -42,6 +46,10 @@ class TopPluginController extends AbstractController implements ViewControllerIn
         return $chartData;
     }
 
+    /**
+     * @param array<array<string,mixed>> $data
+     * @return array<array<string,mixed>>
+     */
     public function prepareChartData(array $data): array
     {
         $chartData = [];
