@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240125084731 extends AbstractMigration
+final class Version20240219080756 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -19,29 +19,6 @@ final class Version20240125084731 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
-        $this->addSql('CREATE TABLE telemetry_glpi_plugin (
-          id INT AUTO_INCREMENT NOT NULL,
-          telemetry_entry_id INT DEFAULT NULL,
-          glpi_plugin_id INT DEFAULT NULL,
-          version VARCHAR(50) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
-          created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
-          updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\',
-          INDEX IDX_212467C9E1B3F466 (glpi_plugin_id),
-          INDEX created_at_idx (created_at),
-          INDEX IDX_212467C91C10E3FE (telemetry_entry_id),
-          PRIMARY KEY(id)
-        ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB COMMENT = \'\'');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
         $this->addSql('CREATE TABLE telemetry (
           id INT AUTO_INCREMENT NOT NULL,
           created_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\',
@@ -80,31 +57,48 @@ final class Version20240125084731 extends AbstractMigration
           os_distribution VARCHAR(50) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`,
           os_version VARCHAR(50) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`,
           install_mode VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`,
-          INDEX os_idx (os_family),
+          INDEX install_mode_idx (install_mode),
+          INDEX webengine_idx (web_engine),
           INDEX version_idx (glpi_version),
           INDEX php_idx (php_version),
-          INDEX webengine_idx (web_engine),
-          INDEX glpi_default_language_idx (glpi_default_language),
-          INDEX created_at_idx (created_at),
+          INDEX os_idx (os_family),
           INDEX glpi_uuid_idx (glpi_uuid),
+          INDEX glpi_default_language_idx (glpi_default_language),
+          INDEX db_version_idx (db_version),
+          INDEX db_engine_idx (db_engine),
+          INDEX created_at_idx (created_at),
           PRIMARY KEY(id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB COMMENT = \'\'');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
 
         $this->addSql('CREATE TABLE glpi_plugin (
           id INT AUTO_INCREMENT NOT NULL,
           pkey VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
           created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
           updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\',
+          INDEX pkey_idx (pkey),
           PRIMARY KEY(id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB COMMENT = \'\'');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
+
+        $this->addSql('CREATE TABLE telemetry_glpi_plugin (
+          id INT AUTO_INCREMENT NOT NULL,
+          telemetry_entry_id INT DEFAULT NULL,
+          glpi_plugin_id INT DEFAULT NULL,
+          version VARCHAR(50) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+          created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\',
+          updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\',
+          INDEX IDX_212467C9E1B3F466 (glpi_plugin_id),
+          INDEX IDX_212467C91C10E3FE (telemetry_entry_id),
+          INDEX created_at_idx (created_at),
+          PRIMARY KEY(id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB COMMENT = \'\'');
+        $this->addSql('ALTER TABLE
+          telemetry_glpi_plugin
+        ADD
+          CONSTRAINT FK_212467C91C10E3FE FOREIGN KEY (telemetry_entry_id) REFERENCES telemetry (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE
+          telemetry_glpi_plugin
+        ADD
+          CONSTRAINT FK_212467C9E1B3F466 FOREIGN KEY (glpi_plugin_id) REFERENCES glpi_plugin (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
 
         $this->addSql('CREATE TABLE reference (
           id INT AUTO_INCREMENT NOT NULL,
@@ -121,10 +115,6 @@ final class Version20240125084731 extends AbstractMigration
           uuid VARCHAR(41) CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_unicode_ci`,
           PRIMARY KEY(id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB COMMENT = \'\'');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
 
         $this->addSql('CREATE TABLE glpi_reference (
           id INT AUTO_INCREMENT NOT NULL,
@@ -136,40 +126,18 @@ final class Version20240125084731 extends AbstractMigration
           UNIQUE INDEX UNIQ_A38496BA1645DEA9 (reference_id),
           PRIMARY KEY(id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB COMMENT = \'\'');
+        $this->addSql('ALTER TABLE
+          glpi_reference
+        ADD
+          CONSTRAINT FK_A38496BA1645DEA9 FOREIGN KEY (reference_id) REFERENCES reference (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
         $this->addSql('DROP TABLE telemetry_glpi_plugin');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
-        $this->addSql('DROP TABLE telemetry');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
         $this->addSql('DROP TABLE glpi_plugin');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
-        $this->addSql('DROP TABLE reference');
-        $this->abortIf(
-            !$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MariaDb1052Platform,
-            "Migration can only be executed safely on '\Doctrine\DBAL\Platforms\MariaDb1052Platform'."
-        );
-
+        $this->addSql('DROP TABLE telemetry');
         $this->addSql('DROP TABLE glpi_reference');
+        $this->addSql('DROP TABLE reference');
     }
 }
