@@ -52,7 +52,7 @@ class RefreshCacheService
                 $this->logger->debug("Instance created successfully: " . get_class($controller));
 
                 if ($controller instanceof ViewControllerInterface) {
-                    $this->logger->debug($filter . $forceUpdate ."". get_class($controller));
+                    $this->logger->debug($filter . $forceUpdate . "" . get_class($controller));
                     foreach ($periods as $period) {
                         $this->refreshCache($period, $forceUpdate, $controller);
                     }
@@ -73,7 +73,7 @@ class RefreshCacheService
      */
     public function refreshCache(string $filter, bool $forceUpdate, ViewControllerInterface $controller): array
     {
-        $this->logger->debug('refreshCache called'. $filter. ' '. $forceUpdate);
+        $this->logger->debug('refreshCache called' . $filter . ' ' . $forceUpdate);
         $vueName = md5(strtolower(get_class($controller)));
 
         if ($forceUpdate) {
