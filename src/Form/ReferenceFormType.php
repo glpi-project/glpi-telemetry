@@ -20,14 +20,14 @@ class ReferenceFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, ['label' => false, 'required' => true, 'attr' => ['placeholder' => 'Your (company) name']])
-            ->add('url', UrlType::class, ['label' => false, 'attr' => ['placeholder' => 'URL']])
-            ->add('country', CountryType::class, ['label' => false, 'placeholder' => 'Choose a country'])
-            ->add('phone', TelType::class, ['label' => false, 'attr' => ['placeholder' => 'Phone']])
-            ->add('email', EmailType::class, ['label' => false, 'attr' => ['placeholder' => 'Email']])
-            ->add('referent', TextType::class, ['label' => false, 'attr' => ['placeholder' => 'Referent name']])
-            ->add('nb_assets', NumberType::class, ['label' => false, 'attr' => ['placeholder' => 'Number of assets', 'step' => 1]])
-            ->add('nb_helpdesk', NumberType::class, ['label' => false, 'attr' => ['placeholder' => 'Number of helpdesk', 'step' => 1]])
-            ->add('comment', TextareaType::class, ['label' => false, 'attr' => ['rows' => 6, 'placeholder' => 'Your message']])
+            ->add('url', UrlType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'URL']])
+            ->add('country', CountryType::class, ['label' => false, 'required' => false, 'placeholder' => 'Choose a country'])
+            ->add('phone', TelType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'Phone']])
+            ->add('email', EmailType::class, ['label' => false,'required' => false, 'attr' => ['placeholder' => 'Email']])
+            ->add('referent', TextType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'Referent name']])
+            ->add('nb_assets', NumberType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'Number of assets', 'step' => 1]])
+            ->add('nb_helpdesk', NumberType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'Number of helpdesk', 'step' => 1]])
+            ->add('comment', TextareaType::class, ['label' => false, 'required' => false, 'attr' => ['rows' => 6, 'placeholder' => 'Your message']])
         ;
     }
 }
