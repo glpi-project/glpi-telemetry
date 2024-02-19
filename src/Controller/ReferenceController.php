@@ -57,7 +57,6 @@ class ReferenceController extends AbstractController
 
                     $success = true;
                 } catch (\Throwable $e) {
-                    throw $e;
                     $success = false;
                 }
             }
