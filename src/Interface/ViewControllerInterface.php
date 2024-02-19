@@ -10,5 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface ViewControllerInterface
 {
     public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse;
+
+    /**
+     * @param array<string,string> $dateParams
+     * @param TelemetryRepository $telemetryRepository
+     * @return array<array<string,mixed>>
+     */
     public function getData(array $dateParams, TelemetryRepository $telemetryRepository): array;
 }

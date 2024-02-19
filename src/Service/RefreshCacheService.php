@@ -10,11 +10,11 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class RefreshCacheService
 {
-    public $startDate  = '';
-    public $endDate    = '';
-    private $telemetryRepository;
-    private $cache;
-    private $logger;
+    public string $startDate  = '';
+    public string $endDate    = '';
+    private TelemetryRepository $telemetryRepository;
+    private CacheInterface $cache;
+    private LoggerInterface $logger;
 
     public function __construct(
         TelemetryRepository $telemetryRepository,
@@ -65,7 +65,13 @@ class RefreshCacheService
         return true;
     }
 
-    public function refreshCache($filter, $forceUpdate, $controller)
+    /**
+     * @param string $filter
+     * @param bool $forceUpdate
+     * @param ViewControllerInterface $controller
+     * @return array<array<string,mixed>>
+     */
+    public function refreshCache(string $filter, bool $forceUpdate, ViewControllerInterface $controller): array
     {
         $this->logger->debug('refreshCache called'. $filter. ' '. $forceUpdate);
         $vueName = md5(strtolower(get_class($controller)));

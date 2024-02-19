@@ -39,7 +39,10 @@ class TelemetryRepository extends ServiceEntityRepository
         }
     }
 
-    public function getGlpiVersion($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getGlpiVersion(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -61,7 +64,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getWebEngines($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getWebEngines(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -81,7 +87,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getOsFamily($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getOsFamily(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -100,7 +109,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getPhpInfos($startDate, $endDate): array
+    /**
+     * @return array<int,array<string,mixed>>
+     */
+    public function getPhpInfos(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -121,7 +133,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getTopPlugin($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getTopPlugin(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -142,7 +157,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getDefaultLanguages($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getDefaultLanguages(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -164,7 +182,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getDbEngines($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getDbEngines(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -195,7 +216,10 @@ class TelemetryRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getInstallMode($startDate, $endDate): array
+    /**
+     * @return array<array<string,mixed>>
+     */
+    public function getInstallMode(string $startDate, string $endDate): array
     {
         $conn = $this->getEntityManager()->getConnection();
 

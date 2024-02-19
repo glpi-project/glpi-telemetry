@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GlpiVersionController extends AbstractController implements ViewControllerInterface
 {
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -31,6 +31,10 @@ class GlpiVersionController extends AbstractController implements ViewController
         return $this->json($result);
     }
 
+    /**
+     * @param array<string,string> $dateParams
+     * @return array<array<string,mixed>>
+     */
     public function getData(array $dateParams, TelemetryRepository $telemetryRepository): array
     {
         $startDate      = $dateParams['startDate'];
@@ -43,6 +47,14 @@ class GlpiVersionController extends AbstractController implements ViewController
         return $chartData;
     }
 
+    /**
+     * @param array<array<string,mixed>> $data
+     * @return array{
+     *    periods: array<int,string>,
+     *   versions: array<int,string>,
+     *   data: array<string,array<string,int>>
+     * } $transformedData
+     */
     public function transformDataForChart(array $data): array
     {
         $periods = [];
@@ -106,6 +118,30 @@ class GlpiVersionController extends AbstractController implements ViewController
         ];
     }
 
+    /**
+     * @param array{
+     *     periods: array<int, string>,
+     *     versions: array<int, string>,
+     *     data: array<string, array<string, int>>
+     * } $transformedData
+     * @return array{
+     *     xAxis: array{
+     *         data: array<int, string>
+     *     },
+     *     series: array<int, array{
+     *         name: string,
+     *         type: string,
+     *         stack: string,
+     *         label: array{
+     *             show: bool
+     *         },
+     *         emphasis: array{
+     *             focus: string
+     *         },
+     *         data: array<int, float|int>
+     *     }>
+     * }
+     */
     public function prepareChartData(array $transformedData): array
     {
         $chartData = [

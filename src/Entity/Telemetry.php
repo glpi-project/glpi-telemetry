@@ -133,6 +133,9 @@ class Telemetry
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $install_mode = null;
 
+    /**
+     * @var Collection<int, TelemetryGlpiPlugin>
+     */
     #[ORM\OneToMany(mappedBy: 'telemetry', targetEntity: TelemetryGlpiPlugin::class, cascade: ['persist', 'remove'])]
     private Collection $telemetryGlpiPlugins;
 
