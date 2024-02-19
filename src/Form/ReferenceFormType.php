@@ -20,7 +20,7 @@ class ReferenceFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, ['label' => false, 'required' => true, 'attr' => ['placeholder' => 'Your (company) name']])
-            ->add('url', UrlType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'URL']])
+            ->add('url', UrlType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'URL', 'pattern' => 'https?://.+']])
             ->add('country', CountryType::class, ['label' => false, 'required' => false, 'placeholder' => 'Choose a country'])
             ->add('phone', TelType::class, ['label' => false, 'required' => false, 'attr' => ['placeholder' => 'Phone']])
             ->add('email', EmailType::class, ['label' => false,'required' => false, 'attr' => ['placeholder' => 'Email']])
