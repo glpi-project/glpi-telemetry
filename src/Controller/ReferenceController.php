@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\GlpiReference;
@@ -45,8 +47,8 @@ class ReferenceController extends AbstractController
                     $reference->setReferent($data['referent']);
                     $reference->setComment($data['comment']);
                     $reference->setCreatedAt(new \DateTimeImmutable());
-                    $glpi_reference->setNumAssets($data['nb_assets']);
-                    $glpi_reference->setNumHelpdesk($data['nb_helpdesk']);
+                    $glpi_reference->setNumAssets((int) $data['nb_assets']);
+                    $glpi_reference->setNumHelpdesk((int) $data['nb_helpdesk']);
                     $glpi_reference->setReference($reference);
                     $glpi_reference->setCreatedAt(new \DateTimeImmutable());
 

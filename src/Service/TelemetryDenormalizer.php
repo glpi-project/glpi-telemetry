@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Telemetry;
@@ -79,14 +81,14 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setGlpiNotifications(json_encode($this->propertyAccessor->getValue($data, 'data.glpi.usage.notifications_modes')));
         $telemetry->setDbEngine($this->propertyAccessor->getValue($data, 'data.system.db.engine'));
         $telemetry->setDbVersion($this->propertyAccessor->getValue($data, 'data.system.db.version'));
-        $telemetry->setDbSize(intval($this->propertyAccessor->getValue($data, 'data.system.db.size')));
-        $telemetry->setDbLogSize(intval($this->propertyAccessor->getValue($data, 'data.system.db.log_size')));
+        $telemetry->setDbSize((int) $this->propertyAccessor->getValue($data, 'data.system.db.size'));
+        $telemetry->setDbLogSize((int) $this->propertyAccessor->getValue($data, 'data.system.db.log_size'));
         $telemetry->setDbSqlMode($this->propertyAccessor->getValue($data, 'data.system.db.sql_mode'));
         $telemetry->setWebEngine($this->propertyAccessor->getValue($data, 'data.system.web_server.engine'));
         $telemetry->setWebVersion($this->propertyAccessor->getValue($data, 'data.system.web_server.version'));
         $telemetry->setPhpVersion($this->propertyAccessor->getValue($data, 'data.system.php.version'));
         $telemetry->setPhpModules(json_encode($this->propertyAccessor->getValue($data, 'data.system.php.modules')));
-        $telemetry->setPhpConfigMaxExecutionTime($this->propertyAccessor->getValue($data, 'data.system.php.setup.max_execution_time'));
+        $telemetry->setPhpConfigMaxExecutionTime((int) $this->propertyAccessor->getValue($data, 'data.system.php.setup.max_execution_time'));
         $telemetry->setPhpConfigMemoryLimit($this->propertyAccessor->getValue($data, 'data.system.php.setup.memory_limit'));
         $telemetry->setPhpConfigPostMaxSize($this->propertyAccessor->getValue($data, 'data.system.php.setup.post_max_size'));
         $telemetry->setPhpConfigSafeMode($this->propertyAccessor->getValue($data, 'data.system.php.setup.safe_mode'));
