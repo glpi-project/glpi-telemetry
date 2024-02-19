@@ -41,14 +41,14 @@ class ReferenceController extends AbstractController
 
                     $reference->setName($data['name']);
                     $reference->setUrl($data['url']);
-                    $reference->setCountry(strtolower($data['country']));
+                    $reference->setCountry($data['country'] !== null ? strtolower((string) $data['country']) : null);
                     $reference->setPhone($data['phone']);
                     $reference->setEmail($data['email']);
                     $reference->setReferent($data['referent']);
                     $reference->setComment($data['comment']);
                     $reference->setCreatedAt(new \DateTimeImmutable());
-                    $glpi_reference->setNumAssets((int) $data['nb_assets']);
-                    $glpi_reference->setNumHelpdesk((int) $data['nb_helpdesk']);
+                    $glpi_reference->setNumAssets($data['nb_assets']);
+                    $glpi_reference->setNumHelpdesk($data['nb_helpdesk']);
                     $glpi_reference->setReference($reference);
                     $glpi_reference->setCreatedAt(new \DateTimeImmutable());
 
