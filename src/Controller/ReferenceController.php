@@ -17,6 +17,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ReferenceController extends AbstractController
 {
+    private string $captchaSiteKey;
+
+    public function __construct(string $captchaSiteKey)
+    {
+        $this->captchaSiteKey = $captchaSiteKey;
+    }
+
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
     {
@@ -25,8 +32,6 @@ class ReferenceController extends AbstractController
 
         $reference = new Reference();
         $glpi_reference = new GlpiReference();
-
-        $captchaSiteKey     = $this->getParameter('captcha.site_key');
 
         $form = $this->createForm(ReferenceFormType::class);
         $form->handleRequest($request);
@@ -77,7 +82,7 @@ class ReferenceController extends AbstractController
                 'references'   => $references,
                 'nb_ref'       => $nb,
                 'form'         => $form,
-                'captchaSiteKey' => $captchaSiteKey
+                'captchaSiteKey' => $this->captchaSiteKey
             ]
         );
     }

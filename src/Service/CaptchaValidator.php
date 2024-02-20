@@ -12,7 +12,7 @@ class CaptchaValidator
     /**
      * Turnstile service secret key.
      */
-    private string $secretKey;
+    private string $captchaSecretKey;
 
     /**
      * HTTP client.
@@ -21,11 +21,10 @@ class CaptchaValidator
 
     public function __construct(
         HttpClientInterface $client,
-        #[Autowire(param: 'captcha.secret_key')]
-        string $secretKey
+        string $captchaSecretKey
     ) {
         $this->client = $client;
-        $this->secretKey = $secretKey;
+        $this->captchaSecretKey = $captchaSecretKey;
     }
 
     /**
@@ -45,7 +44,7 @@ class CaptchaValidator
                         'Content-Type' => 'application/json',
                     ],
                     'body' => [
-                        'secret' => $this->secretKey,
+                        'secret' => $this->captchaSecretKey,
                         'response' => $token,
                     ]
                 ]
