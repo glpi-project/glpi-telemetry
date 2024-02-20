@@ -15,10 +15,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
 {
+    private string $captchaSiteKey;
+
+    private string $contactFormRecipientEmail;
+
+    public function __construct(string $captchaSiteKey, string $contactFormRecipientEmail)
+    {
+        $this->captchaSiteKey = $captchaSiteKey;
+        $this->contactFormRecipientEmail = $contactFormRecipientEmail;
+    }
+
     #[Route('/contact', name: 'app_contact')]
     public function index(Request $request, MailerInterface $mailer, CaptchaValidator $captchaValidator): Response
     {
-        $captchaSiteKey     = $this->getParameter('captcha.site_key');
 
         $form = $this->createForm(ContactFormType::class);
         $form->handleRequest($request);
@@ -33,7 +42,7 @@ class ContactController extends AbstractController
 
                     $message = (new Email())
                         ->from($contactFormData['Email'])
-                        ->to($this->getParameter('contact_form.recipient.email'))
+                        ->to($this->contactFormRecipientEmail)
                         ->subject('New message from Telemetry: ' . $contactFormData['Subject'])
                         ->text($contactFormData['Message']);
 
@@ -56,7 +65,7 @@ class ContactController extends AbstractController
 
         return $this->render('contact/index.html.twig', [
             'form'           => $form->createView(),
-            'captchaSiteKey' => $captchaSiteKey,
+            'captchaSiteKey' => $this->captchaSiteKey,
         ]);
     }
 }
