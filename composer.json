@@ -8,6 +8,7 @@
         "ext-ctype": "*",
         "ext-gettext": "*",
         "ext-iconv": "*",
+        "ext-pdo_mysql": "*",
         "doctrine/collections": "^2.1",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
@@ -82,6 +83,7 @@
         "symfony/symfony": "*"
     },
     "require-dev": {
+        "deployer/deployer": "^7.3",
         "friendsofphp/php-cs-fixer": "^3.49",
         "friendsoftwig/twigcs": "^6.4",
         "maglnet/composer-require-checker": "^4.8",
