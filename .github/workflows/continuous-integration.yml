@@ -8,6 +8,12 @@ on:
        - "*"
   pull_request:
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Deploy on the development server?"
+        type: "boolean"
+        required: true
+        default: false
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -87,3 +93,14 @@ jobs:
         run: |
           symfony server:start --daemon --no-tls
           vendor/bin/phpunit --colors=always
+      - name: "Deploy on development server"
+        if: "${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.deploy == true || github.event.inputs.deploy == 'true')) }}"
+        env:
+          SSH_AUTH_SOCK: "/tmp/ssh_agent.sock"
+        run: |
+          mkdir --parents /home/runner/.ssh
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          printf '%s\n' "${{ secrets.DEPLOYER_PRIVATE_KEY }}" | ssh-add -
+          ssh-keyscan -H bastion.teclib.com >> /home/runner/.ssh/known_hosts
+          BRANCH=$(echo ${{ github.ref }} | sed 's|refs/heads/||')
+          vendor/bin/dep deploy stage=development --branch=$BRANCH --file=.deploy.php --ansi --no-interaction --verbose

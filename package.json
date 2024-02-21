@@ -21,6 +21,7 @@
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
+        "encore": "encore",
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
