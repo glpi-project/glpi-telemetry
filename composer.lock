@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94e80be68a167f80ad9aab3d40cd5bc1",
+    "content-hash": "c8d66640cd94ace9a48518b8cff81bdf",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -1285,6 +1285,65 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
+        },
+        {
+            "name": "mledoze/countries",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mledoze/countries.git",
+                "reference": "b5df8831d73836417cd47811639cfc26cb4a96ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mledoze/countries/zipball/b5df8831d73836417cd47811639cfc26cb4a96ce",
+                "reference": "b5df8831d73836417cd47811639cfc26cb4a96ce",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-gettext": "*",
+                "php": ">=8.2",
+                "symfony/console": "~5.4|~6.4|~7.0",
+                "symfony/yaml": "~5.4|~6.4|~7.0"
+            },
+            "require-dev": {
+                "roave/security-advisories": "dev-latest"
+            },
+            "default-branch": true,
+            "bin": [
+                "countries.php"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MLD\\": "src/MLD"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ODbL-1.0"
+            ],
+            "authors": [
+                {
+                    "name": "Mohammed Le Doze"
+                }
+            ],
+            "description": "List of world countries in JSON, CSV, XML and Yaml",
+            "homepage": "https://mledoze.github.io/countries/",
+            "keywords": [
+                "countries",
+                "csv",
+                "json",
+                "world",
+                "xml",
+                "yaml"
+            ],
+            "support": {
+                "issues": "https://github.com/mledoze/countries/issues",
+                "source": "https://github.com/mledoze/countries/tree/master"
+            },
+            "time": "2024-02-10T22:09:29+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8718,12 +8777,15 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mledoze/countries": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.2",
         "ext-ctype": "*",
+        "ext-gettext": "*",
         "ext-iconv": "*"
     },
     "platform-dev": [],

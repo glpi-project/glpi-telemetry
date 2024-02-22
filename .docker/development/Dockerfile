@@ -21,6 +21,9 @@ RUN apt-get update \
   && docker-php-ext-enable apcu \
   && echo "apc.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
   \
+  # Install gettext PHP extension.
+  && docker-php-ext-install gettext \
+  \
   # Install intl PHP extension.
   && apt-get install --assume-yes --no-install-recommends --quiet libicu-dev \
   && docker-php-ext-configure intl \
