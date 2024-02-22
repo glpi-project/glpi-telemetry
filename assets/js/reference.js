@@ -3,16 +3,23 @@ import * as gridjs from "gridjs";
 window.gridjs = gridjs;
 
 window.addEventListener('DOMContentLoaded', () => {
-    var chartDom = document.getElementById('map_graph');
-    var myChart = global.echarts.init(chartDom);
-    var option;
+    const chartDom = document.getElementById('map_graph');
+    const myChart = global.echarts.init(chartDom);
 
     myChart.showLoading();
-    $.get('map/countries', function (geoJson) {
+
+    fetch('map/countries', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then(response => {
+        return response.json();
+    }).then(geoJson => {
         myChart.hideLoading();
         global.echarts.registerMap('countriesMap', geoJson);
 
-        option = {
+        myChart.setOption({
             title: {
                 text: 'GLPI references by country',
                 left: 'center',
@@ -62,29 +69,27 @@ window.addEventListener('DOMContentLoaded', () => {
                     data: []
                 }
             ]
-        };
-        myChart.setOption(option);
+        });
 
-        var url = 'map/graph';
-
-        fetch(url, {
+        fetch('map/graph', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-        })
-            .then(response => {
-                return response.json();
-            })
-            .then(json => {
-                myChart.setOption({
-                    series: [{
+        }).then(response => {
+            return response.json();
+        }).then(json => {
+            myChart.setOption({
+                series: [
+                    {
                         data: json
-                    }]
-                });
-            })
-            .catch(error => {
-                console.error('an error occured: ', error);
+                    }
+                ]
             });
+        }).catch(error => {
+            console.error('an error occured: ', error);
+        });
+    }).catch(error => {
+        console.error('an error occured: ', error);
     });
 });
