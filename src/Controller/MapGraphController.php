@@ -25,7 +25,7 @@ class MapGraphController extends AbstractController
     #[Route('/map/graph', name: 'app_map_graph')]
     public function index(Request $request, ReferenceRepository $referenceRepository): JsonResponse
     {
-        $data = $referenceRepository->getReferencesCountries();
+        $data = $referenceRepository->getReferencesCountByCountries();
 
         $this->logger->debug('data from getData');
 
@@ -39,8 +39,8 @@ class MapGraphController extends AbstractController
                     'value' => 0,
                 ];
         }
-        foreach ($data as $d) {
-            $transformedData[strtoupper($d['isoa2'])]['value'] = $d['total'];
+        foreach ($data as $isoa2 => $total) {
+            $transformedData[strtoupper($isoa2)]['value'] = $total;
         }
 
         $transformedData = array_values($transformedData);
