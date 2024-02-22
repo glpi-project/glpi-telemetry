@@ -41,7 +41,7 @@ class ReferenceController extends AbstractController
 
     #[Route('/reference/register', name: 'app_reference_register')]
 
-    public function registerReference(Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator)
+    public function registerReference(Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
     {
         $reference = new Reference();
         $glpi_reference = new GlpiReference();
