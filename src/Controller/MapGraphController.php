@@ -64,10 +64,9 @@ class MapGraphController extends AbstractController
             ];
 
             foreach ($countriesData as $country) {
-
                 $cca3 = strtolower($country['cca3']);
 
-                if ($country['name']['common'] === 'Antarctica') {
+                if ($country['cca3'] === 'ATA') {
                     continue;
                 }
 
