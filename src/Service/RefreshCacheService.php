@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace  App\Service;
 
 use App\Interface\ViewControllerInterface;
-use App\Repository\ReferenceRepository;
 use App\Repository\TelemetryRepository;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -16,18 +15,15 @@ class RefreshCacheService
     public string $startDate  = '';
     public string $endDate    = '';
     private TelemetryRepository $telemetryRepository;
-    private ReferenceRepository $referenceRepository;
     private CacheInterface $cache;
     private LoggerInterface $logger;
 
     public function __construct(
         TelemetryRepository $telemetryRepository,
-        ReferenceRepository $referenceRepository,
         CacheInterface $cache,
         LoggerInterface $logger
     ) {
         $this->telemetryRepository = $telemetryRepository;
-        $this->referenceRepository = $referenceRepository;
         $this->cache = $cache;
         $this->logger = $logger;
     }
@@ -91,13 +87,7 @@ class RefreshCacheService
             $this->setPeriod($filter);
 
             $dateParams = ['startDate' => $this->startDate, 'endDate' => $this->endDate];
-            //si le nom du controller contient "map" alors on appelle getData avec le repository ReferenceRepository
-            //sinon on appelle getData avec le repository TelemetryRepository
-            if (str_contains(get_class($controller), 'Map')) {
-                $data = $controller->getData($dateParams, $this->referenceRepository);
-                $this->logger->debug('data retreived from DB :', $data);
-                return $data;
-            }
+
             $data = $controller->getData($dateParams, $this->telemetryRepository);
             $this->logger->debug('data retreived from DB :', $data);
 
