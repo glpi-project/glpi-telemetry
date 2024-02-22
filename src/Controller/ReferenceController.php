@@ -30,6 +30,19 @@ class ReferenceController extends AbstractController
         $references = $referenceRepository->findBy([], ['created_at' => 'DESC']);
         $nb = count($references);
 
+        return $this->render(
+            'reference/index.html.twig',
+            [
+                'references'   => $references,
+                'nb_ref'       => $nb,
+            ]
+        );
+    }
+
+    #[Route('/reference/register', name: 'app_reference_register')]
+
+    public function registerReference(Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator)
+    {
         $reference = new Reference();
         $glpi_reference = new GlpiReference();
 
@@ -75,15 +88,9 @@ class ReferenceController extends AbstractController
             return $this->redirectToRoute('app_reference');
 
         }
-
-        return $this->render(
-            'reference/index.html.twig',
-            [
-                'references'   => $references,
-                'nb_ref'       => $nb,
-                'form'         => $form,
-                'captchaSiteKey' => $this->captchaSiteKey
-            ]
-        );
+        return $this->render('reference/register.html.twig', [
+            'form'  => $form,
+            'captchaSiteKey' => $this->captchaSiteKey
+        ]);
     }
 }
