@@ -40,4 +40,21 @@ class ReferenceRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function getReferencesCountries(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT country as isoa2, COUNT(*) as total
+            FROM reference
+            GROUP BY isoa2
+            ORDER BY total DESC
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        return $resultSet->fetchAllAssociative();
+    }
 }

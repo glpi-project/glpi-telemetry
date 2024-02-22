@@ -1,7 +1,3 @@
-import * as echarts from "echarts";
-
-window.echarts = echarts;
-
 global.filterCallbacks = [];
 global.registerFilterCallback = function (callback) {global.filterCallbacks.push(callback);};
 global.executeFilterCallbacks = function (filters) {
@@ -29,7 +25,7 @@ window.addEventListener("DOMContentLoaded", () => {
     modalButtons.forEach((button) => {
         button.addEventListener('click', () => {
             const chartContainer = button.closest('.card').querySelector('.card-body');
-            const chart = echarts.getInstanceByDom(chartContainer);
+            const chart = global.echarts.getInstanceByDom(chartContainer);
             const options = chart.getOption();
             const title = typeof(options.title) !== 'undefined' && typeof(options.title[0]) !== 'undefined' && typeof(options.title[0].text) !== 'undefined'
                 ? options.title[0].text
@@ -56,7 +52,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 options.title = {show:false};
 
                 const modalChartContainer = modal.querySelector('.chart-container');
-                const modalChart = echarts.init(modalChartContainer);
+                const modalChart = global.echarts.init(modalChartContainer);
                 modalChart.setOption(options);
             });
             modal.addEventListener('hidden.bs.modal', () => {
