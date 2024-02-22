@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\ReferenceRepository;
@@ -12,7 +14,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class MapGraphController extends AbstractController
 {
-    private $logger;
+    private LoggerInterface $logger;
 
     private CacheInterface $cache;
 
@@ -35,9 +37,9 @@ class MapGraphController extends AbstractController
         $transformedData = [];
         foreach ($countriesData as $country) {
             $transformedData[strtoupper($country['cca2'])] = [
-                    'name' => $country['name']['common'],
-                    'value' => 0,
-                ];
+                'name' => $country['name']['common'],
+                'value' => 0,
+            ];
         }
         foreach ($data as $isoa2 => $total) {
             $transformedData[strtoupper($isoa2)]['value'] = $total;
