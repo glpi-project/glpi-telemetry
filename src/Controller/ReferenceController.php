@@ -14,19 +14,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class ReferenceController extends AbstractController
 {
     private string $captchaSiteKey;
 
-    public function __construct(string $captchaSiteKey)
+    private LoggerInterface $logger;
+
+    public function __construct(string $captchaSiteKey, LoggerInterface $logger)
     {
         $this->captchaSiteKey = $captchaSiteKey;
+        $this->logger = $logger;
     }
 
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
     {
+
+        if ($request->query->get('showmodal') !== null) {
+            $uuid = $request->query->get('uuid');
+            return $this->redirectToRoute('app_reference_register', ['uuid' => $uuid]);
+        }
+
         $references = $referenceRepository->findBy([], ['created_at' => 'DESC']);
         $nb = count($references);
 
@@ -43,6 +53,8 @@ class ReferenceController extends AbstractController
 
     public function registerReference(Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
     {
+        $uuid = $request->query->get('uuid');
+
         $reference = new Reference();
         $glpi_reference = new GlpiReference();
 
@@ -50,13 +62,16 @@ class ReferenceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->debug('form submitted and valid');
             $success = false;
 
             $captcha_token = $request->request->get('captcha_token');
             if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
                 try {
+                    $this->logger->debug('captcha token is valid');
                     $data = $form->getData();
 
+                    $reference->setUuid($uuid);
                     $reference->setName($data['name']);
                     $reference->setUrl($data['url']);
                     $reference->setCountry($data['country'] !== null ? strtolower((string) $data['country']) : null);
@@ -77,15 +92,18 @@ class ReferenceController extends AbstractController
                 } catch (\Throwable $e) {
                     $success = false;
                 }
+            } else {
+                $this->logger->error('Captcha token is invalid');
+                $this->addFlash('danger', 'Captcha token is invalid');
             }
 
             if ($success) {
                 $this->addFlash('success', 'Your reference has been added successfully');
+                return $this->redirectToRoute('app_reference');
             } else {
+                $this->logger->error('An error occurred while adding your reference');
                 $this->addFlash('danger', 'An error occurred while adding your reference');
             }
-
-            return $this->redirectToRoute('app_reference');
 
         }
         return $this->render('reference/register.html.twig', [
