@@ -94,7 +94,6 @@ class ReferenceController extends AbstractController
                 }
             } else {
                 $this->logger->error('Captcha token is invalid');
-                $this->addFlash('danger', 'Captcha token is invalid');
             }
 
             if ($success) {
