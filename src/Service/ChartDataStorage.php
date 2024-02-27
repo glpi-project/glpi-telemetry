@@ -41,7 +41,7 @@ class ChartDataStorage
             $this->filesystem->mkdir($directory);
         }
 
-        $this->logger->info('Check existing repository OK');
+        $this->logger->info('Check main repository OK');
 
         try {
             foreach (ChartSerie::cases() as $serie) {
@@ -55,24 +55,38 @@ class ChartDataStorage
 
                 $this->logger->info('Check existing repository for serie: ' . $serieName . ' OK');
 
-                for ($date = clone $start; $date <= $end; $date->add(\DateInterval::createFromDateString('1 day'))) {
-                    $formattedDate = $date->format('Y-m-d');
-                    $this->logger->info('Processing date: ' . $formattedDate);
-                    $file = $serieDirectory . '/' . $formattedDate . '.json';
-                    if ($this->filesystem->exists($file)) {
-                        $this->logger->info('File already exists for date: ' . $date);
-                        continue;
-                    } else {
-                        $this->logger->info('File does not exist for date: ' . $date);
-                        $sql = $serie->getSqlQuery();
-                        $result = $this->connection->executeQuery($sql, ['startDate' => $start, 'endDate' => $end]);
-                        $data = $result->fetchAllAssociative();
-                        $json = json_encode($data);
-                        $this->filesystem->dumpFile($serieDirectory . '/' . $date . '.json', $json);
-                    }
-                }
-            }
+                //récupérer les fichiers existants avec $finder
+                $files = $finder->files()->in($serieDirectory)->name('*.json');
 
+                //récupérer la liste des dates des fichiers existants
+                $dates = [];
+                foreach ($files as $file) {
+                    $dates[] = $file->getBasename('.json');
+                }
+
+                //pour chaque date entre $start et $end, si la date existe dans $dates, passer à la suivante, sinon exécuter la requête SQL correspondante à la série et stocker le résultat dans un fichier JSON
+                $currentDate = clone $start;
+                while ($currentDate <= $end) {
+                    $date = $currentDate->format('Y-m-d');
+                    if (in_array($date, $dates)) {
+                        $this->logger->info('File for date ' . $date . ' already exists');
+                    } else {
+                        $this->logger->info('File for date ' . $date . ' does not exist');
+                        $sql = $serie->getSqlQuery();
+                        $this->logger->info('SQL query: ' . $sql);
+                        $result = $this->connection->executeQuery($sql, [
+                            'startDate' => $date . ' 00:00:00',
+                            'endDate' => $date . ' 23:59:59'
+                        ])->fetchAllAssociative();
+                        $this->logger->info('SQL query result: ' . json_encode($result));
+                        $this->filesystem->dumpFile($serieDirectory . '/' . $date . '.json', json_encode($result));
+                        $this->logger->info('File for date ' . $date . ' created');
+                    }
+                    $currentDate->modify('+1 day');
+                }
+
+
+            }
         } catch (\Throwable $e) {
             $this->logger->error('Error during computeValues(): ' . $e->getMessage());
         }
