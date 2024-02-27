@@ -21,6 +21,8 @@
         "symfony/cache-contracts": "^3.4",
         "symfony/console": "^7.0",
         "symfony/dotenv": "^7.0",
+        "symfony/filesystem": "*",
+        "symfony/finder": "^7.0",
         "symfony/form": "^7.0",
         "symfony/framework-bundle": "^7.0",
         "symfony/http-client": "^7.0",
