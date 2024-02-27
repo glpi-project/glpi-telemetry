@@ -31,18 +31,18 @@ class DataStorageUpdate extends Command
     {
 
         try {
-        $startDate = $this->chartDataStorage->getOldestDate();
-        $this->logger->info('Data storage update started '. $startDate);
-        //stocker la date actuelle -1 jour dans $endDate
-        $endDate = date('Y-m-d', strtotime('-1 day'));
+            $startDate = $this->chartDataStorage->getOldestDate();
+            $this->logger->info('Data storage update started ' . $startDate);
+            //stocker la date actuelle -1 jour dans $endDate
+            $endDate = date('Y-m-d', strtotime('-1 day'));
 
-        //appeler la méthode computeValues de $chartDataStorage avec les paramètres $startDate et $endDate
-        $this->chartDataStorage->computeValues(new \DateTime($startDate), new \DateTime($endDate));
+            //appeler la méthode computeValues de $chartDataStorage avec les paramètres $startDate et $endDate
+            $this->chartDataStorage->computeValues(new \DateTime($startDate), new \DateTime($endDate));
 
-        //loguer la fin de l'exécution
-        $this->logger->info('Data storage update complete');
-        //retourner 1 succès
-        return Command::SUCCESS;
+            //loguer la fin de l'exécution
+            $this->logger->info('Data storage update complete');
+            //retourner 1 succès
+            return Command::SUCCESS;
         } catch (\Exception $e) {
             $this->logger->error('Data storage update failed');
             return Command::FAILURE;

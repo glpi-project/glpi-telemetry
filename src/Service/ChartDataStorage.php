@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Telemetry\ChartSerie;
@@ -28,12 +30,12 @@ class ChartDataStorage
      */
     public function computeValues(\DateTime $start, \DateTime $end): void
     {
-        $this->logger->info('Enter computeValues() for period: '. $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
+        $this->logger->info('Enter computeValues() for period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
         $directory = __DIR__ . '/../../var/storage/chart-data/';
         $finder = new Finder();
 
-        $this->logger->info('Main storage directory: '. $directory);
+        $this->logger->info('Main storage directory: ' . $directory);
 
         if (!$this->filesystem->exists($directory)) {
             $this->filesystem->mkdir($directory);
@@ -43,7 +45,7 @@ class ChartDataStorage
 
         try {
             foreach (ChartSerie::cases() as $serie) {
-                $this->logger->info('Processing serie: '. $serie->name);
+                $this->logger->info('Processing serie: ' . $serie->name);
                 $serieName = $serie->name;
                 $serieDirectory = $directory . $serieName;
 
@@ -51,28 +53,28 @@ class ChartDataStorage
                     $this->filesystem->mkdir($serieDirectory);
                 }
 
-                $this->logger->info('Check existing repository for serie: '. $serieName . ' OK');
+                $this->logger->info('Check existing repository for serie: ' . $serieName . ' OK');
 
                 for ($date = clone $start; $date <= $end; $date->add(\DateInterval::createFromDateString('1 day'))) {
                     $formattedDate = $date->format('Y-m-d');
-                    $this->logger->info('Processing date: '. $formattedDate);
+                    $this->logger->info('Processing date: ' . $formattedDate);
                     $file = $serieDirectory . '/' . $formattedDate . '.json';
-                        if ($this->filesystem->exists($file)) {
-                            $this->logger->info('File already exists for date: '. $date);
-                            continue;
-                        } else {
-                            $this->logger->info('File does not exist for date: '. $date);
-                            $sql = $serie->getSqlQuery();
-                            $result = $this->connection->executeQuery($sql, ['startDate' => $start, 'endDate' => $end]);
-                            $data = $result->fetchAllAssociative();
-                            $json = json_encode($data);
-                            $this->filesystem->dumpFile($serieDirectory . '/' . $date . '.json', $json);
-                        }
+                    if ($this->filesystem->exists($file)) {
+                        $this->logger->info('File already exists for date: ' . $date);
+                        continue;
+                    } else {
+                        $this->logger->info('File does not exist for date: ' . $date);
+                        $sql = $serie->getSqlQuery();
+                        $result = $this->connection->executeQuery($sql, ['startDate' => $start, 'endDate' => $end]);
+                        $data = $result->fetchAllAssociative();
+                        $json = json_encode($data);
+                        $this->filesystem->dumpFile($serieDirectory . '/' . $date . '.json', $json);
+                    }
                 }
             }
 
         } catch (\Throwable $e) {
-            $this->logger->error('Error during computeValues(): '. $e->getMessage());
+            $this->logger->error('Error during computeValues(): ' . $e->getMessage());
         }
 
 

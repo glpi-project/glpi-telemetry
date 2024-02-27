@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Telemetry;
 
 enum ChartSerie
@@ -106,7 +108,7 @@ enum ChartSerie
                 return $sql;
 
             default:
-            throw new \RuntimeException();
+                throw new \RuntimeException();
         }
     }
 }
