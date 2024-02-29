@@ -12,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\ChartDataStorage;
+use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractController implements ViewControllerInterface
 {
@@ -29,6 +31,17 @@ class GlpiVersionController extends AbstractController implements ViewController
         $forceUpdate    = false;
 
         $result = $refreshCacheService->refreshCache($filter, $forceUpdate, $this);
+
+        // $controllerName = $this::class;
+        // $series = ChartSerie::cases();
+        // $serieName = '';
+        // foreach ($series as $serie) {
+        //     if (str_contains($controllerName, $serie->name)) {
+        //         $serieName = $serie;
+        //     }
+        // }
+        // //appeler la fonction getMonthlyValue de $chartDataStorage avec le paramètre $serieName
+        // $chartData = $chartDataStorage->getMonthlyValues($serieName);
 
         return $this->json($result);
     }

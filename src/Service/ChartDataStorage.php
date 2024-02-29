@@ -84,37 +84,91 @@ class ChartDataStorage
                     }
                     $currentDate->modify('+1 day');
                 }
-
-
             }
         } catch (\Throwable $e) {
             $this->logger->error('Error during computeValues(): ' . $e->getMessage());
         }
-
-
-
     }
+
+    /**
+     * @param ChartSerie $serie
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return array<string,array{name:string,total:int}>
+     */
     public function getMonthlyValues(ChartSerie $serie, \DateTime $start, \DateTime $end): array
     {
+        $this->logger->info('Enter getMonthlyValues() for serie: ' . $serie->name . ' and period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . '/../../var/storage/chart-data/' . $serie->value;
+        $directory = __DIR__ . '/../../var/storage/chart-data/' . $serie->name;
         $finder = new Finder();
+        $files = $finder->files()->in($directory)->name('*.json');
 
-        //récupérer les fichiers sur la période entre $start et $end dans $directory avec $finder
-        $files = $finder->files()->in($directory)->name('*.json')->date('>= ' . $start->format('Y-m-d'))->date('<= ' . $end->format('Y-m-d'));
-        //extraire les données de chaque fichier et les regrouper de façon mensuelle dans un tableau qui aura le format suivant : ['Y-m' => [['name' => 'value', 'total' => 0], ...]]
-        $monthlyValues = [];
+        $dates = [];
         foreach ($files as $file) {
-            $date = $file->getBasename('.json');
-            $data = json_decode($file->getContents(), true);
-            $month = substr($date, 0, 7);
-            if (!isset($monthlyValues[$month])) {
-                $monthlyValues[$month] = [];
-            }
-            $monthlyValues[$month][] = $data;
+            $dates[] = $file->getBasename('.json');
         }
-        return $monthlyValues;
 
+        $this->logger->info('Dates: ' . json_encode($dates));
+
+        $monthlyValues = [];
+        $currentDate = clone $start;
+
+        while ($currentDate <= $end) {
+
+            $this->logger->info('Processing date: ' . $currentDate->format('Y-m-d'));
+
+            $date = $currentDate->format('Y-m-d');
+            $monthKey = $currentDate->format('Y-m');
+            $dailyFileName = $date . '.json';
+
+            $this->logger->info('Month key: ' . $monthKey);
+            $this->logger->info('Daily file name: ' . $dailyFileName);
+
+            if (in_array($date, $dates)) {
+                $this->logger->info('File for month ' . $monthKey . ' exists');
+                $dailyData = json_decode(file_get_contents($directory . '/' . $dailyFileName), true);
+                $this->logger->info('Daily data: ' . json_encode($dailyData));
+            } else {
+                $this->logger->info('File for month ' . $monthKey . ' does not exist');
+                $dailyData = [];
+            }
+
+            foreach ($dailyData as $versionData) {
+                $versionName = $versionData['name'];
+                $versionTotal = $versionData['total'];
+
+                if (!isset($monthlyValues[$monthKey])) {
+                    $monthlyValues[$monthKey] = [];
+                }
+
+                $versionIndex = $this->findVersionIndex($monthlyValues[$monthKey], $versionName);
+
+                if ($versionIndex !== false) {
+                    // Version exists, update the total
+                    $monthlyValues[$monthKey][$versionIndex]['total'] += $versionTotal;
+                } else {
+                    // Version does not exist, add a new entry
+                    $monthlyValues[$monthKey][] = [
+                        'name' => $versionName,
+                        'total' => $versionTotal,
+                    ];
+                }
+            }
+            $currentDate->modify('+1 day');
+        }
+        $this->logger->info('Monthly values: ' . json_encode($monthlyValues));
+        return $monthlyValues;
+    }
+
+    private function findVersionIndex(array $monthlyValues, string $versionName): int|false
+    {
+        foreach ($monthlyValues as $index => $value) {
+            if ($value['name'] === $versionName) {
+                return $index;
+            }
+        }
+        return false;
     }
 
     public function getOldestDate(): string
@@ -124,9 +178,8 @@ class ChartDataStorage
             FROM telemetry
         SQL;
 
-        //exécuter la requête
         $result = $this->connection->executeQuery($sql)->fetchOne();
-        // retourner $result au format Y-m-d
+
         return date('Y-m-d', strtotime($result));
     }
 }
