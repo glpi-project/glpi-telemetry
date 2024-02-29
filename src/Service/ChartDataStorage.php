@@ -168,7 +168,7 @@ class ChartDataStorage
     private function findVersionIndex(array $monthlyValues, string $versionName): int|false
     {
         foreach ($monthlyValues as $index => $value) {
-            if ($value['name'] === $versionName) {
+            if ($value['name'] == $versionName) {
                 return $index;
             }
         }
