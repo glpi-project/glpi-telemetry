@@ -94,7 +94,7 @@ class ChartDataStorage
      * @param ChartSerie $serie
      * @param \DateTime $start
      * @param \DateTime $end
-     * @return array<string,array{name:string,total:int}>
+     * @return array<string,array{name:string,total:int}[]>
      */
     public function getMonthlyValues(ChartSerie $serie, \DateTime $start, \DateTime $end): array
     {
@@ -160,7 +160,11 @@ class ChartDataStorage
         $this->logger->info('Monthly values: ' . json_encode($monthlyValues));
         return $monthlyValues;
     }
-
+    /**
+     * @param array<string,array{name:string,total:int}[]> $monthlyValues
+     * @param string $versionName
+     * @return int|false
+     */
     private function findVersionIndex(array $monthlyValues, string $versionName): int|false
     {
         foreach ($monthlyValues as $index => $value) {
