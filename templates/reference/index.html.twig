@@ -33,9 +33,9 @@
 
     <div id="references-table-container"></div>
 </div>
-{% set referenceData = [] %}
+{% set reference_data = [] %}
 {% for reference in references %}
-    {% set referenceData = referenceData|merge([[
+    {% set reference_data = reference_data|merge([[
         reference.name,
         reference.country,
         reference.glpireference.numAssets|default(0),
@@ -46,6 +46,6 @@
     ]]) %}
 {% endfor %}
 <script>
-    window.referenceData = {{ referenceData|json_encode|raw }};
+    window.referenceData = {{ reference_data|json_encode|raw }};
 </script>
 {% endblock %}
