@@ -14,85 +14,20 @@
         </div>
     </div>
 </div>
-<div class="container-xl mt-2" id="tabcontainer"></div>
+<div class="container-xl mt-2" id="references-table-container"></div>
 
+{% set referenceData = [] %}
+{% for reference in references %}
+    {% set referenceData = referenceData|merge([[
+        reference.name,
+        reference.country,
+        reference.glpireference.numAssets|default(0),
+        reference.glpireference.numHelpdesk|default(0),
+        reference.createdAt|date("Y-m-d"),
+        reference.comment,
+        reference.url,
+    ]]) %}
+{% endfor %}
 <script>
-window.addEventListener("DOMContentLoaded", (event) => {
-    const translator = new Intl.DisplayNames(['en'], {type: 'region'});
-    const namesMap = new Map();
-    const diplayTab = new gridjs.Grid({
-        columns: [
-            {
-                name: "Name",
-                formatter: (cell, row) => {
-                    const url = row.cells[6].data;
-                    const name = cell;
-                    try {
-                        new URL(url);
-                        return gridjs.h(
-                            'a',
-                            {
-                                href: url,
-                                target: '_blank',
-                            },
-                            name
-                        );
-                    } catch (e) {
-                        return name;
-                    }
-                }
-            },
-            {
-                name: "Country",
-                formatter: (cell, row) => {
-                    if (cell === null || cell === '') {
-                        return '';
-                    }
-
-                    if (!namesMap.has(cell)) {
-                        namesMap.set(cell, translator.of(cell.toUpperCase()));
-                    }
-                    return gridjs.html(`<span class="fi fi-${cell}" title="${namesMap.get(cell)}"></span>`);
-                },
-                sort: {
-                    compare: (a, b) => {
-                        if (!namesMap.has(a)) {
-                            namesMap.set(a, translator.of(a.toUpperCase()));
-                        }
-                        if (!namesMap.has(b)) {
-                            namesMap.set(b, translator.of(b.toUpperCase()));
-                        }
-                        return namesMap.get(a).localeCompare(namesMap.get(b));
-                    }
-                },
-            },
-            "Nb of assets",
-            "Nb of helpdesk",
-            "Registration date",
-            "Comment",
-            {
-                name: "URL",
-                hidden: true,
-            },
-        ],
-        pagination: {
-            limit: 20
-        },
-        search: true,
-        sort: true,
-        data: [
-            {% for reference in references %}
-            [
-                {{ reference.name|json_encode|raw }},
-                {{ reference.country|json_encode|raw }},
-                {{ reference.glpireference.numAssets|default(0)|json_encode|raw }},
-                {{ reference.glpireference.numHelpdesk|default(0)|json_encode|raw }},
-                "{{ reference.createdAt|date("Y-m-d") }}",
-                {{ reference.comment|json_encode|raw }},
-                {{ reference.url|json_encode|raw }},
-            ],
-            {% endfor %}
-        ]
-    }).render(document.getElementById("tabcontainer"));
-});
+    window.referenceData = {{ referenceData|json_encode|raw }};
 </script>
