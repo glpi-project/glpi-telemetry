@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CaptchaValidator
@@ -21,7 +21,7 @@ class CaptchaValidator
 
     public function __construct(
         HttpClientInterface $client,
-        string $captchaSecretKey,
+        string $captchaSecretKey
     ) {
         $this->client = $client;
         $this->captchaSecretKey = $captchaSecretKey;
@@ -49,6 +49,7 @@ class CaptchaValidator
                     ]
                 ]
             );
+
             return $response->toArray()['success'] ?? false;
 
         } catch (\Throwable $e) {

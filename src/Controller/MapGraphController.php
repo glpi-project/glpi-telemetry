@@ -89,6 +89,6 @@ class MapGraphController extends AbstractController
 
         $this->logger->debug('CompiledGeoJson created from cache');
 
-        return new JsonResponse($compiledGeoJson);
+        return new JsonResponse($compiledGeoJson, json: true);
     }
 }
