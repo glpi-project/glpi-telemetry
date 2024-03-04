@@ -12,7 +12,7 @@
         "doctrine/collections": "^2.2",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^3.0",
+        "doctrine/orm": "^3.1",
         "doctrine/persistence": "^3.3",
         "mledoze/countries": "dev-master",
         "opis/json-schema": "^2.3",
