@@ -27,13 +27,11 @@ class ReferenceController extends AbstractController
         }
 
         $references = $referenceRepository->findBy([], ['created_at' => 'DESC']);
-        $nb = count($references);
 
         return $this->render(
             'reference/index.html.twig',
             [
-                'references'   => $references,
-                'nb_ref'       => $nb,
+                'references' => $references,
             ]
         );
     }
