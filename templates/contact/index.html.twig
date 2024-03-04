@@ -6,5 +6,38 @@
 {% endblock %}
 
 {% block body_content %}
-{% include 'contact/contactForm.html.twig' %}
+    <div class="container container-tight py-4">
+        <div class="card card-md">
+            {{ form_start(form) }}
+                <div class="card-body">
+                    <h2 class="card-title mb-3"> Any question about GLPI ?</h2>
+                    <p class="card-subtitle mb-4">Feel free to ask us</p>
+                    <div class="form-group">
+                        <div class="mb-3">
+                            {{ form_label(form.Email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_row(form.Email, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.Subject, 'Subject', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_row(form.Subject, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.Message, 'Message', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_row(form.Message, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="cf-turnstile" data-sitekey="{{ captchaSiteKey }}" data-response-field-name="captcha_token"></div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-location" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
+                        </svg>
+                        Send
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
