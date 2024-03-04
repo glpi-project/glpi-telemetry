@@ -9,7 +9,7 @@
         "ext-gettext": "*",
         "ext-iconv": "*",
         "ext-pdo_mysql": "*",
-        "doctrine/collections": "^2.1",
+        "doctrine/collections": "^2.2",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
