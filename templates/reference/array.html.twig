@@ -45,6 +45,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
             {
                 name: "Country",
                 formatter: (cell, row) => {
+                    if (cell === null || cell === '') {
+                        return '';
+                    }
+
                     if (!namesMap.has(cell)) {
                         namesMap.set(cell, translator.of(cell.toUpperCase()));
                     }
@@ -80,17 +84,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             {% for reference in references %}
             [
                 {{ reference.name|json_encode|raw }},
-                "{{ reference.country }}",
-                {% if reference.glpireference.numAssets is defined %}
-                {{ reference.glpireference.numAssets|json_encode|raw }},
-                {% else %}
-                0,
-                {% endif %}
-                {% if reference.glpireference.numHelpdesk is defined %}
-                {{ reference.glpireference.numHelpdesk|json_encode|raw }},
-                {% else %}
-                0,
-                {% endif %}
+                {{ reference.country|json_encode|raw }},
+                {{ reference.glpireference.numAssets|default(0)|json_encode|raw }},
+                {{ reference.glpireference.numHelpdesk|default(0)|json_encode|raw }},
                 "{{ reference.createdAt|date("Y-m-d") }}",
                 {{ reference.comment|json_encode|raw }},
                 {{ reference.url|json_encode|raw }},
