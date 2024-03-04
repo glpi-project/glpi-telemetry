@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Interface\ViewControllerInterface;
-use App\Repository\TelemetryRepository;
-use App\Service\RefreshCacheService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\ChartDataStorage;
-use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractController implements ViewControllerInterface
 {
@@ -25,37 +22,28 @@ class GlpiVersionController extends AbstractController implements ViewController
     }
 
     #[Route('/glpi/version', name: 'app_glpi_version')]
-    public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
+    public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {
         $filter         = $request->query->get('filter');
-        $forceUpdate    = false;
+        $period         = $chartDataStorage->setPeriod($filter);
 
-        $result = $refreshCacheService->refreshCache($filter, $forceUpdate, $this);
+        $start          = $period['startDate'];
+        $end            = $period['endDate'];
 
-        // $controllerName = $this::class;
-        // $series = ChartSerie::cases();
-        // $serieName = '';
-        // foreach ($series as $serie) {
-        //     if (str_contains($controllerName, $serie->name)) {
-        //         $serieName = $serie;
-        //     }
-        // }
-        // //appeler la fonction getMonthlyValue de $chartDataStorage avec le paramètre $serieName
-        // $chartData = $chartDataStorage->getMonthlyValues($serieName);
+        $serie          = $chartDataStorage->setSerie($this::class);
+
+        $res = $chartDataStorage->getMonthlyValues($serie, $start, $end);
+        $result = $this->processData($res);
 
         return $this->json($result);
     }
 
     /**
-     * @param array<string,string> $dateParams
+     * @param array<string,mixed> $data
      * @return array<array<string,mixed>>
      */
-    public function getData(array $dateParams, TelemetryRepository $telemetryRepository): array
+    public function processData($data): array
     {
-        $startDate      = $dateParams['startDate'];
-        $endDate        = $dateParams['endDate'];
-
-        $data              = $telemetryRepository->getGlpiVersion($startDate, $endDate);
         $transformedData   = $this->transformDataForChart($data);
         $chartData         = $this->prepareChartData($transformedData);
 
@@ -198,4 +186,5 @@ class GlpiVersionController extends AbstractController implements ViewController
 
         return $chartData;
     }
+
 }
