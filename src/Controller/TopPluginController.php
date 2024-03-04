@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Interface\ViewControllerInterface;
-use App\Repository\TelemetryRepository;
-use App\Service\RefreshCacheService;
+use App\Controller\AbstractChartController;
+use App\Service\ChartDataStorage;
+use App\Telemetry\ChartSerie;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TopPluginController extends AbstractController implements ViewControllerInterface
+class TopPluginController extends AbstractChartController
 {
     private LoggerInterface $logger;
 
@@ -23,47 +22,18 @@ class TopPluginController extends AbstractController implements ViewControllerIn
     }
 
     #[Route('/top/plugin', name: 'app_top_plugin')]
-    public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
+    public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {
         $filter         = $request->query->get('filter');
-        $forceUpdate    = false;
+        $period         = $this->getPeriodFromFilter($filter);
 
-        $result = $refreshCacheService->refreshCache($filter, $forceUpdate, $this);
+        $start          = $period['startDate'];
+        $end            = $period['endDate'];
 
-        return $this->json($result);
-    }
+        $res = $chartDataStorage->getMonthlyValues(ChartSerie::TopPlugin, $start, $end);
 
-    /**
-     * @param array<string,string> $Dateparams
-     * @return array<array<string,mixed>>
-     */
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
-    {
-        $startDate      = $Dateparams['startDate'];
-        $endDate        = $Dateparams['endDate'];
+        $result = $this->prepareDataForPieChart($res);
 
-        $data = $telemetryRepository->getTopPlugin($startDate, $endDate);
-        $chartData = $this->prepareChartData($data);
-
-        return $chartData;
-    }
-
-    /**
-     * @param array<array<string,mixed>> $data
-     * @return array<array<string,mixed>>
-     */
-    public function prepareChartData(array $data): array
-    {
-        $chartData = [];
-
-        foreach ($data as $entry) {
-            $chartData[] = [
-            'name'  => $entry['pluginname'],
-            'value' => $entry['total'],
-            ];
-        }
-
-        $this->logger->info('chartData :', $chartData);
-        return $chartData;
+        return new JsonResponse($result);
     }
 }

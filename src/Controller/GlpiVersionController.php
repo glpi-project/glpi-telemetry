@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Interface\ViewControllerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\AbstractChartController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\ChartDataStorage;
+use App\Telemetry\ChartSerie;
 
-class GlpiVersionController extends AbstractController implements ViewControllerInterface
+class GlpiVersionController extends AbstractChartController
 {
     private LoggerInterface $logger;
 
@@ -25,17 +25,16 @@ class GlpiVersionController extends AbstractController implements ViewController
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {
         $filter         = $request->query->get('filter');
-        $period         = $chartDataStorage->setPeriod($filter);
+        $period         = $this->getPeriodFromFilter($filter);
 
         $start          = $period['startDate'];
         $end            = $period['endDate'];
 
-        $serie          = $chartDataStorage->setSerie($this::class);
+        $res = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
 
-        $res = $chartDataStorage->getMonthlyValues($serie, $start, $end);
         $result = $this->processData($res);
 
-        return $this->json($result);
+        return new JsonResponse($result);
     }
 
     /**

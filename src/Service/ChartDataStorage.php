@@ -186,37 +186,4 @@ class ChartDataStorage
 
         return date('Y-m-d', strtotime($result));
     }
-
-    public function setPeriod(string $filter): array
-    {
-        $period  = [];
-        $endDate = date("y-m-d");
-
-        try {
-            $startDate = match($filter) {
-                'lastYear' => date('y-m-d', strtotime('-1 year')),
-                'fiveYear' => date('y-m-d', strtotime('-5 years')),
-                'always'   => date('y-m-d', strtotime('-10 years')),
-                default    => throw new \Exception("Invalid filter value")
-            };
-            $period = ['startDate' => $startDate, 'endDate' => $endDate];
-            return $period;
-        } catch(\Exception $e) {
-            $error_msg = $e->getMessage();
-            $error = ['error' => $error_msg];
-            return $error;
-        }
-    }
-
-    public function setSerie(string $controllerName): ChartSerie
-    {
-        $series = ChartSerie::cases();
-        $serieName = '';
-        foreach ($series as $serie) {
-            if (str_contains($controllerName, $serie->name)) {
-                $serieName = $serie;
-            }
-        }
-        return $serieName;
-    }
 }
