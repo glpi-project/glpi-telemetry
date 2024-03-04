@@ -93,3 +93,75 @@ window.addEventListener('DOMContentLoaded', () => {
         console.error('an error occured: ', error);
     });
 });
+
+
+window.addEventListener("DOMContentLoaded", () => {
+    const data = global.referenceData;
+
+    const translator = new Intl.DisplayNames(['en'], {type: 'region'});
+    const namesMap = new Map();
+    const grid = new gridjs.Grid({
+        columns: [
+            {
+                name: "Name",
+                formatter: (cell, row) => {
+                    const url = row.cells[6].data;
+                    const name = cell;
+                    try {
+                        new URL(url);
+                        return gridjs.h(
+                            'a',
+                            {
+                                href: url,
+                                target: '_blank',
+                            },
+                            name
+                        );
+                    } catch (e) {
+                        return name;
+                    }
+                }
+            },
+            {
+                name: "Country",
+                formatter: (cell) => {
+                    if (cell === null || cell === '') {
+                        return '';
+                    }
+
+                    if (!namesMap.has(cell)) {
+                        namesMap.set(cell, translator.of(cell.toUpperCase()));
+                    }
+                    return gridjs.html(`<span class="fi fi-${cell}" title="${namesMap.get(cell)}"></span>`);
+                },
+                sort: {
+                    compare: (a, b) => {
+                        if (!namesMap.has(a)) {
+                            namesMap.set(a, translator.of(a.toUpperCase()));
+                        }
+                        if (!namesMap.has(b)) {
+                            namesMap.set(b, translator.of(b.toUpperCase()));
+                        }
+                        return namesMap.get(a).localeCompare(namesMap.get(b));
+                    }
+                },
+            },
+            "Nb of assets",
+            "Nb of helpdesk",
+            "Registration date",
+            "Comment",
+            {
+                name: "URL",
+                hidden: true,
+            },
+        ],
+        pagination: {
+            limit: 20
+        },
+        search: true,
+        sort: true,
+        data: data,
+    });
+
+    grid.render(document.getElementById('references-table-container'));
+});

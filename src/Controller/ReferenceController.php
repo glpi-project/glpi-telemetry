@@ -17,15 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ReferenceController extends AbstractController
 {
-    private string $captchaSiteKey;
-
-    public function __construct(string $captchaSiteKey)
-    {
-        $this->captchaSiteKey = $captchaSiteKey;
-    }
-
     #[Route('/reference', name: 'app_reference')]
-    public function index(ReferenceRepository $referenceRepository, Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
+    public function index(ReferenceRepository $referenceRepository, Request $request): Response
     {
         if ($request->query->get('showmodal') !== null) {
             // `showmodal` is the parameter passed by GLPI in the `Register your GLPI instance` link
@@ -34,20 +27,22 @@ class ReferenceController extends AbstractController
         }
 
         $references = $referenceRepository->findBy([], ['created_at' => 'DESC']);
-        $nb = count($references);
 
         return $this->render(
             'reference/index.html.twig',
             [
-                'references'   => $references,
-                'nb_ref'       => $nb,
+                'references' => $references,
             ]
         );
     }
 
     #[Route('/reference/register', name: 'app_reference_register')]
-    public function register(Request $request, EntityManagerInterface $manager, CaptchaValidator $captchaValidator): Response
-    {
+    public function register(
+        Request $request,
+        EntityManagerInterface $manager,
+        CaptchaValidator $captchaValidator,
+        string $captchaSiteKey
+    ): Response {
         $form = $this->createForm(ReferenceFormType::class);
         if ($request->query->has('uuid')) {
             $form->setData(['uuid' => $request->query->get('uuid')]);
@@ -99,7 +94,7 @@ class ReferenceController extends AbstractController
         }
         return $this->render('reference/register.html.twig', [
             'form'  => $form,
-            'captchaSiteKey' => $this->captchaSiteKey
+            'captchaSiteKey' => $captchaSiteKey,
         ]);
     }
 }
