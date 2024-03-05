@@ -19,7 +19,7 @@ class PhpVersionController extends AbstractChartController
         $period         = $this->getPeriodFromFilter($filter);
 
         $start          = new \DateTime($period['startDate']);
-        $end            = new \Datetime($period['endDate']);
+        $end            = new \DateTime($period['endDate']);
 
         $res = $this->chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
 
