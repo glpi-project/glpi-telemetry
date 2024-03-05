@@ -29,7 +29,7 @@ class PhpVersionController extends AbstractChartController
     }
 
     /**
-     * @param array<string,string> $data
+     * @param array<array<string,mixed>> $data
      * @return array<array<string,mixed>>
      */
     public function processData(array $data): array

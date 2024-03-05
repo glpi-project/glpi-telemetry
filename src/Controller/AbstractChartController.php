@@ -8,7 +8,7 @@ use App\Service\ChartDataStorage;
 
 abstract class AbstractChartController
 {
-    protected $chartDataStorage;
+    protected ChartDataStorage $chartDataStorage;
 
     public function __construct(ChartDataStorage $chartDataStorage)
     {
