@@ -14,7 +14,6 @@ use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractChartController
 {
-
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
