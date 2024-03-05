@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\AbstractChartController;
-use App\Service\ChartDataStorage;
 use App\Telemetry\ChartSerie;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PhpVersionController extends AbstractChartController
 {
     #[Route('/php/version', name: 'app_php_version')]
-    public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $filter         = $request->query->get('filter');
         $period         = $this->getPeriodFromFilter($filter);
@@ -23,7 +21,7 @@ class PhpVersionController extends AbstractChartController
         $start          = new \DateTime($period['startDate']);
         $end            = new \Datetime($period['endDate']);
 
-        $res = $chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
+        $res = $this->chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
 
         $result = $this->prepareDataForPieChart($res);
 
@@ -31,7 +29,7 @@ class PhpVersionController extends AbstractChartController
     }
 
     /**
-     * @param array<string,string> $Dateparams
+     * @param array<string,string> $data
      * @return array<array<string,mixed>>
      */
     public function processData(array $data): array
@@ -99,7 +97,6 @@ class PhpVersionController extends AbstractChartController
             // Sort the versions within each period
             ksort($result[$period]);
         }
-        $this->logger->debug('result :', $result);
         return [
             'periods' => $periods,
             'versions' => $versions,

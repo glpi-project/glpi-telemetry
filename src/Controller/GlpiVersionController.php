@@ -8,13 +8,12 @@ use App\Controller\AbstractChartController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Service\ChartDataStorage;
 use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractChartController
 {
     #[Route('/glpi/version', name: 'app_glpi_version')]
-    public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $filter         = $request->query->get('filter');
         $period         = $this->getPeriodFromFilter($filter);
@@ -22,7 +21,7 @@ class GlpiVersionController extends AbstractChartController
         $start          = new \DateTime($period['startDate']);
         $end            = new \Datetime($period['endDate']);
 
-        $res = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
+        $res = $this->chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
 
         $result = $this->processData($res);
 
@@ -104,7 +103,6 @@ class GlpiVersionController extends AbstractChartController
             // Sort the versions within each period
             ksort($result[$period]);
         }
-        $this->logger->debug('result :', $result);
         return [
             'periods' => $periods,
             'versions' => $versions,
