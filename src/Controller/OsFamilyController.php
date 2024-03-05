@@ -14,13 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class OsFamilyController extends AbstractChartController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/os/family', name: 'app_os_family')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {

@@ -14,13 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GlpiDefaultLanguagesController extends AbstractChartController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/glpi/default/languages', name: 'app_glpi_default_languages')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {

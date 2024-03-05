@@ -14,13 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InstallModeController extends AbstractChartController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/install/mode', name: 'app_install_mode')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {

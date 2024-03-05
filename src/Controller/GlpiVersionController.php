@@ -14,11 +14,6 @@ use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractChartController
 {
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/glpi/version', name: 'app_glpi_version')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {

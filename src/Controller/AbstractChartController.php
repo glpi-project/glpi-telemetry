@@ -6,6 +6,10 @@ namespace App\Controller;
 
 abstract class AbstractChartController
 {
+    /**
+     * @param string $filter
+     * @return array<string,string>
+     */
     public function getPeriodFromFilter(string $filter): array
     {
         $period  = [];
@@ -27,6 +31,10 @@ abstract class AbstractChartController
         }
     }
 
+    /**
+     * @param array<array<string,mixed>> $data
+     * @return array<array<string,mixed>>
+     */
     public function prepareDataForPieChart(array $data): array
     {
         $chartData = [];

@@ -14,13 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TopPluginController extends AbstractChartController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/top/plugin', name: 'app_top_plugin')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {

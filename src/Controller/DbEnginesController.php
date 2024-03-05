@@ -14,13 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DbEnginesController extends AbstractChartController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/db/engines', name: 'app_db_engines')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {

@@ -14,13 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PhpVersionController extends AbstractChartController
 {
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     #[Route('/php/version', name: 'app_php_version')]
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {
