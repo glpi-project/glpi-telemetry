@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
 use App\Controller\AbstractChartController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,8 +19,8 @@ class GlpiVersionController extends AbstractChartController
         $filter         = $request->query->get('filter');
         $period         = $this->getPeriodFromFilter($filter);
 
-        $start          = $period['startDate'];
-        $end            = $period['endDate'];
+        $start          = new \DateTime($period['startDate']);
+        $end            = new \Datetime($period['endDate']);
 
         $res = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
 
