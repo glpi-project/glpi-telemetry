@@ -4,16 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\ChartDataStorage;
-
 abstract class AbstractChartController
 {
-    protected ChartDataStorage $chartDataStorage;
-
-    public function __construct(ChartDataStorage $chartDataStorage)
-    {
-        $this->chartDataStorage = $chartDataStorage;
-    }
     /**
      * @param string $filter
      * @return array<string,string>

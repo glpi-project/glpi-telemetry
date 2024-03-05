@@ -11,10 +11,6 @@ services:
             string $captchaSecretKey: '%env(CAPTCHA_SECRET_KEY)%'
             string $contactFormRecipientEmail: '%env(CONTACT_FORM_RECIPIENT_EMAIL)%'
 
-    App\Controller\AbstractChartController:
-        arguments:
-            $chartDataStorage: '@App\Service\ChartDataStorage'
-
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -23,5 +19,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
 
     Opis\JsonSchema\Validator: ~

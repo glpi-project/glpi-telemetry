@@ -163,9 +163,9 @@ class ChartDataStorage
     /**
      * @param array<string,array{name:string,total:int}[]> $monthlyValues
      * @param string $versionName
-     * @return string|false
+     * @return int|false
      */
-    public function findVersionIndex(array $monthlyValues, string $versionName): string|false
+    public function findVersionIndex(array $monthlyValues, string $versionName): int|false
     {
         foreach ($monthlyValues as $index => $value) {
             if ($value['name'] == $versionName) {
