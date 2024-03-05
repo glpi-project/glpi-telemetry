@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-class AbstractChartController
+abstract class AbstractChartController
 {
     public function getPeriodFromFilter(string $filter): array
     {

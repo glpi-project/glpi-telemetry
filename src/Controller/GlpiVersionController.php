@@ -14,7 +14,6 @@ use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractChartController
 {
-    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -52,7 +51,7 @@ class GlpiVersionController extends AbstractChartController
     /**
      * @param array<array<string,mixed>> $data
      * @return array{
-     *    periods: array<int,string>,
+     *   periods: array<int,string>,
      *   versions: array<int,string>,
      *   data: array<string,array<string,int>>
      * } $transformedData

@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\TelemetryRepository;
-use App\Service\RefreshCacheService;
+use App\Controller\AbstractChartController;
+use App\Service\ChartDataStorage;
+use App\Telemetry\ChartSerie;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Interface\ViewControllerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
-class PhpVersionController extends AbstractController implements ViewControllerInterface
+class PhpVersionController extends AbstractChartController
 {
     private LoggerInterface $logger;
 
@@ -23,26 +22,27 @@ class PhpVersionController extends AbstractController implements ViewControllerI
     }
 
     #[Route('/php/version', name: 'app_php_version')]
-    public function index(Request $request, RefreshCacheService $refreshCacheService): JsonResponse
+    public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {
         $filter         = $request->query->get('filter');
-        $forceUpdate    = false;
+        $period         = $this->getPeriodFromFilter($filter);
 
-        $result = $refreshCacheService->refreshCache($filter, $forceUpdate, $this);
+        $start          = $period['startDate'];
+        $end            = $period['endDate'];
 
-        return $this->json($result);
+        $res = $chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
+
+        $result = $this->prepareDataForPieChart($res);
+
+        return new JsonResponse($result);
     }
 
     /**
      * @param array<string,string> $Dateparams
      * @return array<array<string,mixed>>
      */
-    public function getData(array $Dateparams, TelemetryRepository $telemetryRepository): array
+    public function processData(array $data): array
     {
-        $startDate      = $Dateparams['startDate'];
-        $endDate        = $Dateparams['endDate'];
-
-        $data = $telemetryRepository->getPhpInfos($startDate, $endDate);
         $transformedData   = $this->transformDataForChart($data);
         $chartData         = $this->prepareChartData($transformedData);
 
