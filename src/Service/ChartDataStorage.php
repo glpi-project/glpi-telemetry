@@ -168,10 +168,8 @@ class ChartDataStorage
 
                 $currentDate->modify('+1 day');
             }
-
-            $this->logger->info('Monthly values: ' . json_encode($monthlyValues));
-            return $monthlyValues;
         }
+        return $monthlyValues;
     }
 
     /**
