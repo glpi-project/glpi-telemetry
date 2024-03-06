@@ -31,7 +31,7 @@ class DataStorageUpdate extends Command
         try {
             $startDate = $this->chartDataStorage->getOldestDate();
 
-            $output->writeln('<info>Data storage update started ' . $startDate . '</info>');
+            $output->writeln('<info>Data storage update started ' . $startDate->format('Y-m-d') . '</info>');
 
             $start = $startDate;
             $end  = new \DateTime('-1 day');

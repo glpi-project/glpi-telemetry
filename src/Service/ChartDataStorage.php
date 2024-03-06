@@ -135,7 +135,7 @@ class ChartDataStorage
                     throw new \Exception('Error reading file ' . $dailyFileName);
                 }
 
-                /** @var array{name:string,total:int} $dailyData */
+                /** @var array{name:string,total:int}[] $dailyData */
                 $dailyData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
 
                 foreach ($dailyData as $versionData) {
