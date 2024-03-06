@@ -34,7 +34,7 @@ class ChartDataStorage
     {
         $this->logger->info('Enter computeValues() for period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . $this->storageDir. '/chart-data/';
+        $directory = __DIR__ . $this->storageDir . '/chart-data/';
         $finder = new Finder();
 
         $this->logger->info('Main storage directory: ' . $directory);
@@ -102,11 +102,12 @@ class ChartDataStorage
     {
         $this->logger->info('Enter getMonthlyValues() for serie: ' . $serie->name . ' and period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . $this->storageDir. '/chart-data/' . $serie->name;
+        $directory = __DIR__ . $this->storageDir . '/chart-data/' . $serie->name;
         $finder = new Finder();
         $files = $finder->files()->in($directory)->name('*.json');
 
         $dates = [];
+
         foreach ($files as $file) {
             $dates[] = $file->getBasename('.json');
         }
@@ -133,61 +134,51 @@ class ChartDataStorage
                 if ($fileContents === false) {
                     throw new \Exception('Error reading file ' . $dailyFileName);
                 }
-                $this->logger->info('Daily data: ' . json_encode($dailyData));
 
                 /** @var array{name:string,total:int} $dailyData */
                 $dailyData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
 
-            foreach ($dailyData as $versionData) {
-                $versionName = $versionData['name'];
-                $versionTotal = $versionData['total'];
+                foreach ($dailyData as $versionData) {
+                    $versionName = $versionData['name'];
+                    $versionTotal = $versionData['total'];
 
-                // Initialize the monthlyValues array for the month if necessary
-                if (!isset($monthlyValues[$monthKey])) {
-                    $monthlyValues[$monthKey] = [];
-                }
+                    // Initialize the monthlyValues array for the month if necessary
+                    if (!isset($monthlyValues[$monthKey])) {
+                        $monthlyValues[$monthKey] = [];
+                    }
 
-                // Check if the version data already exists in the monthlyValues for the current month
-                $versionExists = false;
-                foreach ($monthlyValues[$monthKey] as &$existingVersionData) {
-                    if ($existingVersionData['name'] === $versionName) {
-                        $versionExists = true;
-                        $existingVersionData['total'] += $versionTotal;
-                        break;
+                    // Check if the version data already exists in the monthlyValues for the current month
+                    $versionExists = false;
+                    foreach ($monthlyValues[$monthKey] as &$existingVersionData) {
+                        if ($existingVersionData['name'] === $versionName) {
+                            $versionExists = true;
+                            $existingVersionData['total'] += $versionTotal;
+                            break;
+                        }
+                    }
+
+                    // If the version data does not exist, add it
+                    if (!$versionExists) {
+                        $monthlyValues[$monthKey][] = [
+                            'name' => $versionName,
+                            'total' => $versionTotal,
+                        ];
                     }
                 }
 
-                // If the version data does not exist, add it
-                if (!$versionExists) {
-                    $monthlyValues[$monthKey][] = [
-                        'name' => $versionName,
-                        'total' => $versionTotal,
-                    ];
-                }
+                $currentDate->modify('+1 day');
             }
 
-            $currentDate->modify('+1 day');
+            $this->logger->info('Monthly values: ' . json_encode($monthlyValues));
+            return $monthlyValues;
         }
-
-        $this->logger->info('Monthly values: ' . json_encode($monthlyValues));
-        return $monthlyValues;
     }
+
     /**
-     * @param array<string,array{name:string,total:int}[]> $monthlyValues
-     * @param string $versionName
-     * @return int|false
+     * Retreive the oldest date in the telemetry table
+     * @return \DateTime
      */
-    public function findVersionIndex(array $monthlyValues, string $versionName): int|false
-    {
-        foreach ($monthlyValues as $index => $value) {
-            if ($value['name'] == $versionName) {
-                return $index;
-            }
-        }
-        return false;
-    }
-
-    public function getOldestDate(): string
+    public function getOldestDate(): \DateTime
     {
         $sql = <<<SQL
             SELECT MIN(created_at) as startDate
@@ -196,6 +187,6 @@ class ChartDataStorage
 
         $result = $this->connection->executeQuery($sql)->fetchOne();
 
-        return date('Y-m-d', strtotime($result));
+        return new \DateTime($result);
     }
 }

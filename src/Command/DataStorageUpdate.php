@@ -38,9 +38,9 @@ class DataStorageUpdate extends Command
             $end  = new \DateTime('-1 day');
 
             $iterationSize = 30;
-            $diff = (int)$start->diff($end)->format('%a');
+            $diff = (int) $start->diff($end)->format('%a');
 
-            $progressBar = new ProgressBar($output, (int)ceil($diff / $iterationSize));
+            $progressBar = new ProgressBar($output, (int) ceil($diff / $iterationSize));
             $progressBar->start();
 
             $currentStart = clone $start;
