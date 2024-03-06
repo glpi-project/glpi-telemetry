@@ -15,12 +15,14 @@ class ChartDataStorage
     private Connection $connection;
     private Filesystem $filesystem;
     private LoggerInterface $logger;
+    private string $storageDir;
 
-    public function __construct(Connection $connection, Filesystem $filesystem, LoggerInterface $logger)
+    public function __construct(Connection $connection, Filesystem $filesystem, string $storageDir, LoggerInterface $logger)
     {
         $this->connection = $connection;
         $this->filesystem = $filesystem;
         $this->logger = $logger;
+        $this->storageDir = $storageDir;
     }
 
     /**
@@ -32,7 +34,7 @@ class ChartDataStorage
     {
         $this->logger->info('Enter computeValues() for period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . '/../../var/storage/chart-data/';
+        $directory = __DIR__ . $this->storageDir. '/chart-data/';
         $finder = new Finder();
 
         $this->logger->info('Main storage directory: ' . $directory);
@@ -126,11 +128,11 @@ class ChartDataStorage
             $this->logger->info('Daily file name: ' . $dailyFileName);
 
             if (in_array($date, $dates)) {
-                $this->logger->info('File for month ' . $monthKey . ' exists');
+                $this->logger->info('File for current date ' . $date . ' exists');
                 $dailyData = json_decode(file_get_contents($directory . '/' . $dailyFileName), true);
                 $this->logger->info('Daily data: ' . json_encode($dailyData));
             } else {
-                $this->logger->info('File for month ' . $monthKey . ' does not exist');
+                $this->logger->info('File for data ' . $date . ' does not exist');
                 $dailyData = [];
             }
 
@@ -138,25 +140,33 @@ class ChartDataStorage
                 $versionName = $versionData['name'];
                 $versionTotal = $versionData['total'];
 
+                // Initialize the monthlyValues array for the month if necessary
                 if (!isset($monthlyValues[$monthKey])) {
                     $monthlyValues[$monthKey] = [];
                 }
 
-                $versionIndex = $this->findVersionIndex($monthlyValues[$monthKey], $versionName);
+                // Check if the version data already exists in the monthlyValues for the current month
+                $versionExists = false;
+                foreach ($monthlyValues[$monthKey] as &$existingVersionData) {
+                    if ($existingVersionData['name'] === $versionName) {
+                        $versionExists = true;
+                        $existingVersionData['total'] += $versionTotal;
+                        break;
+                    }
+                }
 
-                if ($versionIndex !== false) {
-                    // Version exists, update the total
-                    $monthlyValues[$monthKey][$versionIndex]['total'] += $versionTotal;
-                } else {
-                    // Version does not exist, add a new entry
+                // If the version data does not exist, add it
+                if (!$versionExists) {
                     $monthlyValues[$monthKey][] = [
                         'name' => $versionName,
                         'total' => $versionTotal,
                     ];
                 }
             }
+
             $currentDate->modify('+1 day');
         }
+
         $this->logger->info('Monthly values: ' . json_encode($monthlyValues));
         return $monthlyValues;
     }

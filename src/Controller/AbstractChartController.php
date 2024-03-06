@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-abstract class AbstractChartController
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+abstract class AbstractChartController extends AbstractController
 {
     /**
      * @param string $filter
