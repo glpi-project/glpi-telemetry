@@ -102,7 +102,7 @@ class ChartDataStorage
     {
         $this->logger->info('Enter getMonthlyValues() for serie: ' . $serie->name . ' and period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . '/../../var/storage/chart-data/' . $serie->name;
+        $directory = __DIR__ . $this->storageDir. '/chart-data/' . $serie->name;
         $finder = new Finder();
         $files = $finder->files()->in($directory)->name('*.json');
 
@@ -129,12 +129,14 @@ class ChartDataStorage
 
             if (in_array($date, $dates)) {
                 $this->logger->info('File for current date ' . $date . ' exists');
-                $dailyData = json_decode(file_get_contents($directory . '/' . $dailyFileName), true);
+                $fileContents = file_get_contents($directory . '/' . $dailyFileName);
+                if ($fileContents === false) {
+                    throw new \Exception('Error reading file ' . $dailyFileName);
+                }
                 $this->logger->info('Daily data: ' . json_encode($dailyData));
-            } else {
-                $this->logger->info('File for data ' . $date . ' does not exist');
-                $dailyData = [];
-            }
+
+                /** @var array{name:string,total:int} $dailyData */
+                $dailyData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
 
             foreach ($dailyData as $versionData) {
                 $versionName = $versionData['name'];
