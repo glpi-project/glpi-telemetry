@@ -56,7 +56,7 @@ enum ChartSerie
                 return $sql;
             case ChartSerie::PhpInfos:
                 $sql = <<<SQL
-                    SUBSTRING_INDEX(php_version, '.', 2) as name,
+                    SELECT SUBSTRING_INDEX(php_version, '.', 2) as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
                     WHERE created_at BETWEEN :startDate AND :endDate
