@@ -34,7 +34,7 @@ class ChartDataStorage
     {
         $this->logger->info('Enter computeValues() for period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . $this->storageDir . '/chart-data/';
+        $directory = $this->storageDir . '/chart-data/';
         $finder = new Finder();
 
         $this->logger->info('Main storage directory: ' . $directory);
@@ -48,6 +48,7 @@ class ChartDataStorage
         try {
             foreach (ChartSerie::cases() as $serie) {
                 $this->logger->info('Processing serie: ' . $serie->name);
+
                 $serieName = $serie->name;
                 $serieDirectory = $directory . $serieName;
 
@@ -57,7 +58,6 @@ class ChartDataStorage
 
                 $this->logger->info('Check existing repository for serie: ' . $serieName . ' OK');
 
-                //récupérer les fichiers existants avec $finder
                 $files = $finder->files()->in($serieDirectory)->name('*.json');
 
                 //récupérer la liste des dates des fichiers existants
@@ -70,10 +70,11 @@ class ChartDataStorage
                 $currentDate = clone $start;
                 while ($currentDate <= $end) {
                     $date = $currentDate->format('Y-m-d');
+
                     if (in_array($date, $dates)) {
-                        $this->logger->info('File for date ' . $date . ' already exists');
+                        $this->logger->info($serieName . ' File for date ' . $date . ' already exists');
                     } else {
-                        $this->logger->info('File for date ' . $date . ' does not exist');
+                        $this->logger->info($serieName . 'File for date ' . $date . ' does not exist');
                         $sql = $serie->getSqlQuery();
                         $this->logger->info('SQL query: ' . $sql);
                         $result = $this->connection->executeQuery($sql, [

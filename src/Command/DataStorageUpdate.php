@@ -31,10 +31,12 @@ class DataStorageUpdate extends Command
         try {
             $startDate = $this->chartDataStorage->getOldestDate();
 
-            $output->writeln('<info>Data storage update started ' . $startDate->format('Y-m-d') . '</info>');
+            $output->writeln('<info>Data storage update started ' . '</info>');
 
             $start = $startDate;
-            $end  = new \DateTime('-1 day');
+            $end  = (new \DateTime(date('Y-m-d')))->modify('-1 day');
+
+            $output->writeln('<info>' . 'Period : ' . $start->format('Y-m-d') . ' ' . $end->format('Y-m-d') . '</info>');
 
             $iterationSize = 30;
             $diff = (int) $start->diff($end)->format('%a');
@@ -57,6 +59,7 @@ class DataStorageUpdate extends Command
             } while ($currentStart <= $end);
 
             $output->writeln('<info>Data storage update completed</info>');
+            $progressBar->finish();
             return Command::SUCCESS;
 
         } catch (\Exception $e) {
