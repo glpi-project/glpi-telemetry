@@ -102,7 +102,7 @@ class ChartDataStorage
     {
         $this->logger->info('Enter getMonthlyValues() for serie: ' . $serie->name . ' and period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
-        $directory = __DIR__ . $this->storageDir . '/chart-data/' . $serie->name;
+        $directory = $this->storageDir . '/chart-data/' . $serie->name;
         $finder = new Finder();
         $files = $finder->files()->in($directory)->name('*.json');
 
@@ -165,9 +165,8 @@ class ChartDataStorage
                         ];
                     }
                 }
-
-                $currentDate->modify('+1 day');
             }
+            $currentDate->modify('+1 day');
         }
         return $monthlyValues;
     }
