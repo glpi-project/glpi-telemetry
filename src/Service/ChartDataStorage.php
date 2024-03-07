@@ -35,7 +35,6 @@ class ChartDataStorage
         $this->logger->info('Enter computeValues() for period: ' . $start->format('Y-m-d') . ' to ' . $end->format('Y-m-d'));
 
         $directory = $this->storageDir . '/chart-data/';
-        $finder = new Finder();
 
         $this->logger->info('Main storage directory: ' . $directory);
 
@@ -58,7 +57,7 @@ class ChartDataStorage
 
                 $this->logger->info('Check existing repository for serie: ' . $serieName . ' OK');
 
-                $files = $finder->files()->in($serieDirectory)->name('*.json');
+                $files = (new Finder())->files()->in($serieDirectory)->name('*.json');
 
                 //récupérer la liste des dates des fichiers existants
                 $dates = [];
