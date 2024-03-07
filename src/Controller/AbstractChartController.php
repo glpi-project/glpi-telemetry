@@ -40,16 +40,20 @@ abstract class AbstractChartController extends AbstractController
     public function prepareDataForPieChart(array $data): array
     {
         $chartData = [];
-        foreach($data as $entry) {
-            $index = array_search($entry['name'], array_column($chartData, 'name'));
 
-            if ($index !== false) {
-                $chartData[$index]['value'] += $entry['total'];
-            } else {
-                $chartData[] = [
-                    'name' => $entry['name'],
-                    'value' => $entry['total'],
-                ];
+        foreach ($data as $entries) {
+            // monthly entries
+            foreach($entries as $entry) {
+                $index = array_search($entry['name'], array_column($chartData, 'name'));
+
+                if ($index !== false) {
+                    $chartData[$index]['value'] += $entry['total'];
+                } else {
+                    $chartData[] = [
+                        'name' => $entry['name'],
+                        'value' => $entry['total'],
+                    ];
+                }
             }
         }
 
