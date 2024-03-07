@@ -60,7 +60,7 @@ abstract class AbstractChartController extends AbstractController
         return $chartData;
     }
 
-        /**
+    /**
      * @param array<array<string,mixed>> $data
      * @return array{
      *   periods: array<int,string>,
