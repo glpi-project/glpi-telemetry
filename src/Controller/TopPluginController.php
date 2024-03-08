@@ -26,7 +26,7 @@ class TopPluginController extends AbstractChartController
 
         $result = $this->prepareDataForPieChart($res);
 
-        usort($result, function($a, $b) {
+        usort($result, function ($a, $b) {
             return $b['value'] - $a['value'];
         });
 
