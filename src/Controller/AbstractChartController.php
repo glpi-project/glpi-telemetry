@@ -63,10 +63,22 @@ abstract class AbstractChartController extends AbstractController
     /**
      * @param array<array<string,mixed>> $data
      * @return array{
-     *   periods: array<int,string>,
-     *   versions: array<int,string>,
-     *   data: array<string,array<string,int>>
-     * } $transformedData
+     *     xAxis: array{
+     *         data: array<int, string>
+     *     },
+     *     series: array<int, array{
+     *         name: string,
+     *         type: string,
+     *         stack: string,
+     *         label: array{
+     *             show: bool
+     *         },
+     *         emphasis: array{
+     *             focus: string
+     *         },
+     *         data: array<int, float|int>
+     *     }>
+     * }
      */
     public function prepareDataForBarChart(array $data): array
     {
