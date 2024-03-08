@@ -18,14 +18,13 @@ class PhpVersionController extends AbstractChartController
     {
         $filter         = $request->query->get('filter');
         $period         = $this->getPeriodFromFilter($filter);
-        $controllerName = 'PhpVersionController';
 
         $start          = new \DateTime($period['startDate']);
         $end            = new \DateTime($period['endDate']);
 
         $res = $chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
 
-        $result = $this->prepareDataForBarChart($res, $controllerName);
+        $result = $this->prepareDataForBarChart($res);
 
         return new JsonResponse($result);
     }
