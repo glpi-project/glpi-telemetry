@@ -42,6 +42,7 @@ enum ChartSerie
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
                     WHERE created_at BETWEEN :startDate AND :endDate
+                    AND web_engine IS NOT NULL
                     GROUP BY name
                 SQL;
                 return $sql;
