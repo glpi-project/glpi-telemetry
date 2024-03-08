@@ -18,14 +18,19 @@ class GlpiVersionController extends AbstractChartController
     {
         $filter         = $request->query->get('filter');
         $period         = $this->getPeriodFromFilter($filter);
-        $controllerName = 'GlpiVersionController';
 
         $start          = new \DateTime($period['startDate']);
         $end            = new \DateTime($period['endDate']);
 
         $res = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
 
-        $result = $this->prepareDataForBarChart($res, $controllerName);
+        foreach ($res as $version => $value) {
+            if (preg_match('/^(9|10)\.\d+$/', $version) !== 1) {
+                unset($res[$version]);
+            }
+        }
+
+        $result = $this->prepareDataForBarChart($res);
 
         return new JsonResponse($result);
     }

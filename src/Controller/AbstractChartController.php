@@ -68,7 +68,7 @@ abstract class AbstractChartController extends AbstractController
      *   data: array<string,array<string,int>>
      * } $transformedData
      */
-    public function prepareDataForBarChart(array $data, string $controllerName): array
+    public function prepareDataForBarChart(array $data): array
     {
         $periods = [];
         $versions = [];
@@ -84,14 +84,6 @@ abstract class AbstractChartController extends AbstractController
             foreach ($entries as $entry) {
                 $version = $entry['name'];
                 $nbInstance = $entry['total'];
-
-                if (str_contains($controllerName, 'glpiversion')) {
-                    if (preg_match('/^(9|10)\.\d+$/', $version) !== 1) {
-                        // ignore invalid versions (e.g. `1.6`, `V1`, ...)
-                        // TODO Validate version against Github releases when telemetry data is received
-                        continue;
-                    }
-                }
 
                 // Add the version to the $versions array if it's not already there
                 if (!in_array($version, $versions)) {
