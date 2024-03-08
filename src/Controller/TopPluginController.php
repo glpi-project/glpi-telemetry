@@ -26,6 +26,12 @@ class TopPluginController extends AbstractChartController
 
         $result = $this->prepareDataForPieChart($res);
 
-        return new JsonResponse($result);
+        usort($result, function($a, $b) {
+            return $b['value'] - $a['value'];
+        });
+
+        $topTenPlugin = array_slice($result, 0, 10);
+
+        return new JsonResponse($topTenPlugin);
     }
 }
