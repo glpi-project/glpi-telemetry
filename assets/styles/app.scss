@@ -27,3 +27,9 @@ td {
     white-space: normal;
     text-overflow: ellipsis;
 }
+
+.fixed {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
