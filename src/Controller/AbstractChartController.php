@@ -34,8 +34,8 @@ abstract class AbstractChartController extends AbstractController
     }
 
     /**
-     * @param array<array<string,mixed>> $data
-     * @return array<string,array<int,array{name:string,value:int}>>
+     * @param array<string,array<int,array{name:string,value:int}>> $data
+     * @return array<array<string,mixed>>
      */
     public function prepareDataForPieChart(array $data): array
     {
