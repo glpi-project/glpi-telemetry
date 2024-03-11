@@ -7,10 +7,7 @@ namespace App\Tests\Controller;
 use App\Controller\AbstractChartController;
 use PHPUnit\Framework\TestCase;
 
-class AnyChartController extends AbstractChartController
-{
-
-}
+class AnyChartController extends AbstractChartController {}
 
 class AbstractChartControllerTest extends TestCase
 {
