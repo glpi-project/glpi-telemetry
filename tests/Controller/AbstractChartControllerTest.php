@@ -30,11 +30,9 @@ class AbstractChartControllerTest extends TestCase
     public function testPrepareDataForPieChart(): void
     {
         $data = [
-            [
+            "2024-01" => [
                 ['name' => 'Chrome', 'total' => 10],
                 ['name' => 'Firefox', 'total' => 5],
-            ],
-            [
                 ['name' => 'Chrome', 'total' => 15],
                 ['name' => 'Safari', 'total' => 10],
             ],
