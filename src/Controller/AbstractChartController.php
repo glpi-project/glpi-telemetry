@@ -61,7 +61,7 @@ abstract class AbstractChartController extends AbstractController
     }
 
     /**
-     * @param array<array<string,mixed>> $data
+     * @param array<string,array<int,array{name:string,total:int}>> $data
      * @return array{
      *     xAxis: array{
      *         data: array<int, string>
