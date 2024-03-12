@@ -35,7 +35,7 @@ abstract class AbstractChartController extends AbstractController
 
     /**
      * @param array<string,array<int,array{name:string,total:int}>> $data
-     * @return array<array<string,mixed>>
+     * @return array<array{name:string,value:int}>
      */
     public function prepareDataForPieChart(array $data): array
     {
@@ -76,7 +76,7 @@ abstract class AbstractChartController extends AbstractController
      *         emphasis: array{
      *             focus: string
      *         },
-     *         data: array<int,int>
+     *         data: array<int, float|int>
      *     }>
      * }
      */
