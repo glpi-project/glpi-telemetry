@@ -43,4 +43,23 @@ class AbstractChartControllerTest extends TestCase
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
     }
+    public function testPrepareDataForBarChart(): void
+    {
+        $data = [
+            '2022-01' => [
+                ['name' => 'Chrome', 'total' => 10],
+                ['name' => 'Firefox', 'total' => 5],
+            ],
+            '2022-02' => [
+                ['name' => 'Chrome', 'total' => 15],
+                ['name' => 'Safari', 'total' => 10],
+            ],
+        ];
+
+        $result = $this->controller->prepareDataForBarChart($data);
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('xAxis', $result);
+        $this->assertArrayHasKey('series', $result);
+    }
 }

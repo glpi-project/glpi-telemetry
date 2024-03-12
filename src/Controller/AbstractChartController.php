@@ -42,7 +42,7 @@ abstract class AbstractChartController extends AbstractController
         $chartData = [];
 
         foreach ($data as $entries) {
-            // monthly entries
+
             foreach($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'));
 
@@ -76,7 +76,7 @@ abstract class AbstractChartController extends AbstractController
      *         emphasis: array{
      *             focus: string
      *         },
-     *         data: array<int, float|int>
+     *         data: array<int,int>
      *     }>
      * }
      */
