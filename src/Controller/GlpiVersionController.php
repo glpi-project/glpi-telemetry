@@ -22,7 +22,7 @@ class GlpiVersionController extends AbstractChartController
         $start          = new \DateTime($period['startDate']);
         $end            = new \DateTime($period['endDate']);
 
-        $res = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
+        $res            = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
 
         foreach ($res as $version => $value) {
             if (preg_match('/^(9|10)\.\d+$/', $version) !== 1) {
@@ -30,7 +30,7 @@ class GlpiVersionController extends AbstractChartController
             }
         }
 
-        $result = $this->prepareDataForBarChart($res);
+        $result         = $this->prepareDataForBarChart($res);
 
         return new JsonResponse($result);
     }

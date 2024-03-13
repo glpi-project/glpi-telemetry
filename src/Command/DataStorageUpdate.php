@@ -34,17 +34,18 @@ class DataStorageUpdate extends Command
             $output->writeln('<info>Data storage update started ' . '</info>');
 
             $start = $startDate;
-            $end  = (new \DateTime(date('Y-m-d')))->modify('-1 day');
+            $end   = (new \DateTime(date('Y-m-d')))->modify('-1 day');
 
             $output->writeln('<info>' . 'Period : ' . $start->format('Y-m-d') . ' ' . $end->format('Y-m-d') . '</info>');
 
             $iterationSize = 30;
-            $diff = (int) $start->diff($end)->format('%a');
+            $diff          = (int) $start->diff($end)->format('%a');
 
-            $progressBar = new ProgressBar($output, (int) ceil($diff / $iterationSize));
+            $progressBar   = new ProgressBar($output, (int) ceil($diff / $iterationSize));
             $progressBar->start();
 
-            $currentStart = clone $start;
+            $currentStart  = clone $start;
+
             do {
                 $currentEnd  = (clone $currentStart)->modify('+ ' . $iterationSize . ' days');
                 if ($currentEnd > $end) {

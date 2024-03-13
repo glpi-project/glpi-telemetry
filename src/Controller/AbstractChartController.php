@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 abstract class AbstractChartController extends AbstractController
 {
     /**
+     * Set a period based on the filter value
+     *
      * @param string $filter
      * @return array<string,string>
      */
@@ -28,12 +30,14 @@ abstract class AbstractChartController extends AbstractController
             return $period;
         } catch(\Exception $e) {
             $error_msg = $e->getMessage();
-            $error = ['error' => $error_msg];
+            $error     = ['error' => $error_msg];
             return $error;
         }
     }
 
     /**
+     * Process data to prepare it for the Echart pie chart
+     *
      * @param array<string,array<int,array{name:string,total:int}>> $data
      * @return array<array{name:string,value:int}>
      */
@@ -61,6 +65,8 @@ abstract class AbstractChartController extends AbstractController
     }
 
     /**
+     * Process data to prepare it for the Echart bar chart
+     *
      * @param array<string,array<int,array{name:string,total:int}>> $data
      * @return array{
      *     xAxis: array{

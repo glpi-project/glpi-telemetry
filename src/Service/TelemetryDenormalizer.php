@@ -41,8 +41,8 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidPropertyPath()
             ->getPropertyAccessor();
-        $this->validator = $validator;
-        $this->schemaDir = $schemaDir;
+        $this->validator            = $validator;
+        $this->schemaDir            = $schemaDir;
         $this->glpiPluginRepository = $glpiPluginRepository;
     }
 

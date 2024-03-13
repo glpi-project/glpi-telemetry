@@ -22,9 +22,9 @@ class TopPluginController extends AbstractChartController
         $start          = new \DateTime($period['startDate']);
         $end            = new \DateTime($period['endDate']);
 
-        $res = $chartDataStorage->getMonthlyValues(ChartSerie::TopPlugin, $start, $end);
+        $res            = $chartDataStorage->getMonthlyValues(ChartSerie::TopPlugin, $start, $end);
 
-        $result = $this->prepareDataForPieChart($res);
+        $result         = $this->prepareDataForPieChart($res);
 
         usort($result, function ($a, $b) {
             return $b['value'] - $a['value'];

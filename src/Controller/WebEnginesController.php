@@ -22,9 +22,9 @@ class WebEnginesController extends AbstractChartController
         $start          = new \DateTime($period['startDate']);
         $end            = new \DateTime($period['endDate']);
 
-        $res = $chartDataStorage->getMonthlyValues(ChartSerie::WebEngine, $start, $end);
+        $res            = $chartDataStorage->getMonthlyValues(ChartSerie::WebEngine, $start, $end);
 
-        $result = $this->prepareDataForPieChart($res);
+        $result         = $this->prepareDataForPieChart($res);
 
         return new JsonResponse($result);
     }

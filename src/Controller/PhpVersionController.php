@@ -22,9 +22,9 @@ class PhpVersionController extends AbstractChartController
         $start          = new \DateTime($period['startDate']);
         $end            = new \DateTime($period['endDate']);
 
-        $res = $chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
+        $res            = $chartDataStorage->getMonthlyValues(ChartSerie::PhpInfos, $start, $end);
 
-        $result = $this->prepareDataForBarChart($res);
+        $result         = $this->prepareDataForBarChart($res);
 
         return new JsonResponse($result);
     }
