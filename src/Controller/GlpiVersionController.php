@@ -24,11 +24,13 @@ class GlpiVersionController extends AbstractChartController
 
         $res            = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
 
-        foreach ($res as $version => $value) {
-            if (preg_match('/^(9|10)\.\d+$/', $version) !== 1) {
-                unset($res[$version]);
-            }
-        }
+        $regex          = '/^(9|10)\.\d+$/';
+
+        $res = array_map(function ($versions) use ($regex) {
+            return array_filter($versions, function ($version) use ($regex) {
+                return preg_match($regex, $version['name']);
+            });
+        }, $res);
 
         $result         = $this->prepareDataForBarChart($res);
 
