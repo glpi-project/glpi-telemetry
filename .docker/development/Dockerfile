@@ -35,6 +35,10 @@ RUN apt-get update \
   # Install PDO MySQL PHP extension.
   && docker-php-ext-install pdo pdo_mysql \
   \
+  # Install zip PHP extension (for `php-webdriver/webdriver`).
+  && apt-get install --assume-yes --no-install-recommends --quiet libzip-dev zip \
+  && docker-php-ext-install zip \
+  \
   # Install nodejs and npm.
   && apt-get install --assume-yes --no-install-recommends --quiet gnupg \
   && mkdir -p /etc/apt/keyrings \
@@ -45,6 +49,9 @@ RUN apt-get update \
   \
   # Install git and zip used by composer when fetching dependencies.
   && apt-get install --assume-yes --no-install-recommends --quiet git unzip \
+  \
+  # Install browser driver used for E2E tests.
+  && apt-get install --assume-yes --no-install-recommends --quiet chromium-driver \
   \
   # Clean sources list
   && rm -rf /var/lib/apt/lists/*

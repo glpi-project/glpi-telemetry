@@ -90,9 +90,16 @@ jobs:
           bin/console doctrine:database:create --ansi --no-interaction
           bin/console doctrine:migrations:migrate --ansi --no-interaction
       - name: "Run tests"
+        id: "phpunit"
         run: |
           symfony server:start --daemon --no-tls
           vendor/bin/phpunit --colors=always
+      - name: "Upload `/var` dir artifact"
+        uses: "actions/upload-artifact@v4"
+        if: "${{ failure() && steps.phpunit.conclusion == 'failure' }}"
+        with:
+          name: "var"
+          path: "var/"
       - name: "Deploy on development server"
         if: "${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.deploy == true || github.event.inputs.deploy == 'true')) }}"
         env:
