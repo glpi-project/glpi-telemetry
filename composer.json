@@ -60,7 +60,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\E2ETests\\": "tests/e2e/",
+            "App\\Tests\\": "tests/src/"
         }
     },
     "replace": {
@@ -100,6 +101,7 @@
         "symfony/css-selector": "^7.0",
         "symfony/debug-bundle": "^7.0",
         "symfony/maker-bundle": "^1.55",
+        "symfony/panther": "^2.1",
         "symfony/stopwatch": "^7.0",
         "symfony/web-profiler-bundle": "^7.0"
     }

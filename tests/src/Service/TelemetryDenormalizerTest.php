@@ -2,14 +2,20 @@
 
 declare(strict_types=1);
 
+namespace App\Tests\Service;
+
 use App\Entity\GlpiPlugin;
 use App\Entity\Telemetry;
 use App\Entity\TelemetryGlpiPlugin;
 use App\Repository\GlpiPluginRepository;
 use App\Service\TelemetryDenormalizer;
+use DateTimeImmutable;
+use DirectoryIterator;
 use Doctrine\ORM\EntityManager;
 use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use stdClass;
 
 class TelemetryDenormalizerTest extends TestCase
 {
@@ -18,7 +24,7 @@ class TelemetryDenormalizerTest extends TestCase
      */
     public function testValidateTelemetryJsonForTelemetryFiles(): void
     {
-        $directory_iterator = new DirectoryIterator(__DIR__ . '/../../tests/fixtures/telemetry');
+        $directory_iterator = new DirectoryIterator(__DIR__ . '/../../../tests/fixtures/telemetry');
         /** @var \SplFileObject $file */
         foreach ($directory_iterator as $file) {
             if ($file->getExtension() !== 'json') {
@@ -54,7 +60,7 @@ class TelemetryDenormalizerTest extends TestCase
      */
     public function testTelemetryFiles(): void
     {
-        $directory_iterator = new DirectoryIterator(__DIR__ . '/../../tests/fixtures/telemetry');
+        $directory_iterator = new DirectoryIterator(__DIR__ . '/../../../tests/fixtures/telemetry');
         /** @var \SplFileObject $file */
         foreach ($directory_iterator as $file) {
             if ($file->getExtension() !== 'json') {
@@ -257,7 +263,7 @@ class TelemetryDenormalizerTest extends TestCase
     {
         return new TelemetryDenormalizer(
             new Validator(),
-            __DIR__ . '/../../resources/schema',
+            __DIR__ . '/../../../resources/schema',
             $this->createMock(GlpiPluginRepository::class)
         );
     }
