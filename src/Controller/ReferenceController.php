@@ -11,12 +11,20 @@ use App\Repository\ReferenceRepository;
 use App\Service\CaptchaValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class ReferenceController extends AbstractController
 {
+    private CacheInterface $cache;
+    public function __construct(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
+
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request): Response
     {
@@ -96,5 +104,67 @@ class ReferenceController extends AbstractController
             'form'  => $form,
             'captchaSiteKey' => $captchaSiteKey,
         ]);
+    }
+
+    #[Route('/map/graph', name: 'app_map_graph')]
+    public function getDataForMapGraph(Request $request, ReferenceRepository $referenceRepository): JsonResponse
+    {
+        $data = $referenceRepository->getReferencesCountByCountries();
+
+        $countriesDataJson = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
+        $countriesData = json_decode($countriesDataJson, true);
+
+        $transformedData = [];
+        foreach ($countriesData as $country) {
+            $transformedData[strtoupper($country['cca2'])] = [
+                'name' => $country['name']['common'],
+                'value' => 0,
+            ];
+        }
+        foreach ($data as $isoa2 => $total) {
+            $transformedData[strtoupper($isoa2)]['value'] = $total;
+        }
+
+        $transformedData = array_values($transformedData);
+        return $this->json($transformedData);
+    }
+
+    #[Route('/map/countries', name: 'app_map_countries')]
+    public function countries(): JsonResponse
+    {
+        $compiledGeoJson = $this->cache->get("countries.geo.json", function () {
+
+            $countriesDataJson = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
+            $countriesData = json_decode($countriesDataJson, true);
+
+            $compiledGeoJson = [
+                'type' => 'FeatureCollection',
+                'features' => [],
+            ];
+
+            foreach ($countriesData as $country) {
+                $cca3 = strtolower($country['cca3']);
+
+                if ($country['cca3'] === 'ATA') {
+                    continue;
+                }
+
+                $geoJsonPath = __DIR__ . "/../../vendor/mledoze/countries/data/{$cca3}.geo.json";
+
+                if (file_exists($geoJsonPath)) {
+                    $geoJsonData = json_decode(file_get_contents($geoJsonPath), true);
+                    if (isset($geoJsonData['features'])) {
+                        foreach ($geoJsonData['features'] as &$feature) {
+                            $feature['properties']['name'] = $country['name']['common'];
+                        }
+                        $compiledGeoJson['features'] = array_merge($compiledGeoJson['features'], $geoJsonData['features']);
+                    }
+                }
+            }
+
+            return json_encode($compiledGeoJson);
+        });
+
+        return new JsonResponse($compiledGeoJson, json: true);
     }
 }
