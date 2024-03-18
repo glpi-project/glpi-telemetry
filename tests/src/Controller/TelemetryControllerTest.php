@@ -21,7 +21,9 @@ class TelemetryControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'text/html']);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
-        $this->assertJsonStringEqualsJsonString($client->getResponse()->getContent(), '{"error":"Bad request"}');
+        $content = $client->getResponse()->getContent();
+        $this->assertIsString($content);
+        $this->assertJsonStringEqualsJsonString($content, '{"error":"Bad request"}');
     }
 
     public function testInvalidJsonPost(): void
@@ -29,6 +31,8 @@ class TelemetryControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'application/json'], '{"test": "test"}');
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
-        $this->assertJsonStringEqualsJsonString($client->getResponse()->getContent(), '{"error":"Bad request"}');
+        $content = $client->getResponse()->getContent();
+        $this->assertIsString($content);
+        $this->assertJsonStringEqualsJsonString($content, '{"error":"Bad request"}');
     }
 }

@@ -172,7 +172,9 @@ class ReferenceRegistrationTest extends PantherTestCase
         $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
 
         // Validates that UUID is saved in DB
-        $repository = static::getContainer()->get('doctrine')->getManager()->getRepository(Reference::class);
+        /** @var \Doctrine\Persistence\ManagerRegistry $doctrine */
+        $doctrine = static::getContainer()->get('doctrine');
+        $repository = $doctrine->getManager()->getRepository(Reference::class);
         $reference = $repository->findOneBy(['uuid' => $uuid]);
         $this->assertInstanceOf(Reference::class, $reference);
         $this->assertEquals($reference->getUuid(), $uuid);

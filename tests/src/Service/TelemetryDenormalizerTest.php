@@ -32,6 +32,7 @@ class TelemetryDenormalizerTest extends TestCase
             }
 
             $contents = file_get_contents($file->getRealPath());
+            $this->assertIsString($contents);
             $this->assertJson($contents);
 
             $denormalizer = $this->getDenormalizerInstance();
@@ -68,6 +69,7 @@ class TelemetryDenormalizerTest extends TestCase
             }
 
             $contents = file_get_contents($file->getRealPath());
+            $this->assertIsString($contents);
             $this->assertJson($contents);
 
             $data = json_decode($contents);
@@ -403,7 +405,10 @@ class TelemetryDenormalizerTest extends TestCase
         ];
 
         // Convert array structure to object structure.
-        $data = json_decode(json_encode($data));
+        $data = json_decode(
+            json_encode($data, flags: JSON_THROW_ON_ERROR),
+            flags: JSON_THROW_ON_ERROR
+        );
 
         return $data;
     }

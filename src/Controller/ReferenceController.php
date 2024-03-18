@@ -55,7 +55,7 @@ class ReferenceController extends AbstractController
             $success = false;
 
             $captcha_token = $request->request->get('captcha_token');
-            if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
+            if ($captcha_token !== null && $captchaValidator->validateToken((string) $captcha_token)) {
                 try {
                     $data = $form->getData();
 
@@ -127,7 +127,7 @@ class ReferenceController extends AbstractController
             ];
 
             foreach ($countries as $country) {
-                $features = $this->getCountryGeometryFeatures($country['cca3']);
+                $features = $this->getCountryGeometryFeatures($country['cca3'], $country['name']);
 
                 foreach (array_keys($features) as $key) {
                     $features[$key]->properties->name = $country['name'];
@@ -184,9 +184,9 @@ class ReferenceController extends AbstractController
     /**
      * Get geometry features for the given country.
      *
-     * @return array<object{type: string, properties: object, geometry: object}>
+     * @return array<object{type: string, properties: \stdClass, geometry: object}>
      */
-    private function getCountryGeometryFeatures(string $cca3): array
+    private function getCountryGeometryFeatures(string $cca3, string $countryName): array
     {
         $geoJsonPath = __DIR__ . sprintf('/../../vendor/mledoze/countries/data/%s.geo.json', $cca3);
 

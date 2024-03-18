@@ -59,7 +59,11 @@ class ChartDataStorage
                         'startDate' => $date . ' 00:00:00',
                         'endDate' => $date . ' 23:59:59'
                     ])->fetchAllAssociative();
-                    $this->filesystem->dumpFile($serieDirectory . '/' . $date . '.json', json_encode($result));
+
+                    $this->filesystem->dumpFile(
+                        $serieDirectory . '/' . $date . '.json',
+                        json_encode($result, flags: JSON_THROW_ON_ERROR)
+                    );
                 }
                 $currentDate = $currentDate->modify('+1 day');
             }
@@ -94,10 +98,14 @@ class ChartDataStorage
         $currentDate   = $start;
         while ($currentDate <= $end) {
             $date          = $currentDate->format('Y-m-d');
-            $monthKey      = $currentDate->format('Y-m');
+            $monthKey      = (string) $currentDate->format('Y-m');
             $dailyFileName = $date . '.json';
 
-            if (in_array($date, $dates)) {
+            if (!array_key_exists($monthKey, $monthlyValues)) {
+                $monthlyValues[$monthKey] = [];
+            }
+
+            if (in_array($date, $dates, true)) {
                 $fileContents = file_get_contents($directory . '/' . $dailyFileName);
                 if ($fileContents === false) {
                     throw new \Exception(sprintf('Error reading file %s.', $dailyFileName));
@@ -106,27 +114,23 @@ class ChartDataStorage
                 /** @var array<int, array{name: string, total: int}> $dailyData */
                 $dailyData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
 
-                foreach ($dailyData as $versionData) {
-                    $versionName = $versionData['name'];
-                    $versionTotal = $versionData['total'];
-
-                    if (!isset($monthlyValues[$monthKey])) {
-                        $monthlyValues[$monthKey] = [];
-                    }
+                foreach ($dailyData as $entry) {
+                    $name  = $entry['name'];
+                    $total = $entry['total'];
 
                     $versionExists = false;
-                    foreach ($monthlyValues[$monthKey] as &$existingVersionData) {
-                        if ($existingVersionData['name'] === $versionName) {
+                    foreach ($monthlyValues[$monthKey] as $existingKey => $existingData) {
+                        if ($existingData['name'] === $name) {
                             $versionExists = true;
-                            $existingVersionData['total'] += $versionTotal;
+                            $monthlyValues[$monthKey][$existingKey]['total'] += $total;
                             break;
                         }
                     }
 
                     if (!$versionExists) {
                         $monthlyValues[$monthKey][] = [
-                            'name' => $versionName,
-                            'total' => $versionTotal,
+                            'name'  => $name,
+                            'total' => $total,
                         ];
                     }
                 }

@@ -78,7 +78,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setGlpiAvgGroups($this->propertyAccessor->getValue($data, 'data.glpi.usage.avg_groups'));
         $telemetry->setGlpiLdapEnabled($this->propertyAccessor->getValue($data, 'data.glpi.usage.ldap_enabled'));
         $telemetry->setGlpiMailcollectorEnabled($this->propertyAccessor->getValue($data, 'data.glpi.usage.mailcollector_enabled'));
-        $telemetry->setGlpiNotifications(json_encode($this->propertyAccessor->getValue($data, 'data.glpi.usage.notifications_modes')));
+        $telemetry->setGlpiNotifications(json_encode($this->propertyAccessor->getValue($data, 'data.glpi.usage.notifications_modes'), flags: JSON_THROW_ON_ERROR));
         $telemetry->setDbEngine($this->propertyAccessor->getValue($data, 'data.system.db.engine'));
         $telemetry->setDbVersion($this->propertyAccessor->getValue($data, 'data.system.db.version'));
         $telemetry->setDbSize((int) $this->propertyAccessor->getValue($data, 'data.system.db.size'));
@@ -87,7 +87,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $telemetry->setWebEngine($this->propertyAccessor->getValue($data, 'data.system.web_server.engine'));
         $telemetry->setWebVersion($this->propertyAccessor->getValue($data, 'data.system.web_server.version'));
         $telemetry->setPhpVersion($this->propertyAccessor->getValue($data, 'data.system.php.version'));
-        $telemetry->setPhpModules(json_encode($this->propertyAccessor->getValue($data, 'data.system.php.modules')));
+        $telemetry->setPhpModules(json_encode($this->propertyAccessor->getValue($data, 'data.system.php.modules'), flags: JSON_THROW_ON_ERROR));
         $telemetry->setPhpConfigMaxExecutionTime((int) $this->propertyAccessor->getValue($data, 'data.system.php.setup.max_execution_time'));
         $telemetry->setPhpConfigMemoryLimit($this->propertyAccessor->getValue($data, 'data.system.php.setup.memory_limit'));
         $telemetry->setPhpConfigPostMaxSize($this->propertyAccessor->getValue($data, 'data.system.php.setup.post_max_size'));
