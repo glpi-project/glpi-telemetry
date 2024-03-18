@@ -8,15 +8,13 @@ use App\Controller\AbstractChartController;
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 
-class AnyChartController extends AbstractChartController {}
-
 class AbstractChartControllerTest extends TestCase
 {
-    private AnyChartController $controller;
+    private AbstractChartController $controller;
 
     protected function setUp(): void
     {
-        $this->controller = new AnyChartController();
+        $this->controller = new class () extends AbstractChartController {};
     }
 
     public function testGetPeriodFromFilter(): void
@@ -54,6 +52,7 @@ class AbstractChartControllerTest extends TestCase
             ]
         );
     }
+
     public function testPrepareDataForBarChart(): void
     {
         $data = [
