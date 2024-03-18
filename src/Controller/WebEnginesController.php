@@ -22,6 +22,12 @@ class WebEnginesController extends AbstractChartController
 
         $res            = $chartDataStorage->getMonthlyValues(ChartSerie::WebEngine, $start, $end);
 
+        $res = array_map(function ($entries) {
+            return array_filter($entries, function ($entry) {
+                return $entry['name'] !== '';
+            });
+        }, $res);
+
         $result         = $this->prepareDataForPieChart($res);
 
         return new JsonResponse($result);
