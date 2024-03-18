@@ -76,7 +76,6 @@ class TelemetryDenormalizerTest extends TestCase
 
             $telemetry = $this->getDenormalizedData($data);
 
-            $this->assertMatchesRegularExpression('/^[a-z0-9]{40}$/i', $telemetry->getGlpiUuid());
             if ($file->getBasename('.json') === '9.2.0') {
                 // Special case for GLPI 9.2.0, `glpi.install_mode` was missing.
                 $this->assertNull($telemetry->getInstallMode());
@@ -86,7 +85,9 @@ class TelemetryDenormalizerTest extends TestCase
             $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getCreatedAt());
             $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getUpdatedAt());
             $this->assertEquals('IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6', $telemetry->getGlpiUuid());
-            $this->assertMatchesRegularExpression('/^\d+(\.\d+)+$/', $telemetry->getGlpiVersion());
+            $glpiVersion = $telemetry->getGlpiVersion();
+            $this->assertIsString($glpiVersion);
+            $this->assertMatchesRegularExpression('/^\d+(\.\d+)+$/', $glpiVersion);
             $this->assertEquals('fr_FR', $telemetry->getGlpiDefaultLanguage());
             $this->assertEquals('0-500', $telemetry->getGlpiAvgEntities());
             $this->assertEquals('0-500', $telemetry->getGlpiAvgComputers());
@@ -107,8 +108,12 @@ class TelemetryDenormalizerTest extends TestCase
             $this->assertIsString($telemetry->getDbSqlMode());
             $this->assertEquals('Apache', $telemetry->getWebEngine());
             $this->assertEquals('2.4.25', $telemetry->getWebVersion());
-            $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $telemetry->getPhpVersion());
-            $this->assertJson($telemetry->getPhpModules());
+            $phpVersion = $telemetry->getPhpVersion();
+            $this->assertIsString($phpVersion);
+            $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $phpVersion);
+            $phpModules = $telemetry->getPhpModules();
+            $this->assertIsString($phpModules);
+            $this->assertJson($phpModules);
             $this->assertEquals(30, $telemetry->getPhpConfigMaxExecutionTime());
             $this->assertEquals('128M', $telemetry->getPhpConfigMemoryLimit());
             $this->assertEquals('8M', $telemetry->getPhpConfigPostMaxSize());
@@ -124,7 +129,9 @@ class TelemetryDenormalizerTest extends TestCase
             foreach ($telemetry->getTelemetryGlpiPlugins() as $plugin) {
                 $this->assertInstanceOf(TelemetryGlpiPlugin::class, $plugin);
                 $this->assertInstanceOf(GlpiPlugin::class, $plugin->getGlpiPlugin());
-                $this->assertFalse(strlen($plugin->getVersion()) === 0);
+                $pluginVersion = $plugin->getVersion();
+                $this->assertIsString($pluginVersion);
+                $this->assertFalse(strlen($pluginVersion) === 0);
                 $plugins_keys[] = $plugin->getGlpiPlugin()->getPkey();
             }
             $this->assertEquals(
@@ -132,7 +139,7 @@ class TelemetryDenormalizerTest extends TestCase
                 [
                     'fields',
                     'formcreator',
-                    version_compare($telemetry->getGlpiVersion(), '10.0.0', '<') ? 'fusioninventory' : 'glpiinventory'
+                    version_compare($glpiVersion, '10.0.0', '<') ? 'fusioninventory' : 'glpiinventory'
                 ]
             );
         }
@@ -253,7 +260,9 @@ class TelemetryDenormalizerTest extends TestCase
 
         $telemetry = $this->getDenormalizedData($data);
 
-        $this->assertMatchesRegularExpression('/^[a-z]{2}(_[A-Z0-9]{2,3})?$/', $telemetry->getGlpiDefaultLanguage());
+        $defaultLanguage = $telemetry->getGlpiDefaultLanguage();
+        $this->assertIsString($defaultLanguage);
+        $this->assertMatchesRegularExpression('/^[a-z]{2}(_[A-Z0-9]{2,3})?$/', $defaultLanguage);
     }
 
     /**

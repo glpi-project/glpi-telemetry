@@ -9,6 +9,7 @@ use App\Entity\GlpiPlugin;
 use App\Entity\TelemetryGlpiPlugin;
 use App\Repository\GlpiPluginRepository;
 use DateTimeImmutable;
+use Opis\JsonSchema\Resolvers\SchemaResolver;
 use Opis\JsonSchema\Validator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -153,12 +154,15 @@ class TelemetryDenormalizer implements DenormalizerInterface
      */
     private function validateTelemetryJson(mixed $contents): bool
     {
-        $this->validator
-            ->resolver()
-            ->registerFile(
-                'https://telemetry.glpi-project.org/schema/v1.json',
-                $this->schemaDir . '/telemetry.v1.json'
-            );
+        $resolver = $this->validator->resolver();
+        if (!($resolver instanceof SchemaResolver)) {
+            throw new \RuntimeException();
+        }
+
+        $resolver->registerFile(
+            'https://telemetry.glpi-project.org/schema/v1.json',
+            $this->schemaDir . '/telemetry.v1.json'
+        );
 
         $result = $this->validator->validate($contents, 'https://telemetry.glpi-project.org/schema/v1.json');
 
