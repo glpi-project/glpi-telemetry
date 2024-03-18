@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Telemetry\ChartSerie;
-use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -26,7 +27,7 @@ class ChartDataStorage
     /**
      * Compute charts data values and store them into the filesystem.
      */
-    public function computeValues(DateTime $start, DateTime $end): void
+    public function computeValues(DateTimeInterface $start, DateTimeInterface $end): void
     {
         $directory = $this->storageDir . '/chart-data';
 
@@ -48,7 +49,7 @@ class ChartDataStorage
                 $alreadyComputedDates[] = $file->getBasename('.json');
             }
 
-            $currentDate = clone $start;
+            $currentDate = $start;
             while ($currentDate <= $end) {
                 $date = $currentDate->format('Y-m-d');
 
@@ -60,7 +61,7 @@ class ChartDataStorage
                     ])->fetchAllAssociative();
                     $this->filesystem->dumpFile($serieDirectory . '/' . $date . '.json', json_encode($result));
                 }
-                $currentDate->modify('+1 day');
+                $currentDate = $currentDate->modify('+1 day');
             }
         }
     }
@@ -72,7 +73,7 @@ class ChartDataStorage
      *
      * @return array<string, array<int, array{name: string, total: int}>>
      */
-    public function getMonthlyValues(ChartSerie $serie, DateTime $start, DateTime $end): array
+    public function getMonthlyValues(ChartSerie $serie, DateTimeInterface $start, DateTimeInterface $end): array
     {
         $directory = $this->storageDir . '/chart-data/' . $serie->name;
         $finder    = new Finder();
@@ -84,8 +85,7 @@ class ChartDataStorage
         }
 
         $monthlyValues = [];
-        $currentDate   = clone $start;
-
+        $currentDate   = $start;
         while ($currentDate <= $end) {
             $date          = $currentDate->format('Y-m-d');
             $monthKey      = $currentDate->format('Y-m');
@@ -125,16 +125,16 @@ class ChartDataStorage
                     }
                 }
             }
-            $currentDate->modify('+1 day');
+            $currentDate = $currentDate->modify('+1 day');
         }
         return $monthlyValues;
     }
 
     /**
      * Retreive the oldest date in the telemetry table
-     * @return DateTime
+     * @return DateTimeInterface
      */
-    public function getOldestDate(): DateTime
+    public function getOldestDate(): DateTimeInterface
     {
         $sql = <<<SQL
             SELECT MIN(created_at) as startDate
@@ -143,6 +143,6 @@ class ChartDataStorage
 
         $result = $this->connection->executeQuery($sql)->fetchOne();
 
-        return new DateTime($result);
+        return new DateTimeImmutable($result);
     }
 }

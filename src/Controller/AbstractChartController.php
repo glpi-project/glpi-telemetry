@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use DateTime;
+use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class AbstractChartController extends AbstractController
@@ -13,17 +13,17 @@ abstract class AbstractChartController extends AbstractController
      * Set a period based on the filter value
      *
      * @param string $filter
-     * @return array{start: \DateTime, end: \DateTime}
+     * @return array{start: \DateTimeInterface, end: \DateTimeInterface}
      */
     public function getPeriodFromFilter(string $filter): array
     {
         $start = match($filter) {
-            'lastYear' => new DateTime('-1 year'),
-            'fiveYear' => new DateTime('-5 years'),
-            'always'   => new DateTime('-10 years'),
+            'lastYear' => new DateTimeImmutable('-1 year'),
+            'fiveYear' => new DateTimeImmutable('-5 years'),
+            'always'   => new DateTimeImmutable('-10 years'),
             default    => throw new \Exception('Invalid filter value')
         };
-        $end = new DateTime();
+        $end = new DateTimeImmutable();
 
         return [
             'start' => $start,

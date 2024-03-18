@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\ChartDataStorage;
+use DateTimeImmutable;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -31,7 +32,7 @@ class ComputeChartsData extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $start = $this->chartDataStorage->getOldestDate();
-        $end   = (new \DateTime(date('Y-m-d')))->modify('-1 day');
+        $end   = new DateTimeImmutable('-1 day');
 
         $progressBar = new ProgressBar(
             $output,
@@ -41,9 +42,9 @@ class ComputeChartsData extends Command
         $progressBar->setMessage('');
         $progressBar->start();
 
-        $currentStart  = clone $start;
+        $currentStart = $start;
         do {
-            $currentEnd  = (clone $currentStart)->modify('+ ' . self::ITERATION_SIZE . ' days');
+            $currentEnd  = $currentStart->modify('+ ' . self::ITERATION_SIZE . ' days');
             if ($currentEnd > $end) {
                 $currentEnd = $end;
             }
@@ -59,7 +60,7 @@ class ComputeChartsData extends Command
 
             $this->chartDataStorage->computeValues($currentStart, $currentEnd);
 
-            $currentStart->modify('+ ' . (self::ITERATION_SIZE + 1) . ' days');
+            $currentStart = $currentStart->modify('+ ' . (self::ITERATION_SIZE + 1) . ' days');
             $progressBar->advance();
 
         } while ($currentStart <= $end);
