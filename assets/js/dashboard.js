@@ -1,8 +1,8 @@
-global.filterCallbacks = [];
-global.registerFilterCallback = function (callback) {global.filterCallbacks.push(callback);};
-global.executeFilterCallbacks = function (filters) {
-    global.filterCallbacks.forEach(callback => {
-        callback(filters);
+global.periodFilterCallbacks = [];
+global.registerPeriodFilterCallback = function (callback) {global.periodFilterCallbacks.push(callback);};
+global.executePeriodFilterCallbacks = function (periodFilter) {
+    global.periodFilterCallbacks.forEach(callback => {
+        callback(periodFilter);
     });
 };
 
@@ -10,15 +10,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let select = document.getElementById('dataPeriod');
     let selectedOption = select.value;
-    var params = {};
     setValue(selectedOption);
 
     select.onchange = function () {setValue();};
 
     function setValue() {
         selectedOption = document.getElementById('dataPeriod').value;
-        params = { filter: selectedOption };
-        global.executeFilterCallbacks(params);
+        global.executePeriodFilterCallbacks(selectedOption);
     }
 
     const modalButtons = document.querySelectorAll('.openModal');

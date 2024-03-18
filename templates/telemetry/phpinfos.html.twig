@@ -64,8 +64,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     option && myChart.setOption(option);
 
- window.registerFilterCallback(function (filters) {
-        var url = 'php/version?' + new URLSearchParams(filters);
+    window.registerPeriodFilterCallback(function (periodFilter) {
+        var url = 'php/version/' + periodFilter;
 
         fetch(url, {
             method: 'GET',

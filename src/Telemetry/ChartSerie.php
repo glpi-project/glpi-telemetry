@@ -14,16 +14,20 @@ enum ChartSerie
     case TopPlugin;
     case DefaultLanguage;
     case DbEngine;
+
     public function getSqlQuery(): string
     {
         switch ($this) {
             case ChartSerie::GlpiVersion:
+                // TODO Remove invalid values from DB once migration from PgSQL will be done
+                // and filter values based on official release list once a day or at submit time.
                 $sql = <<<SQL
                     SELECT SUBSTRING_INDEX(glpi_version, '.', 2) as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE glpi_version NOT LIKE '%dev'
-                    AND created_at BETWEEN :startDate AND :endDate
+                    WHERE created_at BETWEEN :startDate AND :endDate
+                    AND glpi_version NOT LIKE '%dev'
+                    AND glpi_version REGEXP '^(9|10)\.[0-9]+\.[0-9]+'
                     GROUP BY name
                 SQL;
                 return $sql;
@@ -43,6 +47,7 @@ enum ChartSerie
                     FROM telemetry
                     WHERE created_at BETWEEN :startDate AND :endDate
                     AND web_engine IS NOT NULL
+                    AND web_engine != ''
                     GROUP BY name
                 SQL;
                 return $sql;
