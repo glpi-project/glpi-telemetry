@@ -414,6 +414,7 @@ class TelemetryDenormalizerTest extends TestCase
         ];
 
         // Convert array structure to object structure.
+        /** @var \stdClass $data */
         $data = json_decode(
             json_encode($data, flags: JSON_THROW_ON_ERROR),
             flags: JSON_THROW_ON_ERROR

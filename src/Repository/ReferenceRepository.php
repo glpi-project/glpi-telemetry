@@ -53,6 +53,7 @@ class ReferenceRepository extends ServiceEntityRepository
             ->where($queryBuilder->expr()->isNotNull('reference.country'))
             ->addGroupBy('reference.country');
 
+        /** @var array<array{country: string, total: int}> $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         $countByCountry = [];

@@ -151,6 +151,7 @@ class ChartDataStorage
             FROM telemetry
         SQL;
 
+        /** @var string $result */
         $result = $this->connection->executeQuery($sql)->fetchOne();
 
         return new DateTimeImmutable($result);

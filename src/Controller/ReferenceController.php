@@ -57,6 +57,20 @@ class ReferenceController extends AbstractController
             $captcha_token = $request->request->get('captcha_token');
             if ($captcha_token !== null && $captchaValidator->validateToken((string) $captcha_token)) {
                 try {
+                    /**
+                     * @var array{
+                     *          uuid: ?string,
+                     *          name: ?string,
+                     *          url: ?string,
+                     *          country: ?string,
+                     *          phone: ?string,
+                     *          email: ?string,
+                     *          referent: ?string,
+                     *          comment: ?string,
+                     *          nb_assets: ?int,
+                     *          nb_helpdesk: ?int
+                     *      } $data
+                     */
                     $data = $form->getData();
 
                     $reference = new Reference();
