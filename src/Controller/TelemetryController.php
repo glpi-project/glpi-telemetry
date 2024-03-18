@@ -26,12 +26,13 @@ class TelemetryController extends AbstractController
             return $this->json(['error' => 'Bad request'], Response::HTTP_BAD_REQUEST);
         }
 
+        $logger->debug('Telemetry received : ' . print_r($telemetry, true));
         try {
             $entityManager->persist($telemetry);
             $entityManager->flush();
             return $this->json(['message' => 'OK']);
         } catch (\Exception $e) {
-            $logger->error('Error saving data to database : ' . $e->getMessage());
+            $logger->debug('Error saving data to database : ' . $e->getMessage());
             return $this->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

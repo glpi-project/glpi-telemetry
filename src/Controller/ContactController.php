@@ -27,14 +27,14 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $success = false;
 
-            $success       = false;
             $captcha_token = $request->request->get('captcha_token');
-
             if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
                 try {
                     $contactFormData = $form->getData();
-                    $message         = (new Email())
+
+                    $message = (new Email())
                         ->from($contactFormData['Email'])
                         ->to($contactFormRecipientEmail)
                         ->subject('New message from Telemetry: ' . $contactFormData['Subject'])
