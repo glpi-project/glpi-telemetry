@@ -1,5 +1,6 @@
 parameters:
     level: 9
+    checkBenevolentUnionTypes: true
     checkImplicitMixed: true
     paths:
         - bin/

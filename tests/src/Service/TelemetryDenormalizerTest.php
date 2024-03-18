@@ -42,7 +42,7 @@ class TelemetryDenormalizerTest extends TestCase
                 continue;
             }
 
-            $contents = file_get_contents($file->getRealPath());
+            $contents = file_get_contents($file->getPathname());
             self::assertIsString($contents);
             self::assertJson($contents);
 
@@ -79,7 +79,7 @@ class TelemetryDenormalizerTest extends TestCase
                 continue;
             }
 
-            $contents = file_get_contents($file->getRealPath());
+            $contents = file_get_contents($file->getPathname());
             self::assertIsString($contents);
             self::assertJson($contents);
 

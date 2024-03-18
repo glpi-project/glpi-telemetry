@@ -16,9 +16,12 @@ class TopPluginController extends AbstractChartController
     {
         $result = $this->getPieChartData(ChartSerie::TopPlugin, $periodFilter);
 
-        usort($result, function ($a, $b) {
-            return $b['value'] - $a['value'];
-        });
+        usort(
+            $result,
+            function (array $a, array $b): int {
+                return $b['value'] - $a['value'];
+            }
+        );
 
         $topTenPlugin = array_slice($result, 0, 10);
 
