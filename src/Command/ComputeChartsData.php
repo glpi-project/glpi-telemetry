@@ -7,19 +7,21 @@ namespace App\Command;
 use App\Service\ChartDataStorage;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 #[AsCommand(
-    name: 'app:data-storage-update',
-    description: 'update data storage',
-    hidden: false,
-    aliases: ['app:data-storage-update']
+    name: 'app:compute-charts-data',
+    description: 'Compute charts data'
 )]
-
-class DataStorageUpdate extends Command
+class ComputeChartsData extends Command
 {
+    /**
+     * Iteration size, in days.
+     */
+    private const ITERATION_SIZE = 30;
+
     public function __construct(
         private ChartDataStorage $chartDataStorage,
     ) {
@@ -28,44 +30,43 @@ class DataStorageUpdate extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        try {
-            $startDate = $this->chartDataStorage->getOldestDate();
+        $start = $this->chartDataStorage->getOldestDate();
+        $end   = (new \DateTime(date('Y-m-d')))->modify('-1 day');
 
-            $output->writeln('<info>Data storage update started ' . '</info>');
+        $progressBar = new ProgressBar(
+            $output,
+            (int) ceil((int) $start->diff($end)->format('%a') / self::ITERATION_SIZE)
+        );
+        $progressBar->setFormat('%current%/%max% [%bar%] %percent:3s%%' . PHP_EOL . '%message%' . PHP_EOL);
+        $progressBar->setMessage('');
+        $progressBar->start();
 
-            $start = $startDate;
-            $end   = (new \DateTime(date('Y-m-d')))->modify('-1 day');
+        $currentStart  = clone $start;
+        do {
+            $currentEnd  = (clone $currentStart)->modify('+ ' . self::ITERATION_SIZE . ' days');
+            if ($currentEnd > $end) {
+                $currentEnd = $end;
+            }
 
-            $output->writeln('<info>' . 'Period : ' . $start->format('Y-m-d') . ' ' . $end->format('Y-m-d') . '</info>');
+            $progressBar->setMessage(
+                sprintf(
+                    '<comment>Computing values from %s to %s...</comment>',
+                    $currentStart->format('Y-m-d'),
+                    $currentEnd->format('Y-m-d')
+                )
+            );
+            $progressBar->display();
 
-            $iterationSize = 30;
-            $diff          = (int) $start->diff($end)->format('%a');
+            $this->chartDataStorage->computeValues($currentStart, $currentEnd);
 
-            $progressBar   = new ProgressBar($output, (int) ceil($diff / $iterationSize));
-            $progressBar->start();
+            $currentStart->modify('+ ' . (self::ITERATION_SIZE + 1) . ' days');
+            $progressBar->advance();
 
-            $currentStart  = clone $start;
+        } while ($currentStart <= $end);
 
-            do {
-                $currentEnd  = (clone $currentStart)->modify('+ ' . $iterationSize . ' days');
-                if ($currentEnd > $end) {
-                    $currentEnd = $end;
-                }
+        $progressBar->setMessage('<info>Charts data computation completed.</info>');
+        $progressBar->finish();
 
-                $this->chartDataStorage->computeValues($currentStart, $currentEnd);
-
-                $currentStart->modify('+ ' . ($iterationSize + 1) . ' days');
-                $progressBar->advance();
-
-            } while ($currentStart <= $end);
-
-            $output->writeln('<info>Data storage update completed</info>');
-            $progressBar->finish();
-            return Command::SUCCESS;
-
-        } catch (\Exception $e) {
-            $output->writeln('<info>Data storage update failed</info>');
-            return Command::FAILURE;
-        }
+        return Command::SUCCESS;
     }
 }
