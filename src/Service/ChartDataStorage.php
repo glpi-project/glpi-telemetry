@@ -62,9 +62,7 @@ class ChartDataStorage
                 while ($currentDate <= $end) {
                     $date = $currentDate->format('Y-m-d');
 
-                    if (in_array($date, $dates)) {
-                        continue;
-                    } else {
+                    if (!in_array($date, $dates, true)) {
                         $sql = $serie->getSqlQuery();
                         $result = $this->connection->executeQuery($sql, [
                             'startDate' => $date . ' 00:00:00',
