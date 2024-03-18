@@ -107,7 +107,7 @@ class ReferenceController extends AbstractController
     }
 
     #[Route('/map/graph', name: 'app_map_graph')]
-    public function getDataForMapGraph(Request $request, ReferenceRepository $referenceRepository): JsonResponse
+    public function getDataForMapGraph(ReferenceRepository $referenceRepository): JsonResponse
     {
         $data = $referenceRepository->getReferencesCountByCountries();
 
