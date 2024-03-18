@@ -34,20 +34,19 @@ abstract class AbstractChartController extends AbstractController
     /**
      * Process data to prepare it for the Echart pie chart
      *
-     * @param array<string,array<int,array{name:string,total:int}>> $data
-     * @return array<array{name:string,value:int}>
+     * @param array<string, array<int, array{name: string, total: int}>> $data
+     * @return array<int, array{name: string, value: int}>
      */
     public function prepareDataForPieChart(array $data): array
     {
         $chartData = [];
 
         foreach ($data as $entries) {
-
             foreach($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'));
 
                 if ($index !== false) {
-                    $chartData[$index]['value'] += $entry['total'];
+                    $chartData[(int) $index]['value'] += $entry['total'];
                 } else {
                     $chartData[] = [
                         'name' => $entry['name'],
@@ -63,7 +62,7 @@ abstract class AbstractChartController extends AbstractController
     /**
      * Process data to prepare it for the Echart bar chart
      *
-     * @param array<string,array<int,array{name:string,total:int}>> $data
+     * @param array<string, array<int, array{name: string, total: int}>> $data
      * @return array{
      *     xAxis: array{
      *         data: array<int, string>
@@ -78,69 +77,53 @@ abstract class AbstractChartController extends AbstractController
      *         emphasis: array{
      *             focus: string
      *         },
-     *         data: array<int, float|int>
+     *         data: array<int, float>
      *     }>
      * }
      */
     public function prepareDataForBarChart(array $data): array
     {
-        $periods = [];
-        $versions = [];
-        $result = [];
+        $months = array_keys($data);
+        usort($months, fn(string $a, string $b) => strtotime($a) - strtotime($b));
 
-        foreach ($data as $monthYear => $entries) {
-            if (!in_array($monthYear, $periods)) {
-                $periods[] = $monthYear;
-            }
+        // Extract totals by month and series names
+        $names          = [];
+        $totalsByPeriod = array_fill_keys($months, 0);
 
+        foreach ($data as $period => $entries) {
             foreach ($entries as $entry) {
-                $version = $entry['name'];
-                $nbInstance = $entry['total'];
+                $totalsByPeriod[$period] += $entry['total'];
 
-                if (!in_array($version, $versions)) {
-                    $versions[] = $version;
-                }
-                $result[$monthYear][$version] = $nbInstance;
-            }
-        }
-
-        usort($periods, function ($a, $b) {
-            return strtotime($a) - strtotime($b);
-        });
-
-        sort($versions);
-
-        foreach ($periods as $period) {
-            foreach ($versions as $version) {
-                if (!isset($result[$period][$version])) {
-                    $result[$period][$version] = 0;
+                if (!in_array($entry['name'], $names, true)) {
+                    $names[] = $entry['name'];
                 }
             }
-
-            ksort($result[$period]);
         }
 
-        $preparedData = [
-            'periods' => $periods,
-            'versions' => $versions,
-            'data' => $result
-        ];
+        sort($names, SORT_NATURAL);
 
-        $chartData = [
-            'xAxis' => [
-                'data' => $preparedData['periods']
-            ],
-            'series' => []
-        ];
+        // Format series data
+        $series = [];
 
-        $totalInstancesPerPeriod = [];
-        foreach ($preparedData['data'] as $period => $versions) {
-            $totalInstancesPerPeriod[$period] = array_sum($versions);
-        }
+        foreach ($names as $serieName) {
+            $serieData = [];
+            foreach ($data as $period => $entries) {
+                $total = 0;
 
-        foreach ($preparedData['versions'] as $version) {
-            $seriesData = [
-                'name' => $version,
+                foreach ($entries as $entry) {
+                    if ($entry['name'] === $serieName) {
+                        $total = $entry['total'];
+                        break;
+                    }
+                }
+
+                $serieData[] = $totalsByPeriod[$period] > 0
+                    ? round(($total / $totalsByPeriod[$period]) * 100, 2)
+                    : 0;
+            }
+
+            $series[] = [
+                'name' => $serieName,
                 'type' => 'bar',
                 'stack' => 'total',
                 'label' => [
@@ -149,19 +132,15 @@ abstract class AbstractChartController extends AbstractController
                 'emphasis' => [
                     'focus' => 'series',
                 ],
-                'data' => []
+                'data' => $serieData,
             ];
-
-            foreach ($preparedData['periods'] as $period) {
-                $percentage = $totalInstancesPerPeriod[$period] > 0
-                    ? round(($preparedData['data'][$period][$version] / $totalInstancesPerPeriod[$period]) * 100, 2)
-                    : 0;
-                $seriesData['data'][] = $percentage;
-            }
-
-            $chartData['series'][] = $seriesData;
         }
 
-        return $chartData;
+        return [
+            'xAxis' => [
+                'data' => $months,
+            ],
+            'series' => $series,
+        ];
     }
 }
