@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Service\ChartDataStorage;
 use App\Telemetry\ChartPeriodFilter;
 use App\Telemetry\ChartSerie;
-use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class AbstractChartController extends AbstractController
