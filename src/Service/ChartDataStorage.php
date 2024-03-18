@@ -76,6 +76,12 @@ class ChartDataStorage
     public function getMonthlyValues(ChartSerie $serie, DateTimeInterface $start, DateTimeInterface $end): array
     {
         $directory = $this->storageDir . '/chart-data/' . $serie->name;
+
+        if (!$this->filesystem->exists($directory)) {
+            // No data exists for serie
+            return [];
+        }
+
         $finder    = new Finder();
         $files     = $finder->files()->in($directory)->name('*.json');
         $dates     = [];
