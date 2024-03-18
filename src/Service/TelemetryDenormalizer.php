@@ -155,13 +155,13 @@ class TelemetryDenormalizer implements DenormalizerInterface
         );
         $size = $this->propertyAccessor->getValue($data, 'data.system.db.size');
         $telemetry->setDbSize(
-            is_int($size) || is_float($size) || (is_string($size) && preg_match('/^\d+(\.\d+)?/', $size))
+            is_int($size) || is_float($size) || (is_string($size) && preg_match('/^\d+(\.\d+)?$/', $size) === 1)
                 ? (int) $size
                 : null
         );
         $size = $this->propertyAccessor->getValue($data, 'data.system.db.log_size');
         $telemetry->setDbLogSize(
-            is_int($size) || is_float($size) || (is_string($size) && preg_match('/^\d+(\.\d+)?/', $size))
+            is_int($size) || is_float($size) || (is_string($size) && preg_match('/^\d+(\.\d+)?$/', $size) === 1)
                 ? (int) $size
                 : null
         );
@@ -192,7 +192,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
         );
         $maxExecutionTime = $this->propertyAccessor->getValue($data, 'data.system.php.setup.max_execution_time');
         $telemetry->setPhpConfigMaxExecutionTime(
-            is_int($maxExecutionTime) || (is_string($maxExecutionTime) && preg_match('/^\d+(\.\d+)?/', $maxExecutionTime))
+            is_int($maxExecutionTime) || (is_string($maxExecutionTime) && preg_match('/^\d+$/', $maxExecutionTime) === 1)
                 ? (int) $maxExecutionTime
                 : null
         );

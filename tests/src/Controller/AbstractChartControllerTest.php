@@ -40,7 +40,7 @@ class AbstractChartControllerTest extends TestCase
     {
         $result = $this->controller->getPieChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
 
-        $this->assertEquals(
+        self::assertEquals(
             $result,
             [
                 ['name' => '10.0.6', 'value' => 10],
@@ -95,6 +95,6 @@ class AbstractChartControllerTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($result, $expected);
+        self::assertEquals($result, $expected);
     }
 }

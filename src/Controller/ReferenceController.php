@@ -77,7 +77,7 @@ class ReferenceController extends AbstractController
                     $reference->setUuid($data['uuid']);
                     $reference->setName($data['name']);
                     $reference->setUrl($data['url']);
-                    $reference->setCountry($data['country'] !== null ? strtolower((string) $data['country']) : null);
+                    $reference->setCountry($data['country'] !== null ? strtolower($data['country']) : null);
                     $reference->setPhone($data['phone']);
                     $reference->setEmail($data['email']);
                     $reference->setReferent($data['referent']);

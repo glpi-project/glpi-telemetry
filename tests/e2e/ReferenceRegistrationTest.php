@@ -16,7 +16,7 @@ class ReferenceRegistrationTest extends PantherTestCase
 
         // Load the reference registration page
         $client->request('GET', '/reference/register');
-        $this->assertSelectorTextSame('.card-title', 'Register your GLPI instance');
+        self::assertSelectorTextSame('.card-title', 'Register your GLPI instance');
 
         // Wait for captcha validation
         $this->waitForCaptcha($client);
@@ -46,18 +46,18 @@ class ReferenceRegistrationTest extends PantherTestCase
         $client->submit($form);
 
         // Validates that user is redirected to reference list page and that reference has been added
-        $this->assertStringEndsWith('/reference', $client->getCurrentURL());
-        $this->assertSelectorTextSame('.alert-success', 'Your reference has been added successfully');
+        self::assertStringEndsWith('/reference', $client->getCurrentURL());
+        self::assertSelectorTextSame('.alert-success', 'Your reference has been added successfully');
         $client->waitFor('table.gridjs-table'); // Wait for GridJS to render table
         $firstRowSelector = 'table.gridjs-table > tbody > tr:nth-child(1)';
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
-        $this->assertSelectorAttributeContains($firstRowSelector . ' > td:nth-child(1) > a', 'href', $url);
-        $this->assertSelectorAttributeContains($firstRowSelector . ' > td:nth-child(2) > span > span', 'class', 'fi fi-fr');
-        $this->assertSelectorAttributeContains($firstRowSelector . ' > td:nth-child(2) > span > span', 'title', 'France');
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(3)', (string) $nbAssets);
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(4)', (string) $nbHelpdesk);
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(5)', date('Y-m-d'));
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(6)', $comment);
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
+        self::assertSelectorAttributeContains($firstRowSelector . ' > td:nth-child(1) > a', 'href', $url);
+        self::assertSelectorAttributeContains($firstRowSelector . ' > td:nth-child(2) > span > span', 'class', 'fi fi-fr');
+        self::assertSelectorAttributeContains($firstRowSelector . ' > td:nth-child(2) > span > span', 'title', 'France');
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(3)', (string) $nbAssets);
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(4)', (string) $nbHelpdesk);
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(5)', date('Y-m-d'));
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(6)', $comment);
     }
 
     public function testSuccessfulReferenceRegistrationWithOnlyName(): void
@@ -66,7 +66,7 @@ class ReferenceRegistrationTest extends PantherTestCase
 
         // Load the reference registration page
         $client->request('GET', '/reference/register');
-        $this->assertSelectorTextSame('.card-title', 'Register your GLPI instance');
+        self::assertSelectorTextSame('.card-title', 'Register your GLPI instance');
 
         // Wait for captcha validation
         $this->waitForCaptcha($client);
@@ -81,16 +81,16 @@ class ReferenceRegistrationTest extends PantherTestCase
         $client->submit($form);
 
         // Validates that user is redirected to reference list page and that reference has been added
-        $this->assertStringEndsWith('/reference', $client->getCurrentURL());
-        $this->assertSelectorTextContains('.alert-success', 'Your reference has been added successfully');
+        self::assertStringEndsWith('/reference', $client->getCurrentURL());
+        self::assertSelectorTextContains('.alert-success', 'Your reference has been added successfully');
         $client->waitFor('table.gridjs-table'); // Wait for GridJS to render table
         $firstRowSelector = 'table.gridjs-table > tbody > tr:nth-child(1)';
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(2)', '');
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(3)', '');
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(4)', '');
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(5)', date('Y-m-d'));
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(6)', '');
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(2)', '');
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(3)', '');
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(4)', '');
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(5)', date('Y-m-d'));
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(6)', '');
     }
 
     public function testFailedReferenceRegistration(): void
@@ -100,7 +100,7 @@ class ReferenceRegistrationTest extends PantherTestCase
         // Load the reference registration page
         $uuid = bin2hex(random_bytes(20));
         $crawler = $client->request('GET', sprintf('/reference/register?uuid=%s', $uuid));
-        $this->assertSelectorTextSame('.card-title', 'Register your GLPI instance');
+        self::assertSelectorTextSame('.card-title', 'Register your GLPI instance');
 
         // Submit the form without waiting for captcha token to be generated
         $name       = bin2hex(random_bytes(10));
@@ -126,17 +126,17 @@ class ReferenceRegistrationTest extends PantherTestCase
         $client->submit($form);
 
         // Validates that a propoer error message is displayed and form is still displayed with user values
-        $this->assertSelectorTextContains('.alert-danger', 'An error occurred while adding your reference');
-        $this->assertInputValueSame('reference_form[name]', $name);
-        $this->assertInputValueSame('reference_form[url]', $url);
-        $this->assertSelectorExists('select[name="reference_form[country]"] > option[value="FR"][selected]');
-        $this->assertInputValueSame('reference_form[phone]', $phone);
-        $this->assertInputValueSame('reference_form[email]', $email);
-        $this->assertInputValueSame('reference_form[referent]', $referent);
-        $this->assertInputValueSame('reference_form[nb_assets]', (string) $nbAssets);
-        $this->assertInputValueSame('reference_form[nb_helpdesk]', (string) $nbHelpdesk);
-        $this->assertSelectorTextContains('textarea[name="reference_form[comment]"]', $comment);
-        $this->assertInputValueSame('reference_form[uuid]', $uuid);
+        self::assertSelectorTextContains('.alert-danger', 'An error occurred while adding your reference');
+        self::assertInputValueSame('reference_form[name]', $name);
+        self::assertInputValueSame('reference_form[url]', $url);
+        self::assertSelectorExists('select[name="reference_form[country]"] > option[value="FR"][selected]');
+        self::assertInputValueSame('reference_form[phone]', $phone);
+        self::assertInputValueSame('reference_form[email]', $email);
+        self::assertInputValueSame('reference_form[referent]', $referent);
+        self::assertInputValueSame('reference_form[nb_assets]', (string) $nbAssets);
+        self::assertInputValueSame('reference_form[nb_helpdesk]', (string) $nbHelpdesk);
+        self::assertSelectorTextContains('textarea[name="reference_form[comment]"]', $comment);
+        self::assertInputValueSame('reference_form[uuid]', $uuid);
     }
 
     public function testRedirectFromLegacyUrl(): void
@@ -148,9 +148,9 @@ class ReferenceRegistrationTest extends PantherTestCase
         $crawler = $client->request('GET', sprintf('/reference?showmodal&uuid=%s', $uuid));
 
         // Validates that user is redirected to the form and that UUID is passed to input
-        $this->assertStringEndsWith(sprintf('/reference/register?uuid=%s', $uuid), $client->getCurrentURL());
-        $this->assertSelectorTextContains('.card-title', 'Register your GLPI instance');
-        $this->assertInputValueSame('reference_form[uuid]', $uuid);
+        self::assertStringEndsWith(sprintf('/reference/register?uuid=%s', $uuid), $client->getCurrentURL());
+        self::assertSelectorTextContains('.card-title', 'Register your GLPI instance');
+        self::assertInputValueSame('reference_form[uuid]', $uuid);
 
         // Wait for captcha validation
         $this->waitForCaptcha($client);
@@ -165,19 +165,19 @@ class ReferenceRegistrationTest extends PantherTestCase
         $client->submit($form);
 
         // Validates that user is redirected to reference list page and that reference has been added
-        $this->assertStringEndsWith('/reference', $client->getCurrentURL());
-        $this->assertSelectorTextContains('.alert-success', 'Your reference has been added successfully');
+        self::assertStringEndsWith('/reference', $client->getCurrentURL());
+        self::assertSelectorTextContains('.alert-success', 'Your reference has been added successfully');
         $client->waitFor('table.gridjs-table'); // Wait for GridJS to render table
         $firstRowSelector = 'table.gridjs-table > tbody > tr:nth-child(1)';
-        $this->assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
+        self::assertSelectorTextSame($firstRowSelector . ' > td:nth-child(1)', $name);
 
         // Validates that UUID is saved in DB
         /** @var \Doctrine\Persistence\ManagerRegistry $doctrine */
         $doctrine = static::getContainer()->get('doctrine');
         $repository = $doctrine->getManager()->getRepository(Reference::class);
         $reference = $repository->findOneBy(['uuid' => $uuid]);
-        $this->assertInstanceOf(Reference::class, $reference);
-        $this->assertEquals($reference->getUuid(), $uuid);
+        self::assertInstanceOf(Reference::class, $reference);
+        self::assertEquals($reference->getUuid(), $uuid);
     }
 
     private function waitForCaptcha(Client $pantherClient): void

@@ -32,8 +32,8 @@ class TelemetryDenormalizerTest extends TestCase
             }
 
             $contents = file_get_contents($file->getRealPath());
-            $this->assertIsString($contents);
-            $this->assertJson($contents);
+            self::assertIsString($contents);
+            self::assertJson($contents);
 
             $denormalizer = $this->getDenormalizerInstance();
             $reflection = new ReflectionClass($denormalizer);
@@ -41,7 +41,7 @@ class TelemetryDenormalizerTest extends TestCase
             $method->setAccessible(true);
 
             $data = json_decode($contents);
-            $this->assertTrue($method->invokeArgs($denormalizer, [$data]));
+            self::assertTrue($method->invokeArgs($denormalizer, [$data]));
         }
     }
 
@@ -53,7 +53,7 @@ class TelemetryDenormalizerTest extends TestCase
         $method->setAccessible(true);
 
         $data = json_decode('{"invalid": "data"}');
-        $this->assertFalse($method->invokeArgs($denormalizer, [$data]));
+        self::assertFalse($method->invokeArgs($denormalizer, [$data]));
     }
 
     /**
@@ -69,8 +69,8 @@ class TelemetryDenormalizerTest extends TestCase
             }
 
             $contents = file_get_contents($file->getRealPath());
-            $this->assertIsString($contents);
-            $this->assertJson($contents);
+            self::assertIsString($contents);
+            self::assertJson($contents);
 
             $data = json_decode($contents);
 
@@ -78,63 +78,63 @@ class TelemetryDenormalizerTest extends TestCase
 
             if ($file->getBasename('.json') === '9.2.0') {
                 // Special case for GLPI 9.2.0, `glpi.install_mode` was missing.
-                $this->assertNull($telemetry->getInstallMode());
+                self::assertNull($telemetry->getInstallMode());
             } else {
-                $this->assertEquals('TARBALL', $telemetry->getInstallMode());
+                self::assertEquals('TARBALL', $telemetry->getInstallMode());
             }
-            $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getCreatedAt());
-            $this->assertInstanceOf(DateTimeImmutable::class, $telemetry->getUpdatedAt());
-            $this->assertEquals('IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6', $telemetry->getGlpiUuid());
+            self::assertInstanceOf(DateTimeImmutable::class, $telemetry->getCreatedAt());
+            self::assertInstanceOf(DateTimeImmutable::class, $telemetry->getUpdatedAt());
+            self::assertEquals('IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6', $telemetry->getGlpiUuid());
             $glpiVersion = $telemetry->getGlpiVersion();
-            $this->assertIsString($glpiVersion);
-            $this->assertMatchesRegularExpression('/^\d+(\.\d+)+$/', $glpiVersion);
-            $this->assertEquals('fr_FR', $telemetry->getGlpiDefaultLanguage());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgEntities());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgComputers());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgNetworkequipments());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgTickets());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgProblems());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgChanges());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgProjects());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgUsers());
-            $this->assertEquals('0-500', $telemetry->getGlpiAvgGroups());
-            $this->assertFalse($telemetry->isGlpiLdapEnabled());
-            $this->assertFalse($telemetry->isGlpiMailcollectorEnabled());
-            $this->assertEquals('[]', $telemetry->getGlpiNotifications());
-            $this->assertEquals('MySQL Community Server - GPL', $telemetry->getDbEngine());
-            $this->assertEquals('8.0.35', $telemetry->getDbVersion());
-            $this->assertIsInt($telemetry->getDbSize());
-            $this->assertIsInt($telemetry->getDbLogSize());
-            $this->assertIsString($telemetry->getDbSqlMode());
-            $this->assertEquals('Apache', $telemetry->getWebEngine());
-            $this->assertEquals('2.4.25', $telemetry->getWebVersion());
+            self::assertIsString($glpiVersion);
+            self::assertMatchesRegularExpression('/^\d+(\.\d+)+$/', $glpiVersion);
+            self::assertEquals('fr_FR', $telemetry->getGlpiDefaultLanguage());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgEntities());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgComputers());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgNetworkequipments());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgTickets());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgProblems());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgChanges());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgProjects());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgUsers());
+            self::assertEquals('0-500', $telemetry->getGlpiAvgGroups());
+            self::assertFalse($telemetry->isGlpiLdapEnabled());
+            self::assertFalse($telemetry->isGlpiMailcollectorEnabled());
+            self::assertEquals('[]', $telemetry->getGlpiNotifications());
+            self::assertEquals('MySQL Community Server - GPL', $telemetry->getDbEngine());
+            self::assertEquals('8.0.35', $telemetry->getDbVersion());
+            self::assertIsInt($telemetry->getDbSize());
+            self::assertIsInt($telemetry->getDbLogSize());
+            self::assertIsString($telemetry->getDbSqlMode());
+            self::assertEquals('Apache', $telemetry->getWebEngine());
+            self::assertEquals('2.4.25', $telemetry->getWebVersion());
             $phpVersion = $telemetry->getPhpVersion();
-            $this->assertIsString($phpVersion);
-            $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $phpVersion);
+            self::assertIsString($phpVersion);
+            self::assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $phpVersion);
             $phpModules = $telemetry->getPhpModules();
-            $this->assertIsString($phpModules);
-            $this->assertJson($phpModules);
-            $this->assertEquals(30, $telemetry->getPhpConfigMaxExecutionTime());
-            $this->assertEquals('128M', $telemetry->getPhpConfigMemoryLimit());
-            $this->assertEquals('8M', $telemetry->getPhpConfigPostMaxSize());
-            $this->assertFalse($telemetry->isPhpConfigSafeMode());
-            $this->assertEquals('files', $telemetry->getPhpConfigSession());
-            $this->assertEquals('2M', $telemetry->getPhpConfigUploadMaxFilesize());
-            $this->assertEquals('Linux', $telemetry->getOsFamily());
-            $this->assertEquals('', $telemetry->getOsDistribution());
-            $this->assertEquals('5.15.0-91-generic', $telemetry->getOsVersion());
+            self::assertIsString($phpModules);
+            self::assertJson($phpModules);
+            self::assertEquals(30, $telemetry->getPhpConfigMaxExecutionTime());
+            self::assertEquals('128M', $telemetry->getPhpConfigMemoryLimit());
+            self::assertEquals('8M', $telemetry->getPhpConfigPostMaxSize());
+            self::assertFalse($telemetry->isPhpConfigSafeMode());
+            self::assertEquals('files', $telemetry->getPhpConfigSession());
+            self::assertEquals('2M', $telemetry->getPhpConfigUploadMaxFilesize());
+            self::assertEquals('Linux', $telemetry->getOsFamily());
+            self::assertEquals('', $telemetry->getOsDistribution());
+            self::assertEquals('5.15.0-91-generic', $telemetry->getOsVersion());
 
-            $this->assertIsIterable($telemetry->getTelemetryGlpiPlugins());
+            self::assertIsIterable($telemetry->getTelemetryGlpiPlugins());
             $plugins_keys = [];
             foreach ($telemetry->getTelemetryGlpiPlugins() as $plugin) {
-                $this->assertInstanceOf(TelemetryGlpiPlugin::class, $plugin);
-                $this->assertInstanceOf(GlpiPlugin::class, $plugin->getGlpiPlugin());
+                self::assertInstanceOf(TelemetryGlpiPlugin::class, $plugin);
+                self::assertInstanceOf(GlpiPlugin::class, $plugin->getGlpiPlugin());
                 $pluginVersion = $plugin->getVersion();
-                $this->assertIsString($pluginVersion);
-                $this->assertFalse(strlen($pluginVersion) === 0);
+                self::assertIsString($pluginVersion);
+                self::assertFalse(strlen($pluginVersion) === 0);
                 $plugins_keys[] = $plugin->getGlpiPlugin()->getPkey();
             }
-            $this->assertEquals(
+            self::assertEquals(
                 $plugins_keys,
                 [
                     'fields',
@@ -172,7 +172,7 @@ class TelemetryDenormalizerTest extends TestCase
 
         $telemetry = $this->getDenormalizedData($data);
 
-        $this->assertEquals($value, $telemetry->getInstallMode());
+        self::assertEquals($value, $telemetry->getInstallMode());
     }
 
     /**
@@ -261,8 +261,8 @@ class TelemetryDenormalizerTest extends TestCase
         $telemetry = $this->getDenormalizedData($data);
 
         $defaultLanguage = $telemetry->getGlpiDefaultLanguage();
-        $this->assertIsString($defaultLanguage);
-        $this->assertMatchesRegularExpression('/^[a-z]{2}(_[A-Z0-9]{2,3})?$/', $defaultLanguage);
+        self::assertIsString($defaultLanguage);
+        self::assertMatchesRegularExpression('/^[a-z]{2}(_[A-Z0-9]{2,3})?$/', $defaultLanguage);
     }
 
     /**
@@ -290,10 +290,10 @@ class TelemetryDenormalizerTest extends TestCase
     {
         $denormalizer = $this->getDenormalizerInstance();
 
-        $this->assertTrue($denormalizer->supportsDenormalization($data, Telemetry::class));
+        self::assertTrue($denormalizer->supportsDenormalization($data, Telemetry::class));
 
         $telemetry = $denormalizer->denormalize($data, Telemetry::class);
-        $this->assertInstanceOf(Telemetry::class, $telemetry);
+        self::assertInstanceOf(Telemetry::class, $telemetry);
 
         return $telemetry;
     }
