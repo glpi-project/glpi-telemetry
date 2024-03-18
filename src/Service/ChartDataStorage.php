@@ -51,6 +51,7 @@ class ChartDataStorage
 
             $currentDate = $start;
             while ($currentDate <= $end) {
+                /** @var DateTimeImmutable $currentDate */
                 $date = $currentDate->format('Y-m-d');
 
                 if (!in_array($date, $alreadyComputedDates, true)) {
@@ -97,8 +98,9 @@ class ChartDataStorage
         $monthlyValues = [];
         $currentDate   = $start;
         while ($currentDate <= $end) {
+            /** @var DateTimeImmutable $currentDate */
             $date          = $currentDate->format('Y-m-d');
-            $monthKey      = (string) $currentDate->format('Y-m');
+            $monthKey      = $currentDate->format('Y-m');
             $dailyFileName = $date . '.json';
 
             if (!array_key_exists($monthKey, $monthlyValues)) {

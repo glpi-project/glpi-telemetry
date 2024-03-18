@@ -10,6 +10,7 @@ use App\Form\ReferenceFormType;
 use App\Repository\ReferenceRepository;
 use App\Service\CaptchaValidator;
 use Doctrine\ORM\EntityManagerInterface;
+use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -175,8 +176,16 @@ class ReferenceController extends AbstractController
 
         $result = [];
         foreach ($countriesData as $countryData) {
-            if (!isset($countryData->cca2, $countryData->cca3, $countryData->name->common)) {
-                // Ignore countries with missing data
+            if (
+                !($countryData instanceof stdClass)
+                || !isset($countryData->cca2, $countryData->cca3, $countryData->name)
+                || !($countryData->name instanceof stdClass)
+                || !isset($countryData->name->common)
+                || !is_string($countryData->cca2)
+                || !is_string($countryData->cca3)
+                || !is_string($countryData->name->common)
+            ) {
+                // Ignore countries with missing or invalid data
                 continue;
             }
 
@@ -188,7 +197,7 @@ class ReferenceController extends AbstractController
             $result[] = [
                 'cca2' => strtolower($countryData->cca2),
                 'cca3' => strtolower($countryData->cca3),
-                'name' => $countryData->name->common ?? '',
+                'name' => $countryData->name->common,
             ];
         }
 
@@ -198,7 +207,7 @@ class ReferenceController extends AbstractController
     /**
      * Get geometry features for the given country.
      *
-     * @return array<object{type: string, properties: \stdClass, geometry: object}>
+     * @return array<int, object{type: string, properties: \stdClass, geometry: \stdClass}>
      */
     private function getCountryGeometryFeatures(string $cca3, string $countryName): array
     {
@@ -218,17 +227,32 @@ class ReferenceController extends AbstractController
             throw new \RuntimeException();
         }
 
-        if (!property_exists($geoJsonData, 'features')) {
+        if (
+            !property_exists($geoJsonData, 'features')
+            || !is_array($geoJsonData->features)
+        ) {
             // Some countries files does not contains enough data (e.g. `unk.geo.json`).
             return [];
         }
-        foreach ($geoJsonData->features as $key => $feature) {
-            if (!property_exists($feature, 'geometry')) {
-                // Keep only geometry features.
-                unset($geoJsonData->features[$key]);
+
+        $features = [];
+        foreach ($geoJsonData->features as $feature) {
+            if (
+                !($feature instanceof stdClass)
+                || !property_exists($feature, 'type')
+                || !is_string($feature->type)
+                || !property_exists($feature, 'properties')
+                || !($feature->properties instanceof stdClass)
+                || !property_exists($feature, 'geometry')
+                || !($feature->geometry instanceof stdClass)
+            ) {
+                // Keep only valid geometry features.
+                continue;
             }
+            /** @var object{type: string, properties: \stdClass, geometry: \stdClass} $feature */
+            $features[] = $feature;
         }
 
-        return $geoJsonData->features;
+        return $features;
     }
 }

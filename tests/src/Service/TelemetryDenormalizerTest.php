@@ -16,9 +16,20 @@ use Opis\JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use stdClass;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class TelemetryDenormalizerTest extends TestCase
 {
+    private PropertyAccessorInterface $propertyAccessor;
+
+    protected function setUp(): void
+    {
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->disableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor();
+    }
+
     /**
      * Ensure that all telemetry files are considered as valid.
      */
@@ -104,7 +115,7 @@ class TelemetryDenormalizerTest extends TestCase
             self::assertEquals('MySQL Community Server - GPL', $telemetry->getDbEngine());
             self::assertEquals('8.0.35', $telemetry->getDbVersion());
             self::assertIsInt($telemetry->getDbSize());
-            self::assertIsInt($telemetry->getDbLogSize());
+            self::assertNull($telemetry->getDbLogSize());
             self::assertIsString($telemetry->getDbSqlMode());
             self::assertEquals('Apache', $telemetry->getWebEngine());
             self::assertEquals('2.4.25', $telemetry->getWebVersion());
@@ -168,7 +179,7 @@ class TelemetryDenormalizerTest extends TestCase
     public function testInstallModeValues(string $value): void
     {
         $data = $this->getBaseTelemetryV1Data();
-        $data->data->glpi->install_mode = $value;
+        $this->propertyAccessor->setValue($data, 'data.glpi.install_mode', $value);
 
         $telemetry = $this->getDenormalizedData($data);
 
@@ -256,7 +267,7 @@ class TelemetryDenormalizerTest extends TestCase
     public function testGlpiDefaultLanguageValues(string $value): void
     {
         $data = $this->getBaseTelemetryV1Data();
-        $data->data->glpi->default_language = $value;
+        $this->propertyAccessor->setValue($data, 'data.glpi.default_language', $value);
 
         $telemetry = $this->getDenormalizedData($data);
 

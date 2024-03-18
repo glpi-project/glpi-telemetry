@@ -110,6 +110,7 @@ class ReferenceControllerTest extends WebTestCase
 
             // `geometry` has a `type: "(Multi)Polygon"` property
             self::assertTrue(property_exists($entry->geometry, 'type'));
+            self::assertIsString($entry->geometry->type);
             self::assertMatchesRegularExpression('/^(Multi)?Polygon$/', $entry->geometry->type);
 
             // `geometry` has a `coordinates` array property
@@ -124,6 +125,7 @@ class ReferenceControllerTest extends WebTestCase
                 self::assertIsArray($zoneEntries);
 
                 $validateLonLatCollection = static function ($lonLatCollection): void {
+                    self::assertIsArray($lonLatCollection);
                     foreach ($lonLatCollection as $key => $lonLat) {
                         self::assertIsInt($key);
                         self::assertIsArray($lonLat);
