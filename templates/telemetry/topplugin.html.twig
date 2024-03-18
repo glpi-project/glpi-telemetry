@@ -40,8 +40,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     option && myChart.setOption(option);
 
-    window.registerFilterCallback(function (filters) {
-        var url = 'top/plugin?' + new URLSearchParams(filters);
+    window.registerPeriodFilterCallback(function (periodFilter) {
+        var url = 'top/plugin/' + periodFilter;
 
         fetch(url, {
             method: 'GET',

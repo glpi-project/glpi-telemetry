@@ -4,44 +4,31 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\ChartDataStorage;
+use App\Telemetry\ChartPeriodFilter;
+use App\Telemetry\ChartSerie;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class AbstractChartController extends AbstractController
 {
-    /**
-     * Set a period based on the filter value
-     *
-     * @param string $filter
-     * @return array{start: \DateTimeInterface, end: \DateTimeInterface}
-     */
-    public function getPeriodFromFilter(string $filter): array
-    {
-        $start = match($filter) {
-            'lastYear' => new DateTimeImmutable('-1 year'),
-            'fiveYear' => new DateTimeImmutable('-5 years'),
-            'always'   => new DateTimeImmutable('-10 years'),
-            default    => throw new \Exception('Invalid filter value')
-        };
-        $end = new DateTimeImmutable();
-
-        return [
-            'start' => $start,
-            'end'   => $end,
-        ];
-    }
+    public function __construct(protected ChartDataStorage $chartDataStorage) {}
 
     /**
-     * Process data to prepare it for the Echart pie chart
+     * Get the Echart pie chart data for the given serie.
      *
-     * @param array<string, array<int, array{name: string, total: int}>> $data
      * @return array<int, array{name: string, value: int}>
      */
-    public function prepareDataForPieChart(array $data): array
+    public function getPieChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
-        $chartData = [];
+        $monthlyValues = $this->chartDataStorage->getMonthlyValues(
+            $serie,
+            $periodFilter->getStartDate(),
+            $periodFilter->getEndDate()
+        );
 
-        foreach ($data as $entries) {
+        $chartData = [];
+        foreach ($monthlyValues as $entries) {
             foreach($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'));
 
@@ -60,9 +47,8 @@ abstract class AbstractChartController extends AbstractController
     }
 
     /**
-     * Process data to prepare it for the Echart bar chart
+     * Get the Echart bar chart data for the given serie.
      *
-     * @param array<string, array<int, array{name: string, total: int}>> $data
      * @return array{
      *     xAxis: array{
      *         data: array<int, string>
@@ -81,18 +67,24 @@ abstract class AbstractChartController extends AbstractController
      *     }>
      * }
      */
-    public function prepareDataForBarChart(array $data): array
+    public function getBarChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
-        $months = array_keys($data);
+        $monthlyValues = $this->chartDataStorage->getMonthlyValues(
+            $serie,
+            $periodFilter->getStartDate(),
+            $periodFilter->getEndDate()
+        );
+
+        $months = array_keys($monthlyValues);
         usort($months, fn(string $a, string $b) => strtotime($a) - strtotime($b));
 
         // Extract totals by month and series names
-        $names          = [];
-        $totalsByPeriod = array_fill_keys($months, 0);
+        $names         = [];
+        $totalsByMonth = array_fill_keys($months, 0);
 
-        foreach ($data as $period => $entries) {
+        foreach ($monthlyValues as $month => $entries) {
             foreach ($entries as $entry) {
-                $totalsByPeriod[$period] += $entry['total'];
+                $totalsByMonth[$month] += $entry['total'];
 
                 if (!in_array($entry['name'], $names, true)) {
                     $names[] = $entry['name'];
@@ -107,7 +99,7 @@ abstract class AbstractChartController extends AbstractController
 
         foreach ($names as $serieName) {
             $serieData = [];
-            foreach ($data as $period => $entries) {
+            foreach ($monthlyValues as $month => $entries) {
                 $total = 0;
 
                 foreach ($entries as $entry) {
@@ -117,8 +109,8 @@ abstract class AbstractChartController extends AbstractController
                     }
                 }
 
-                $serieData[] = $totalsByPeriod[$period] > 0
-                    ? round(($total / $totalsByPeriod[$period]) * 100, 2)
+                $serieData[] = $totalsByMonth[$month] > 0
+                    ? round(($total / $totalsByMonth[$month]) * 100, 2)
                     : 0;
             }
 

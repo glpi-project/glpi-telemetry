@@ -37,8 +37,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     };
     option && myChart.setOption(option);
 
-    window.registerFilterCallback(function (filters) {
-        var url = 'install/mode?' + new URLSearchParams(filters);
+    window.registerPeriodFilterCallback(function (periodFilter) {
+        var url = 'install/mode/' + periodFilter;
 
         fetch(url, {
             method: 'GET',

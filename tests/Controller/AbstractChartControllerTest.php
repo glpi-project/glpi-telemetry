@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Controller\AbstractChartController;
+use App\Service\ChartDataStorage;
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
+use App\Telemetry\ChartSerie;
+use App\Telemetry\ChartPeriodFilter;
 
 class AbstractChartControllerTest extends TestCase
 {
@@ -14,69 +17,67 @@ class AbstractChartControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->controller = new class () extends AbstractChartController {};
+        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage->method('getMonthlyValues')
+            ->willReturn(
+                [
+                    "2024-01" => [
+                        ['name' => '10.0.6', 'total' => 10],
+                        ['name' => '10.0.7', 'total' => 5],
+                        ['name' => '10.0.8', 'total' => 10],
+                    ],
+                    "2024-02" => [
+                        ['name' => '10.0.8', 'total' => 15],
+                        ['name' => '10.0.9', 'total' => 15],
+                    ],
+                ]
+            )
+        ;
+        $this->controller = new class ($chartDataStorage) extends AbstractChartController {};
     }
 
-    public function testGetPeriodFromFilter(): void
+    public function testGetPieChartData(): void
     {
-        $result = $this->controller->getPeriodFromFilter('lastYear');
-
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('start', $result);
-        $this->assertInstanceOf(DateTimeInterface::class, $result['start']);
-        $this->assertArrayHasKey('end', $result);
-        $this->assertInstanceOf(DateTimeInterface::class, $result['end']);
-    }
-
-    public function testPrepareDataForPieChart(): void
-    {
-        $data = [
-            "2024-01" => [
-                ['name' => 'Chrome', 'total' => 10],
-                ['name' => 'Firefox', 'total' => 5],
-                ['name' => 'Safari', 'total' => 10],
-            ],
-            "2024-02" => [
-                ['name' => 'Chrome', 'total' => 15],
-            ],
-        ];
-
-        $result = $this->controller->prepareDataForPieChart($data);
+        $result = $this->controller->getPieChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
 
         $this->assertEquals(
             $result,
             [
-                ['name' => 'Chrome', 'value' => 25],
-                ['name' => 'Firefox', 'value' => 5],
-                ['name' => 'Safari', 'value' => 10],
+                ['name' => '10.0.6', 'value' => 10],
+                ['name' => '10.0.7', 'value' => 5],
+                ['name' => '10.0.8', 'value' => 25],
+                ['name' => '10.0.9', 'value' => 15],
             ]
         );
     }
 
-    public function testPrepareDataForBarChart(): void
+    public function testGetBarChartData(): void
     {
-        $data = [
-            '2022-01' => [
-                ['name' => 'Chrome', 'total' => 10],
-                ['name' => 'Firefox', 'total' => 5],
-                ['name' => 'Safari', 'total' => 10],
-            ],
-            '2022-02' => [
-                ['name' => 'Chrome', 'total' => 15],
-                ['name' => 'Safari', 'total' => 10],
-                ['name' => 'Firefox', 'total' => 5],
-            ],
-        ];
-
-        $result = $this->controller->prepareDataForBarChart($data);
+        $result = $this->controller->getBarChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
 
         $expected = [
             'xAxis' => [
-                'data' => ['2022-01', '2022-02']
+                'data' => ['2024-01', '2024-02']
             ],
             'series' => [
                 [
-                    'name' => 'Chrome',
+                    'name' => '10.0.6',
+                    'type' => 'bar',
+                    'stack' => 'total',
+                    'label' => ['show' => false],
+                    'emphasis' => ['focus' => 'series'],
+                    'data' => [40, 0]
+                ],
+                [
+                    'name' => '10.0.7',
+                    'type' => 'bar',
+                    'stack' => 'total',
+                    'label' => ['show' => false],
+                    'emphasis' => ['focus' => 'series'],
+                    'data' => [20, 0]
+                ],
+                [
+                    'name' => '10.0.8',
                     'type' => 'bar',
                     'stack' => 'total',
                     'label' => ['show' => false],
@@ -84,20 +85,12 @@ class AbstractChartControllerTest extends TestCase
                     'data' => [40, 50]
                 ],
                 [
-                    'name' => 'Firefox',
+                    'name' => '10.0.9',
                     'type' => 'bar',
                     'stack' => 'total',
                     'label' => ['show' => false],
                     'emphasis' => ['focus' => 'series'],
-                    'data' => [20, 16.67]
-                ],
-                [
-                    'name' => 'Safari',
-                    'type' => 'bar',
-                    'stack' => 'total',
-                    'label' => ['show' => false],
-                    'emphasis' => ['focus' => 'series'],
-                    'data' => [40, 33.33]
+                    'data' => [0, 50]
                 ],
             ]
         ];

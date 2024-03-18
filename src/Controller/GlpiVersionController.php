@@ -4,33 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Controller\AbstractChartController;
-use App\Service\ChartDataStorage;
+use App\Telemetry\ChartPeriodFilter;
+use App\Telemetry\ChartSerie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Telemetry\ChartSerie;
 
 class GlpiVersionController extends AbstractChartController
 {
-    #[Route('/glpi/version', name: 'app_glpi_version')]
-    public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
+    #[Route('/glpi/version/{periodFilter}')]
+    public function index(ChartPeriodFilter $periodFilter): JsonResponse
     {
-        $filter         = $request->query->get('filter');
-
-        ['start' => $start, 'end' => $end] = $this->getPeriodFromFilter($filter);
-
-        $res            = $chartDataStorage->getMonthlyValues(ChartSerie::GlpiVersion, $start, $end);
-
-        $regex          = '/^(9|10)\.\d+$/';
-
-        $res = array_map(function ($versions) use ($regex) {
-            return array_filter($versions, function ($version) use ($regex) {
-                return preg_match($regex, $version['name']);
-            });
-        }, $res);
-
-        $result         = $this->prepareDataForBarChart($res);
+        $result = $this->getBarChartData(ChartSerie::GlpiVersion, $periodFilter);
 
         return new JsonResponse($result);
     }

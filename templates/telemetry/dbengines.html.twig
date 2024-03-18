@@ -37,8 +37,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     };
     option && myChart.setOption(option);
 
-    window.registerFilterCallback(function (filters) {
-        var url = 'db/engines?' + new URLSearchParams(filters);
+    window.registerPeriodFilterCallback(function (periodFilter) {
+        var url = 'db/engines/' + periodFilter;
         fetch(url, {
             method: 'GET',
             headers: {

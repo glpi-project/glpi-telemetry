@@ -37,8 +37,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     };
     option && myChart.setOption(option);
 
-    window.registerFilterCallback(function (filters) {
-        var url = 'glpi/default/languages?' + new URLSearchParams(filters);
+    window.registerPeriodFilterCallback(function (periodFilter) {
+        var url = 'glpi/default/languages/' + periodFilter;
 
         fetch(url, {
             method: 'GET',
