@@ -17,10 +17,8 @@ class TopPluginController extends AbstractChartController
     public function index(Request $request, ChartDataStorage $chartDataStorage): JsonResponse
     {
         $filter         = $request->query->get('filter');
-        $period         = $this->getPeriodFromFilter($filter);
 
-        $start          = new \DateTime($period['startDate']);
-        $end            = new \DateTime($period['endDate']);
+        ['start' => $start, 'end' => $end] = $this->getPeriodFromFilter($filter);
 
         $res            = $chartDataStorage->getMonthlyValues(ChartSerie::TopPlugin, $start, $end);
 

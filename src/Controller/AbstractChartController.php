@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class AbstractChartController extends AbstractController
@@ -12,27 +13,22 @@ abstract class AbstractChartController extends AbstractController
      * Set a period based on the filter value
      *
      * @param string $filter
-     * @return array<string,string>
+     * @return array{start: \DateTime, end: \DateTime}
      */
     public function getPeriodFromFilter(string $filter): array
     {
-        $period  = [];
-        $endDate = date("y-m-d");
+        $start = match($filter) {
+            'lastYear' => new DateTime('-1 year'),
+            'fiveYear' => new DateTime('-5 years'),
+            'always'   => new DateTime('-10 years'),
+            default    => throw new \Exception('Invalid filter value')
+        };
+        $end = new DateTime();
 
-        try {
-            $startDate = match($filter) {
-                'lastYear' => date('y-m-d', strtotime('-1 year')),
-                'fiveYear' => date('y-m-d', strtotime('-5 years')),
-                'always'   => date('y-m-d', strtotime('-10 years')),
-                default    => throw new \Exception("Invalid filter value")
-            };
-            $period = ['startDate' => $startDate, 'endDate' => $endDate];
-            return $period;
-        } catch(\Exception $e) {
-            $error_msg = $e->getMessage();
-            $error     = ['error' => $error_msg];
-            return $error;
-        }
+        return [
+            'start' => $start,
+            'end'   => $end,
+        ];
     }
 
     /**

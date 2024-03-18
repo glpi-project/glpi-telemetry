@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Controller\AbstractChartController;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 
 class AnyChartController extends AbstractChartController {}
@@ -23,8 +24,10 @@ class AbstractChartControllerTest extends TestCase
         $result = $this->controller->getPeriodFromFilter('lastYear');
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('startDate', $result);
-        $this->assertArrayHasKey('endDate', $result);
+        $this->assertArrayHasKey('start', $result);
+        $this->assertInstanceOf(DateTimeInterface::class, $result['start']);
+        $this->assertArrayHasKey('end', $result);
+        $this->assertInstanceOf(DateTimeInterface::class, $result['end']);
     }
 
     public function testPrepareDataForPieChart(): void
