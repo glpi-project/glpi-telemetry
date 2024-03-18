@@ -139,11 +139,12 @@ class TelemetryDenormalizerTest extends TestCase
             $plugins_keys = [];
             foreach ($telemetry->getTelemetryGlpiPlugins() as $plugin) {
                 self::assertInstanceOf(TelemetryGlpiPlugin::class, $plugin);
-                self::assertInstanceOf(GlpiPlugin::class, $plugin->getGlpiPlugin());
+                $glpiPlugin = $plugin->getGlpiPlugin();
+                self::assertInstanceOf(GlpiPlugin::class, $glpiPlugin);
                 $pluginVersion = $plugin->getVersion();
                 self::assertIsString($pluginVersion);
                 self::assertFalse(strlen($pluginVersion) === 0);
-                $plugins_keys[] = $plugin->getGlpiPlugin()->getPkey();
+                $plugins_keys[] = $glpiPlugin->getPkey();
             }
             self::assertEquals(
                 $plugins_keys,

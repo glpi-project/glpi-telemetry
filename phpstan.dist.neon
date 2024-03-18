@@ -2,6 +2,7 @@ parameters:
     level: 9
     checkBenevolentUnionTypes: true
     checkImplicitMixed: true
+    rememberPossiblyImpureFunctionValues: false
     paths:
         - bin/
         - config/
