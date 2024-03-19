@@ -60,6 +60,7 @@ class ReferenceControllerTest extends WebTestCase
         ];
 
         $controller = new ReferenceController($this->cache);
+        $controller->setContainer(self::getContainer());
         $result = $controller->getDataForMapGraph($this->referenceRepositoryMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
