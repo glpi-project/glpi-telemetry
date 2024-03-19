@@ -6,27 +6,20 @@ namespace App\Tests\Controller;
 
 use App\Controller\ReferenceController;
 use App\Repository\ReferenceRepository;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReferenceControllerTest extends WebTestCase
 {
     private CacheInterface $cache;
-    private ReferenceRepository $referenceRepository;
-    private Request $request;
+    private ReferenceRepository&MockObject $referenceRepositoryMock;
     protected function setUp(): void
     {
         $this->cache = $this->createMock(CacheInterface::class);
 
-        $this->referenceRepository = $this->getMockBuilder(ReferenceRepository::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getReferencesCountbyCountries'])
-            ->getMock();
-
-        $this->request = $this->createMock(Request::class);
+        $this->referenceRepositoryMock = $this->createMock(ReferenceRepository::class);
 
     }
 
@@ -47,9 +40,9 @@ class ReferenceControllerTest extends WebTestCase
             'be' => 300
         ];
 
-        $referenceRepositoryMock = $this->referenceRepository->expects($this->once())
-                                        ->method('getReferencesCountbyCountries')
-                                        ->willReturn($data);
+        $this->referenceRepositoryMock->expects($this->once())
+                ->method('getReferencesCountbyCountries')
+                ->willReturn($data);
 
         $expectedData = [
             [
@@ -67,7 +60,7 @@ class ReferenceControllerTest extends WebTestCase
         ];
 
         $controller = new ReferenceController($this->cache);
-        $result = $controller->getDataForMapGraph($referenceRepositoryMock);
+        $result = $controller->getDataForMapGraph($this->referenceRepositoryMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertJsonStringEqualsJsonString(json_encode($expectedData), $result->getContent());
