@@ -8,19 +8,14 @@ use App\Controller\ReferenceController;
 use App\Repository\ReferenceRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReferenceControllerTest extends WebTestCase
 {
-    private CacheInterface $cache;
     private ReferenceRepository&MockObject $referenceRepositoryMock;
     protected function setUp(): void
     {
-        $this->cache = $this->createMock(CacheInterface::class);
-
         $this->referenceRepositoryMock = $this->createMock(ReferenceRepository::class);
-
     }
 
     public function testMapGraphRoute(): Void
@@ -45,9 +40,9 @@ class ReferenceControllerTest extends WebTestCase
                 ->willReturn($data);
 
 
-        $controller = new ReferenceController($this->cache);
+        $controller = new ReferenceController();
         $controller->setContainer(self::getContainer());
-        $result = $controller->getDataForMapGraph($this->referenceRepositoryMock);
+        $result = $controller->mapData($this->referenceRepositoryMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
 

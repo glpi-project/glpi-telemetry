@@ -19,11 +19,6 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class ReferenceController extends AbstractController
 {
-    private CacheInterface $cache;
-    public function __construct(CacheInterface $cache)
-    {
-        $this->cache = $cache;
-    }
 
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request): Response
@@ -106,8 +101,8 @@ class ReferenceController extends AbstractController
         ]);
     }
 
-    #[Route('/map/graph', name: 'app_map_graph')]
-    public function getDataForMapGraph(ReferenceRepository $referenceRepository): JsonResponse
+    #[Route('/reference/map/data')]
+    public function mapData(ReferenceRepository $referenceRepository): JsonResponse
     {
         $data = $referenceRepository->getReferencesCountByCountries();
 
@@ -129,10 +124,10 @@ class ReferenceController extends AbstractController
         return $this->json($transformedData);
     }
 
-    #[Route('/map/countries', name: 'app_map_countries')]
-    public function countries(): JsonResponse
+    #[Route('reference/map/countries')]
+    public function mapCountries(CacheInterface $cache): JsonResponse
     {
-        $compiledGeoJson = $this->cache->get("countries.geo.json", function () {
+        $compiledGeoJson = $cache->get("countries.geo.json", function () {
 
             $countriesDataJson = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
             $countriesData = json_decode($countriesDataJson, true);
