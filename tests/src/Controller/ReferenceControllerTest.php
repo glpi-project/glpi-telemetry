@@ -12,16 +12,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ReferenceControllerTest extends WebTestCase
 {
-    private ReferenceRepository&MockObject $referenceRepositoryMock;
-    protected function setUp(): void
-    {
-        $this->referenceRepositoryMock = $this->createMock(ReferenceRepository::class);
-    }
-
-    public function testMapGraphRoute(): Void
+    public function testMapDataRoute(): Void
     {
         $client = static::createClient();
-        $client->request('GET', '/map/graph');
+        $client->request('GET', 'reference/map/data');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
@@ -35,14 +29,14 @@ class ReferenceControllerTest extends WebTestCase
             'be' => 300
         ];
 
-        $this->referenceRepositoryMock->expects($this->once())
-                ->method('getReferencesCountbyCountries')
-                ->willReturn($data);
-
+        $referenceRepositoryMock = $this->createMock(ReferenceRepository::class);
+        $referenceRepositoryMock->expects($this->once())
+            ->method('getReferencesCountbyCountries')
+            ->willReturn($data);
 
         $controller = new ReferenceController();
         $controller->setContainer(self::getContainer());
-        $result = $controller->mapData($this->referenceRepositoryMock);
+        $result = $controller->mapData($referenceRepositoryMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
 
