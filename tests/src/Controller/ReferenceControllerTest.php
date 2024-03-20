@@ -6,7 +6,6 @@ namespace App\Tests\Controller;
 
 use App\Controller\ReferenceController;
 use App\Repository\ReferenceRepository;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -20,7 +19,7 @@ class ReferenceControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    public function testGetDataForMapGraph(): Void
+    public function testMapData(): Void
     {
 
         $data = [
@@ -45,15 +44,15 @@ class ReferenceControllerTest extends WebTestCase
         foreach ($decodedResult as $result) {
             $this->assertArrayHasKey("name", $result);
             $this->assertArrayHasKey("value", $result);
-            if ($result['name'] === "France") {
-                $this->assertEquals(100, $result['value']);
-            }
-            if ($result['name'] === "Brazil") {
-                $this->assertEquals(200, $result['value']);
-            }
-            if ($result['name'] === "Belgium") {
-                $this->assertEquals(300, $result['value']);
-            }
+
+            $expectedvalue = 0;
+            match ($result['name']) {
+                'France' => $data['fr'],
+                'Brazil' => $data['br'],
+                'Belgium' => $data['be'],
+                default => 0,
+            };
+            $this->assertEquals($expectedvalue, $result['value']);
         }
     }
 }
