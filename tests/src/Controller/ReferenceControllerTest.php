@@ -43,6 +43,7 @@ class ReferenceControllerTest extends WebTestCase
 
         foreach ($decodedResult as $result) {
             $this->assertArrayHasKey("name", $result);
+            $this->assertIsString($result['name']);
             $this->assertArrayHasKey("value", $result);
 
             $expectedvalue = 0;
