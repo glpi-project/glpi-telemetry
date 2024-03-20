@@ -19,7 +19,6 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class ReferenceController extends AbstractController
 {
-
     #[Route('/reference', name: 'app_reference')]
     public function index(ReferenceRepository $referenceRepository, Request $request): Response
     {
