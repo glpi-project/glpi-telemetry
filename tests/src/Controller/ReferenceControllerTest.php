@@ -46,14 +46,13 @@ class ReferenceControllerTest extends WebTestCase
             $this->assertIsString($result['name']);
             $this->assertArrayHasKey("value", $result);
 
-            $expectedvalue = 0;
-            match ($result['name']) {
+            $expectedvalue = match ($result['name']) {
                 'France' => $data['fr'],
                 'Brazil' => $data['br'],
                 'Belgium' => $data['be'],
                 default => 0,
             };
-            $this->assertEquals($expectedvalue, $result['value']);
+            $this->assertEquals($expectedvalue, $result['value'], $result['name']);
         }
     }
 }
