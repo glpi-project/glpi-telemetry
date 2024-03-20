@@ -56,15 +56,15 @@ class ReferenceControllerTest extends WebTestCase
         foreach ($decodedResult as $result) {
             $this->assertArrayHasKey("name", $result);
             $this->assertArrayHasKey("value", $result);
-                if ($result['name'] === "France") {
-                    $this->assertEquals(100, $result['value']);
-                }
-                if ($result['name'] === "Brazil") {
-                    $this->assertEquals(200, $result['value']);
-                }
-                if ($result['name'] === "Belgium") {
-                    $this->assertEquals(300, $result['value']);
-                }
+            if ($result['name'] === "France") {
+                $this->assertEquals(100, $result['value']);
+            }
+            if ($result['name'] === "Brazil") {
+                $this->assertEquals(200, $result['value']);
+            }
+            if ($result['name'] === "Belgium") {
+                $this->assertEquals(300, $result['value']);
+            }
         }
     }
 }
