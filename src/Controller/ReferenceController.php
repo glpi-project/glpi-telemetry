@@ -105,66 +105,116 @@ class ReferenceController extends AbstractController
     {
         $data = $referenceRepository->getReferencesCountByCountries();
 
-        $countriesDataJson = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
-        $countriesData = json_decode($countriesDataJson, true);
-
-        $transformedData = [];
-        foreach ($countriesData as $country) {
-            $transformedData[strtoupper($country['cca2'])] = [
-                'name' => $country['name']['common'],
-                'value' => 0,
+        $result = [];
+        foreach ($this->getCountries() as $country) {
+            $result[] = [
+                'name'  => $country['name'],
+                'value' => $data[$country['cca2']] ?? 0,
             ];
         }
-        foreach ($data as $isoa2 => $total) {
-            $transformedData[strtoupper($isoa2)]['value'] = $total;
-        }
-
-        $transformedData = array_values($transformedData);
-        return $this->json($transformedData);
+        return $this->json($result);
     }
 
     #[Route('/reference/map/countries')]
     public function mapCountries(CacheInterface $cache): JsonResponse
     {
         $compiledGeoJson = $cache->get("countries.geo.json", function () {
-
-            $countriesDataJson = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
-            $countriesData = json_decode($countriesDataJson, true);
+            $countries = $this->getCountries();
 
             $compiledGeoJson = [
                 'type' => 'FeatureCollection',
                 'features' => [],
             ];
 
-            foreach ($countriesData as $country) {
-                $cca3 = strtolower($country['cca3']);
+            foreach ($countries as $country) {
+                $features = $this->getCountryGeometryFeatures($country['cca3']);
 
-                if ($country['cca3'] === 'ATA') {
-                    // Ignore antartica to have a better map display
-                    continue;
+                foreach (array_keys($features) as $key) {
+                    $features[$key]->properties->name = $country['name'];
                 }
 
-                $geoJsonPath = __DIR__ . "/../../vendor/mledoze/countries/data/{$cca3}.geo.json";
-
-                if (file_exists($geoJsonPath)) {
-                    $geoJsonData = json_decode(file_get_contents($geoJsonPath), true);
-                    if (isset($geoJsonData['features'])) {
-                        foreach ($geoJsonData['features'] as $key => $feature) {
-                            if (!array_key_exists('geometry', $feature)) {
-                                // Drop features that have no geometry.
-                                unset($geoJsonData['features'][$key]);
-                                continue;
-                            }
-                            $geoJsonData['features'][$key]['properties']['name'] = $country['name']['common'];
-                        }
-                        $compiledGeoJson['features'] = array_merge($compiledGeoJson['features'], $geoJsonData['features']);
-                    }
-                }
+                array_push($compiledGeoJson['features'], ...$features);
             }
 
             return json_encode($compiledGeoJson);
         });
 
         return new JsonResponse($compiledGeoJson, json: true);
+    }
+
+    /**
+     * Get countries base properties.
+     *
+     * @return array<array{cca2: string, cca3: string, name: string}>
+     */
+    private function getCountries(): array
+    {
+        $countriesFileData = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
+        if ($countriesFileData === false) {
+            throw new \RuntimeException();
+        }
+
+        $countriesData = json_decode($countriesFileData, flags: JSON_THROW_ON_ERROR);
+        if (!is_array($countriesData)) {
+            throw new \RuntimeException();
+        }
+
+        $result = [];
+        foreach ($countriesData as $countryData) {
+            if (!isset($countryData->cca2, $countryData->cca3, $countryData->name->common)) {
+                // Ignore countries with missing data
+                continue;
+            }
+
+            if (strtolower($countryData->cca3) === 'ata') {
+                // Ignore antartica to have a better map display
+                continue;
+            }
+
+            $result[] = [
+                'cca2' => strtolower($countryData->cca2),
+                'cca3' => strtolower($countryData->cca3),
+                'name' => $countryData->name->common ?? '',
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get geometry features for the given country.
+     *
+     * @return array<object{type: string, properties: object, geometry: object}>
+     */
+    private function getCountryGeometryFeatures(string $cca3): array
+    {
+        $geoJsonPath = __DIR__ . sprintf('/../../vendor/mledoze/countries/data/%s.geo.json', $cca3);
+
+        if (!file_exists($geoJsonPath)) {
+            return [];
+        }
+
+        $geoJsonFileData = file_get_contents($geoJsonPath);
+        if ($geoJsonFileData === false) {
+            throw new \RuntimeException();
+        }
+
+        $geoJsonData = json_decode($geoJsonFileData, flags: JSON_THROW_ON_ERROR);
+        if (!is_object($geoJsonData)) {
+            throw new \RuntimeException();
+        }
+
+        if (!property_exists($geoJsonData, 'features')) {
+            // Some countries files does not contains enough data (e.g. `unk.geo.json`).
+            return [];
+        }
+        foreach ($geoJsonData->features as $key => $feature) {
+            if (!property_exists($feature, 'geometry')) {
+                // Keep only geometry features.
+                unset($geoJsonData->features[$key]);
+            }
+        }
+
+        return $geoJsonData->features;
     }
 }
