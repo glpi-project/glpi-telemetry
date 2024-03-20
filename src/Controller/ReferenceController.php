@@ -140,6 +140,7 @@ class ReferenceController extends AbstractController
                 $cca3 = strtolower($country['cca3']);
 
                 if ($country['cca3'] === 'ATA') {
+                    // Ignore antartica to have a better map display
                     continue;
                 }
 
@@ -148,8 +149,13 @@ class ReferenceController extends AbstractController
                 if (file_exists($geoJsonPath)) {
                     $geoJsonData = json_decode(file_get_contents($geoJsonPath), true);
                     if (isset($geoJsonData['features'])) {
-                        foreach ($geoJsonData['features'] as &$feature) {
-                            $feature['properties']['name'] = $country['name']['common'];
+                        foreach ($geoJsonData['features'] as $key => $feature) {
+                            if (!array_key_exists('geometry', $feature)) {
+                                // Drop features that have no geometry.
+                                unset($geoJsonData['features'][$key]);
+                                continue;
+                            }
+                            $geoJsonData['features'][$key]['properties']['name'] = $country['name']['common'];
                         }
                         $compiledGeoJson['features'] = array_merge($compiledGeoJson['features'], $geoJsonData['features']);
                     }
