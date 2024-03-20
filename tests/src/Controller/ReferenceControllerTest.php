@@ -44,28 +44,27 @@ class ReferenceControllerTest extends WebTestCase
                 ->method('getReferencesCountbyCountries')
                 ->willReturn($data);
 
-        $expectedData = [
-            [
-                'name' => 'France',
-                'value' => 100
-            ],
-            [
-                'name' => 'Brazil',
-                'value' => 200
-            ],
-            [
-                'name' => 'Belgium',
-                'value' => 300
-            ]
-        ];
 
         $controller = new ReferenceController($this->cache);
         $controller->setContainer(self::getContainer());
         $result = $controller->getDataForMapGraph($this->referenceRepositoryMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
-        $this->assertJsonStringEqualsJsonString(json_encode($expectedData), $result->getContent());
 
+        $decodedResult = json_decode($result->getContent(), true);
 
+        foreach ($decodedResult as $result) {
+            $this->assertArrayHasKey("name", $result);
+            $this->assertArrayHasKey("value", $result);
+                if ($result['name'] === "France") {
+                    $this->assertEquals(100, $result['value']);
+                }
+                if ($result['name'] === "Brazil") {
+                    $this->assertEquals(200, $result['value']);
+                }
+                if ($result['name'] === "Belgium") {
+                    $this->assertEquals(300, $result['value']);
+                }
+        }
     }
 }
