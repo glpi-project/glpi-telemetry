@@ -123,7 +123,7 @@ class ReferenceController extends AbstractController
         return $this->json($transformedData);
     }
 
-    #[Route('reference/map/countries')]
+    #[Route('/reference/map/countries')]
     public function mapCountries(CacheInterface $cache): JsonResponse
     {
         $compiledGeoJson = $cache->get("countries.geo.json", function () {
