@@ -58,7 +58,7 @@ class ReferenceRepository extends ServiceEntityRepository
 
         $countByCountry = [];
         foreach ($result as $row) {
-            $countByCountry[strtolower($row['country'])] = (int) $row['total'];
+            $countByCountry[strtolower($row['country'])] = $row['total'];
         }
 
         return $countByCountry;
