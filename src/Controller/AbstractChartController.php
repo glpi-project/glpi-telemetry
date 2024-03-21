@@ -29,10 +29,10 @@ abstract class AbstractChartController extends AbstractController
         $chartData = [];
         foreach ($monthlyValues as $entries) {
             foreach($entries as $entry) {
-                $index = array_search($entry['name'], array_column($chartData, 'name'));
+                $index = array_search($entry['name'], array_column($chartData, 'name'), true);
 
                 if ($index !== false) {
-                    $chartData[(int) $index]['value'] += $entry['total'];
+                    $chartData[$index]['value'] += $entry['total'];
                 } else {
                     $chartData[] = [
                         'name' => $entry['name'],
@@ -75,7 +75,7 @@ abstract class AbstractChartController extends AbstractController
         );
 
         $months = array_keys($monthlyValues);
-        usort($months, fn(string $a, string $b) => strtotime($a) - strtotime($b));
+        sort($months, SORT_NATURAL);
 
         // Extract totals by month and series names
         $names         = [];

@@ -50,7 +50,7 @@ class CaptchaValidator
                 ]
             );
 
-            return $response->toArray()['success'] ?? false;
+            return (bool) ($response->toArray()['success'] ?? false);
 
         } catch (\Throwable $e) {
             return false;

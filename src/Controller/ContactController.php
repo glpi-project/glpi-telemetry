@@ -30,8 +30,15 @@ class ContactController extends AbstractController
             $success = false;
 
             $captcha_token = $request->request->get('captcha_token');
-            if ($captcha_token !== null && $captchaValidator->validateToken($captcha_token)) {
+            if ($captcha_token !== null && $captchaValidator->validateToken((string) $captcha_token)) {
                 try {
+                    /**
+                     * @var array{
+                     *          Email: string,
+                     *          Subject: string,
+                     *          Message: string
+                     *      } $contactFormData
+                     */
                     $contactFormData = $form->getData();
 
                     $message = (new Email())

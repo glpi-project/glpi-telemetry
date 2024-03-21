@@ -25,7 +25,7 @@ class ChartPeriodFilterTest extends TestCase
      */
     public function testGetStartDate(ChartPeriodFilter $filter): void
     {
-        $this->assertInstanceOf(DateTimeImmutable::class, $filter->getStartDate());
+        self::assertInstanceOf(DateTimeImmutable::class, $filter->getStartDate());
     }
 
     /**
@@ -33,7 +33,7 @@ class ChartPeriodFilterTest extends TestCase
      */
     public function testGetEndDate(ChartPeriodFilter $filter): void
     {
-        $this->assertInstanceOf(DateTimeImmutable::class, $filter->getEndDate());
+        self::assertInstanceOf(DateTimeImmutable::class, $filter->getEndDate());
     }
 
 }

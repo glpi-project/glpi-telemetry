@@ -44,6 +44,7 @@ class ComputeChartsData extends Command
 
         $currentStart = $start;
         do {
+            /** @var DateTimeImmutable $currentStart */
             $currentEnd  = $currentStart->modify('+ ' . self::ITERATION_SIZE . ' days');
             if ($currentEnd > $end) {
                 $currentEnd = $end;
@@ -61,6 +62,7 @@ class ComputeChartsData extends Command
             $this->chartDataStorage->computeValues($currentStart, $currentEnd);
 
             $currentStart = $currentStart->modify('+ ' . (self::ITERATION_SIZE + 1) . ' days');
+
             $progressBar->advance();
 
         } while ($currentStart <= $end);

@@ -44,7 +44,7 @@ class ReferenceRepository extends ServiceEntityRepository
     /**
      * Returns references count by country.
      *
-     * @return array<string, string>
+     * @return array<string, int>
      */
     public function getReferencesCountByCountries(): array
     {
@@ -53,9 +53,7 @@ class ReferenceRepository extends ServiceEntityRepository
             ->where($queryBuilder->expr()->isNotNull('reference.country'))
             ->addGroupBy('reference.country');
 
-        /*
-         * @var array<int, array{country: string, total: int}> $result
-         */
+        /** @var array<array{country: string, total: int}> $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         $countByCountry = [];

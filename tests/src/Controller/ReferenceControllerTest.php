@@ -47,9 +47,9 @@ class ReferenceControllerTest extends WebTestCase
 
         foreach ($decodedContent as $entry) {
             self::assertIsObject($entry);
-            self::assertObjectHasProperty('name', $entry);
+            self::assertTrue(property_exists($entry, 'name'));
             self::assertIsString($entry->name);
-            self::assertObjectHasProperty('value', $entry);
+            self::assertTrue(property_exists($entry, 'value'));
 
             $expectedvalue = $data[$entry->name]['value'] ?? 0;
             self::assertEquals($expectedvalue, $entry->value, $entry->name);
@@ -81,39 +81,40 @@ class ReferenceControllerTest extends WebTestCase
         self::assertIsObject($decodedContent);
 
         // Has `type: "Feature"` property
-        self::assertObjectHasProperty('type', $decodedContent);
+        self::assertTrue(property_exists($decodedContent, 'type'));
         self::assertEquals('FeatureCollection', $decodedContent->type);
 
         // Has `features` array property
-        self::assertObjectHasProperty('features', $decodedContent);
+        self::assertTrue(property_exists($decodedContent, 'features'));
         self::assertIsArray($decodedContent->features);
 
         foreach ($decodedContent->features as $entry) {
             self::assertIsObject($entry);
 
             // Each entry has `type: "Feature"`
-            self::assertObjectHasProperty('type', $entry, json_encode($entry, JSON_PRETTY_PRINT));
+            self::assertTrue(property_exists($entry, 'type'));
             self::assertEquals('Feature', $entry->type);
 
             // Each entry has `properties: {cca2: stringname: string}`
-            self::assertObjectHasProperty('properties', $entry);
+            self::assertTrue(property_exists($entry, 'properties'));
             self::assertIsObject($entry->properties);
-            self::assertObjectHasProperty('cca2', $entry->properties);
+            self::assertTrue(property_exists($entry->properties, 'cca2'));
             self::assertIsString($entry->properties->cca2);
             self::assertMatchesRegularExpression('/^[a-z]{2}$/', $entry->properties->cca2);
-            self::assertObjectHasProperty('name', $entry->properties);
+            self::assertTrue(property_exists($entry->properties, 'name'));
             self::assertIsString($entry->properties->name);
 
             // Each entry has a `geometry` array property
-            self::assertObjectHasProperty('geometry', $entry);
+            self::assertTrue(property_exists($entry, 'geometry'));
             self::assertIsObject($entry->geometry);
 
             // `geometry` has a `type: "(Multi)Polygon"` property
-            self::assertObjectHasProperty('type', $entry->geometry);
+            self::assertTrue(property_exists($entry->geometry, 'type'));
+            self::assertIsString($entry->geometry->type);
             self::assertMatchesRegularExpression('/^(Multi)?Polygon$/', $entry->geometry->type);
 
             // `geometry` has a `coordinates` array property
-            self::assertObjectHasProperty('coordinates', $entry->geometry);
+            self::assertTrue(property_exists($entry->geometry, 'coordinates'));
             self::assertIsArray($entry->geometry->coordinates);
 
             // `geometry` model depends on its type:
@@ -124,6 +125,7 @@ class ReferenceControllerTest extends WebTestCase
                 self::assertIsArray($zoneEntries);
 
                 $validateLonLatCollection = static function ($lonLatCollection): void {
+                    self::assertIsArray($lonLatCollection);
                     foreach ($lonLatCollection as $key => $lonLat) {
                         self::assertIsInt($key);
                         self::assertIsArray($lonLat);
