@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     myChart.showLoading();
 
-    fetch('map/countries', {
+    fetch('reference/map/countries', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ window.addEventListener('DOMContentLoaded', () => {
             ]
         });
 
-        fetch('map/graph', {
+        fetch('reference/map/data', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

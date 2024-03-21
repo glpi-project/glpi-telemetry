@@ -48,18 +48,19 @@ class ReferenceRepository extends ServiceEntityRepository
      */
     public function getReferencesCountByCountries(): array
     {
-        $queryBuilder = $this->createQueryBuilder('reference')
-            ->select('reference.country as isoa2', 'COUNT(reference.id) AS total')
-            ->addGroupBy('isoa2');
+        $queryBuilder = $this->createQueryBuilder('reference');
+        $queryBuilder->select('reference.country', 'COUNT(reference.id) AS total')
+            ->where($queryBuilder->expr()->isNotNull('reference.country'))
+            ->addGroupBy('reference.country');
 
         /*
-         * @var array<int, array{isoa2: string, total: int}> $result
+         * @var array<int, array{country: string, total: int}> $result
          */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         $countByCountry = [];
         foreach ($result as $row) {
-            $countByCountry[$row['isoa2']] = $row['total'];
+            $countByCountry[strtolower($row['country'])] = $row['total'];
         }
 
         return $countByCountry;

@@ -11,9 +11,11 @@ use App\Repository\ReferenceRepository;
 use App\Service\CaptchaValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class ReferenceController extends AbstractController
 {
@@ -96,5 +98,123 @@ class ReferenceController extends AbstractController
             'form'  => $form,
             'captchaSiteKey' => $captchaSiteKey,
         ]);
+    }
+
+    #[Route('/reference/map/data')]
+    public function mapData(ReferenceRepository $referenceRepository): JsonResponse
+    {
+        $data = $referenceRepository->getReferencesCountByCountries();
+
+        $result = [];
+        foreach ($this->getCountries() as $country) {
+            $result[] = [
+                'name'  => $country['name'],
+                'value' => $data[$country['cca2']] ?? 0,
+            ];
+        }
+        return $this->json($result);
+    }
+
+    #[Route('/reference/map/countries')]
+    public function mapCountries(CacheInterface $cache): JsonResponse
+    {
+        $compiledGeoJson = $cache->get("countries.geo.json", function () {
+            $countries = $this->getCountries();
+
+            $compiledGeoJson = [
+                'type' => 'FeatureCollection',
+                'features' => [],
+            ];
+
+            foreach ($countries as $country) {
+                $features = $this->getCountryGeometryFeatures($country['cca3']);
+
+                foreach (array_keys($features) as $key) {
+                    $features[$key]->properties->name = $country['name'];
+                }
+
+                array_push($compiledGeoJson['features'], ...$features);
+            }
+
+            return json_encode($compiledGeoJson);
+        });
+
+        return new JsonResponse($compiledGeoJson, json: true);
+    }
+
+    /**
+     * Get countries base properties.
+     *
+     * @return array<array{cca2: string, cca3: string, name: string}>
+     */
+    private function getCountries(): array
+    {
+        $countriesFileData = file_get_contents(__DIR__ . '/../../vendor/mledoze/countries/dist/countries.json');
+        if ($countriesFileData === false) {
+            throw new \RuntimeException();
+        }
+
+        $countriesData = json_decode($countriesFileData, flags: JSON_THROW_ON_ERROR);
+        if (!is_array($countriesData)) {
+            throw new \RuntimeException();
+        }
+
+        $result = [];
+        foreach ($countriesData as $countryData) {
+            if (!isset($countryData->cca2, $countryData->cca3, $countryData->name->common)) {
+                // Ignore countries with missing data
+                continue;
+            }
+
+            if (strtolower($countryData->cca3) === 'ata') {
+                // Ignore antartica to have a better map display
+                continue;
+            }
+
+            $result[] = [
+                'cca2' => strtolower($countryData->cca2),
+                'cca3' => strtolower($countryData->cca3),
+                'name' => $countryData->name->common ?? '',
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get geometry features for the given country.
+     *
+     * @return array<object{type: string, properties: object, geometry: object}>
+     */
+    private function getCountryGeometryFeatures(string $cca3): array
+    {
+        $geoJsonPath = __DIR__ . sprintf('/../../vendor/mledoze/countries/data/%s.geo.json', $cca3);
+
+        if (!file_exists($geoJsonPath)) {
+            return [];
+        }
+
+        $geoJsonFileData = file_get_contents($geoJsonPath);
+        if ($geoJsonFileData === false) {
+            throw new \RuntimeException();
+        }
+
+        $geoJsonData = json_decode($geoJsonFileData, flags: JSON_THROW_ON_ERROR);
+        if (!is_object($geoJsonData)) {
+            throw new \RuntimeException();
+        }
+
+        if (!property_exists($geoJsonData, 'features')) {
+            // Some countries files does not contains enough data (e.g. `unk.geo.json`).
+            return [];
+        }
+        foreach ($geoJsonData->features as $key => $feature) {
+            if (!property_exists($feature, 'geometry')) {
+                // Keep only geometry features.
+                unset($geoJsonData->features[$key]);
+            }
+        }
+
+        return $geoJsonData->features;
     }
 }
