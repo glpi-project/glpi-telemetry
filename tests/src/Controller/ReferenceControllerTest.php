@@ -123,8 +123,7 @@ class ReferenceControllerTest extends WebTestCase
                 self::assertIsInt($zoneKey);
                 self::assertIsArray($zoneEntries);
 
-                $validateLonLatCollection = static function ($lonLatCollection): void
-                {
+                $validateLonLatCollection = static function ($lonLatCollection): void {
                     foreach ($lonLatCollection as $key => $lonLat) {
                         self::assertIsInt($key);
                         self::assertIsArray($lonLat);
