@@ -13,24 +13,28 @@
         {% endblock %}
     </head>
     <body>
-        {% include 'header.html.twig' %}
+        <div class="page">
+            {% include 'header.html.twig' %}
 
-        <div class="page-body">
-            {% set flashes = app.flashes() %}
-            {% if flashes is not empty %}
-                <div class="container container-tight mb-4">
-                    {% for type, messages in flashes %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ type }}">{{ message }}</div>
-                        {% endfor %}
-                    {% endfor %}
+            <div class="page-wrapper">
+                <div class="page-body">
+                    {% set flashes = app.flashes() %}
+                    {% if flashes is not empty %}
+                        <div class="container container-tight mb-4">
+                            {% for type, messages in flashes %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ type }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% block body_content %}
+                    {% endblock %}
                 </div>
-            {% endif %}
 
-            {% block body_content %}
-            {% endblock %}
+                {% include 'footer.html.twig' %}
+            </div>
         </div>
-
-        {% include 'footer.html.twig' %}
     </body>
 </html>
