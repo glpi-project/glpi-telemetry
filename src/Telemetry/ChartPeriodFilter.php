@@ -17,7 +17,7 @@ enum ChartPeriodFilter: string
         return match($this) {
             self::LastTwelveMonths  => new DateTimeImmutable('-1 year'),
             self::LastFiveYears     => new DateTimeImmutable('-5 years'),
-            self::Always            => new DateTimeImmutable('2017-01-01'), // Telemetry data collection started in 2017
+            self::Always            => new DateTimeImmutable('1970-01-01'),
         };
     }
 

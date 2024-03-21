@@ -16,6 +16,7 @@ class ChartDataStorage
     private Connection $connection;
     private Filesystem $filesystem;
     private string $storageDir;
+    private ?DateTimeImmutable $oldestDate = null;
 
     public function __construct(Connection $connection, Filesystem $filesystem, string $storageDir)
     {
@@ -96,7 +97,8 @@ class ChartDataStorage
         }
 
         $monthlyValues = [];
-        $currentDate   = $start;
+        $oldest        = $this->getOldestTelemetryDate();
+        $currentDate   = $start > $oldest ? $start : $oldest;
         while ($currentDate <= $end) {
             /** @var DateTimeImmutable $currentDate */
             $date          = $currentDate->format('Y-m-d');
@@ -143,19 +145,29 @@ class ChartDataStorage
     }
 
     /**
-     * Retreive the oldest date in the telemetry table
+     * Retreive the date of the oldest telemetry entry.
+     *
      * @return DateTimeInterface
      */
-    public function getOldestDate(): DateTimeInterface
+    public function getOldestTelemetryDate(): DateTimeInterface
     {
-        $sql = <<<SQL
-            SELECT MIN(created_at) as startDate
-            FROM telemetry
-        SQL;
+        // FIXME: Once migration from PgSQL to MySQL will be done, values corresponding to telemetry data stored before
+        // 2017-09-25 should be removed from database and this piece of code should be uncommented.
+        // See https://github.com/glpi-project/glpi/releases/tag/9.2 for GLPI 9.2 official release that introduced the telemetry feature.
+        //
+        // if ($this->oldestDate === null) {
+        //     $sql = <<<SQL
+        //         SELECT MIN(created_at) as startDate
+        //         FROM telemetry
+        //     SQL;
 
-        /** @var string $result */
-        $result = $this->connection->executeQuery($sql)->fetchOne();
+        //     /** @var string $result */
+        //     $result = $this->connection->executeQuery($sql)->fetchOne();
 
-        return new DateTimeImmutable($result);
+        //     $this->oldestDate = new DateTimeImmutable($result);
+        // }
+        $this->oldestDate = new DateTimeImmutable('2017-09-25');
+
+        return $this->oldestDate;
     }
 }
