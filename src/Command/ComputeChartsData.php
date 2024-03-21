@@ -31,7 +31,7 @@ class ComputeChartsData extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $start = $this->chartDataStorage->getOldestDate();
+        $start = $this->chartDataStorage->getOldestTelemetryDate();
         $end   = new DateTimeImmutable('-1 day');
 
         $progressBar = new ProgressBar(

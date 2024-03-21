@@ -17,17 +17,23 @@ enum ChartSerie
 
     public function getSqlQuery(): string
     {
+        // TODO Remove invalid values from DB once migration from PgSQL will be done
+        // and filter values based on official release list once a day or at submit time.
+        $baseFilter = <<<SQL
+            (
+                telemetry.created_at BETWEEN :startDate AND :endDate
+                AND telemetry.glpi_version NOT LIKE '%dev'
+                AND telemetry.glpi_version REGEXP '^(9|10)\.[0-9]+'
+            )
+        SQL;
+
         switch ($this) {
             case ChartSerie::GlpiVersion:
-                // TODO Remove invalid values from DB once migration from PgSQL will be done
-                // and filter values based on official release list once a day or at submit time.
                 $sql = <<<SQL
                     SELECT SUBSTRING_INDEX(glpi_version, '.', 2) as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
-                    AND glpi_version NOT LIKE '%dev'
-                    AND glpi_version REGEXP '^(9|10)\.[0-9]+\.[0-9]+'
+                    WHERE $baseFilter
                     GROUP BY name
                 SQL;
                 return $sql;
@@ -36,7 +42,7 @@ enum ChartSerie
                     SELECT install_mode as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
+                    WHERE $baseFilter
                     GROUP BY name
                 SQL;
                 return $sql;
@@ -45,7 +51,7 @@ enum ChartSerie
                     SELECT web_engine as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
+                    WHERE $baseFilter
                     AND web_engine IS NOT NULL
                     AND web_engine != ''
                     GROUP BY name
@@ -56,7 +62,7 @@ enum ChartSerie
                     SELECT os_family as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
+                    WHERE $baseFilter
                     GROUP BY name
                 SQL;
                 return $sql;
@@ -65,7 +71,7 @@ enum ChartSerie
                     SELECT SUBSTRING_INDEX(php_version, '.', 2) as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
+                    WHERE $baseFilter
                     GROUP BY name
                 SQL;
                 return $sql;
@@ -76,7 +82,9 @@ enum ChartSerie
                     FROM telemetry_glpi_plugin as tgp
                     INNER JOIN glpi_plugin as gp
                     ON tgp.glpi_plugin_id = gp.id
-                    WHERE tgp.created_at BETWEEN :startDate AND :endDate
+                    INNER JOIN telemetry
+                    ON tgp.telemetry_entry_id = telemetry.id
+                    WHERE $baseFilter
                     GROUP BY glpi_plugin_id
                     ORDER BY total DESC
                     LIMIT 10
@@ -87,7 +95,7 @@ enum ChartSerie
                     SELECT glpi_default_language as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
+                    WHERE $baseFilter
                     GROUP BY name
                     ORDER BY total DESC
                     LIMIT 10
@@ -108,7 +116,7 @@ enum ChartSerie
                     END as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
-                    WHERE created_at BETWEEN :startDate AND :endDate
+                    WHERE $baseFilter
                     GROUP BY name
                 SQL;
                 return $sql;
