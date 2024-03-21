@@ -1,6 +1,10 @@
 @import "@tabler/core/src/scss/tabler.scss";
 @import "@tabler/icons-webfont/tabler-icons.scss";
 
+.page-body {
+    padding-bottom: 5rem;
+}
+
 .hover-link:hover {
     scale: 1.1;
     text-shadow: 1px 2px 2px rgba(189, 185, 252, 0.795);
@@ -11,7 +15,6 @@
 .default-size {
     min-width: auto;
     min-height: 400px;
-
 }
 
 .icon-size {
@@ -26,10 +29,4 @@ td {
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;
-}
-
-.fixed {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
 }

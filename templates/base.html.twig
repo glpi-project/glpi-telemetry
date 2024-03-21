@@ -15,19 +15,21 @@
     <body>
         {% include 'header.html.twig' %}
 
-        {% set flashes = app.flashes() %}
-        {% if flashes is not empty %}
-            <div class="container container-tight my-4">
-                {% for type, messages in flashes %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ type }}">{{ message }}</div>
+        <div class="page-body">
+            {% set flashes = app.flashes() %}
+            {% if flashes is not empty %}
+                <div class="container container-tight mb-4">
+                    {% for type, messages in flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ type }}">{{ message }}</div>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </div>
-        {% endif %}
+                </div>
+            {% endif %}
 
-        {% block body_content %}
-        {% endblock %}
+            {% block body_content %}
+            {% endblock %}
+        </div>
 
         {% include 'footer.html.twig' %}
     </body>
