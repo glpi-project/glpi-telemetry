@@ -38,11 +38,14 @@ enum ChartSerie
                 SQL;
                 return $sql;
             case ChartSerie::InstallMode:
+                // `install_mode` has been introduced in GLPI 9.2.1
+                // and therefore is `null` for entries related to GLPI 9.2.0
                 $sql = <<<SQL
                     SELECT install_mode as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
                     WHERE $baseFilter
+                    AND install_mode IS NOT NULL
                     GROUP BY name
                 SQL;
                 return $sql;
