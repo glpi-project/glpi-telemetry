@@ -43,7 +43,7 @@ CookieConsent.run({
             en: {
                 consentModal: {
                     title: 'Welcome to Telemetry website',
-                    description: "We use cookies to collect informatin about how you use our website. By clicking 'Accept all cookies', you agree to the use of cookies for website functionality and analytics.",
+                    description: "We use cookies to collect information about how you use our website. By clicking 'Accept all cookies', you agree to the use of cookies for website functionality and analytics.",
                     acceptAllBtn: 'Accept all',
                     acceptNecessaryBtn: 'Reject all',
                     showPreferencesBtn: 'Manage Individual preferences'
