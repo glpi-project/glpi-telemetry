@@ -1,13 +1,40 @@
 import * as CookieConsent from "vanilla-cookieconsent";
 
+const id = '';
+
 CookieConsent.run({
 
     categories: {
-        necessary: {
-            enabled: true,  // this category is enabled by default
-            readOnly: true  // this category cannot be disabled
-        },
-        analytics: {}
+        analytics: {
+            services: {
+                ga: {
+                    label: 'Google Analytics',
+                    onAccept: () => {
+                        var gaScript = document.createElement('script');
+                        gaScript.async = true;
+                        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+                        document.head.appendChild(gaScript);
+
+                        var gaConfigScript = document.createElement('script');
+                        gaConfigScript.textContent = `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', '${id}');
+                        `;
+                        document.head.appendChild(gaConfigScript);
+                    },
+                    onReject: () => {
+                        window['ga-disable-${id}'] = true;
+                    },
+                    cookies: [
+                        {
+                            name: /^(_ga|_gid)/
+                        }
+                    ]
+                },
+            }
+        }
     },
 
     language: {
