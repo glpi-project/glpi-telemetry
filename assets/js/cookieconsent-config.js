@@ -1,6 +1,6 @@
 import * as CookieConsent from "vanilla-cookieconsent";
 
-const id = '';
+const id = window.google_analytics_id;
 
 CookieConsent.run({
 
@@ -25,7 +25,7 @@ CookieConsent.run({
                         document.head.appendChild(gaConfigScript);
                     },
                     onReject: () => {
-                        window['ga-disable-${id}'] = true;
+                        window[`ga-disable-${id}`] = true;
                     },
                     cookies: [
                         {
@@ -42,8 +42,8 @@ CookieConsent.run({
         translations: {
             en: {
                 consentModal: {
-                    title: 'We use cookies',
-                    description: 'Cookie modal description',
+                    title: 'Welcome to Telemetry website',
+                    description: "We use cookies to collect informatin about how you use our website. By clicking 'Accept all cookies', you agree to the use of cookies for website functionality and analytics.",
                     acceptAllBtn: 'Accept all',
                     acceptNecessaryBtn: 'Reject all',
                     showPreferencesBtn: 'Manage Individual preferences'
@@ -60,14 +60,7 @@ CookieConsent.run({
                             description: 'I want one!'
                         },
                         {
-                            title: 'Strictly Necessary cookies',
-                            description: 'These cookies are essential for the proper functioning of the website and cannot be disabled.',
-
-                            //this field will generate a toggle linked to the 'necessary' category
-                            linkedCategory: 'necessary'
-                        },
-                        {
-                            title: 'Performance and Analytics',
+                            title: 'Analytics',
                             description: 'These cookies collect information about how you use our website. All of the data is anonymized and cannot be used to identify you.',
                             linkedCategory: 'analytics'
                         },

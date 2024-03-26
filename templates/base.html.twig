@@ -11,6 +11,7 @@
         {% block javascripts %}
             <script src="{{ asset('build/js/app.js') }}" defer></script>
             <script type="module" src="{{ asset('build/js/cookieconsent-config.js') }}"></script>
+            <script>window.google_analytics_id = '{{ google_analytics_id }}';</script>
         {% endblock %}
     </head>
     <body>
