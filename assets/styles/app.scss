@@ -1,3 +1,5 @@
+$enable-negative-margins: true;
+
 @import "@tabler/core/src/scss/tabler.scss";
 @import "@tabler/icons-webfont/tabler-icons.scss";
 @import "vanilla-cookieconsent/dist/cookieconsent.css";
@@ -9,7 +11,8 @@
     transition: 0.2s;
 }
 
-.default-size {
+.dashboard-card-size,
+.reference-map-size {
     min-width: auto;
     min-height: 400px;
 }
