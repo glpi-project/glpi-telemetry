@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Telemetry;
 
-enum ChartSerie
+enum ChartSerie: string
 {
-    case GlpiVersion;
-    case InstallMode;
-    case WebEngine;
-    case OsFamily;
-    case PhpInfos;
-    case TopPlugin;
-    case DefaultLanguage;
-    case DbEngine;
+    case GlpiVersion     = 'glpi_version';
+    case InstallMode     = 'install_mode';
+    case WebEngine       = 'web_engine';
+    case OsFamily        = 'os_family';
+    case PhpInfos        = 'php_version';
+    case TopPlugin       = 'top_plugin';
+    case DefaultLanguage = 'glpi_default_language';
+    case DbEngine        = 'db_engine';
 
     public function getSqlQuery(): string
     {
@@ -123,6 +123,38 @@ enum ChartSerie
                     GROUP BY name
                 SQL;
                 return $sql;
+
+            default:
+                throw new \RuntimeException();
+        }
+    }
+
+    public function getTitle(): string
+    {
+        switch($this) {
+            case ChartSerie::GlpiVersion:
+                return 'Number of unique GLPI instances reported by version';
+
+            case ChartSerie::InstallMode:
+                return 'Installation mode';
+
+            case ChartSerie::WebEngine:
+                return 'Web Engines';
+
+            case ChartSerie::OsFamily:
+                return 'Operating System';
+
+            case ChartSerie::PhpInfos:
+                return 'PHP Versions';
+
+            case ChartSerie::TopPlugin:
+                return 'Top Plugins';
+
+            case ChartSerie::DefaultLanguage:
+                return 'GLPI default languages';
+
+            case ChartSerie::DbEngine:
+                return 'DB engines';
 
             default:
                 throw new \RuntimeException();
