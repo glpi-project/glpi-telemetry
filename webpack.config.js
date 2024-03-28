@@ -18,7 +18,6 @@ Encore
     .addEntry('js/app', './assets/js/app.js')
     .addEntry('js/dashboard', './assets/js/dashboard.js')
     .addEntry('js/reference', './assets/js/reference.js')
-    .addEntry('js/cookieconsent-config', './assets/js/cookieconsent-config.js')
 
     // Style entries
     .addEntry('styles/app', './assets/styles/app.scss')
