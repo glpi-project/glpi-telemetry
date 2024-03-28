@@ -128,6 +128,10 @@ set('remote_user', 'deployer-telemetry'); // user used to connect through the ba
 set('become', 'deployer'); // user used on the server itself
 set('ssh_multiplexing', false);
 
+// Configure application storage dir
+add('shared_dirs', ['var/storage']);
+add('writable_dirs', ['var/storage']);
+
 // Hosts
 host('telemetry-dev.glpi-project.org')
     ->set('hostname', 'bastion.teclib.com')
