@@ -10,6 +10,7 @@
         {% endblock %}
         {% block javascripts %}
             <script src="{{ asset('build/js/app.js') }}" defer></script>
+            <script>window.google_analytics_id = '{{ google_analytics_id }}';</script>
         {% endblock %}
     </head>
     <body>
