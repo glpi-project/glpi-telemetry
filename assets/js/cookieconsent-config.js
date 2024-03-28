@@ -43,32 +43,10 @@ CookieConsent.run({
             en: {
                 consentModal: {
                     title: 'Welcome to the GLPI telemetry website',
-                    description: "We use cookies to collect information about how you use our website. By clicking 'Accept all cookies', you agree to the use of cookies.",
-                    acceptAllBtn: 'Accept all',
-                    acceptNecessaryBtn: 'Reject all',
-                    showPreferencesBtn: 'Manage Individual preferences'
-                },
-                preferencesModal: {
-                    title: 'Manage cookie preferences',
-                    acceptAllBtn: 'Accept all',
-                    acceptNecessaryBtn: 'Reject all',
-                    savePreferencesBtn: 'Accept current selection',
-                    closeIconLabel: 'Close modal',
-                    sections: [
-                        {
-                            title: 'Somebody said ... cookies?',
-                            description: 'I want one!'
-                        },
-                        {
-                            title: 'Analytics',
-                            description: 'These cookies collect information about how you use our website. All of the data is anonymized and cannot be used to identify you.',
-                            linkedCategory: 'analytics'
-                        },
-                        {
-                            title: 'More information',
-                            description: 'For any queries in relation to my policy on cookies and your choices, please <a href="#contact-page">contact us</a>'
-                        }
-                    ]
+                    description: "We use cookies to collect information about how you use our website. By clicking 'Accept', you agree to the use of cookies.",
+                    acceptAllBtn: 'Accept',
+                    acceptNecessaryBtn: 'Reject',
+                    showPreferencesBtn: null
                 }
             }
         }
