@@ -43,7 +43,7 @@ class TelemetryController extends AbstractController
         return $this->render(
             'telemetry/index.html.twig',
             [
-            'controller_name' => 'controller-name',
+                'controller_name' => 'controller-name',
             ]
         );
     }
