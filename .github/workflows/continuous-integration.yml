@@ -17,7 +17,9 @@ on:
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
-  cancel-in-progress: true
+  # Do not cancel concurrent executions on the main branch to prevent the deployment operation
+  # to be stopped when its execution already started.
+  cancel-in-progress: "${{ github.ref != 'refs/heads/main' }}"
 
 jobs:
   ci:
