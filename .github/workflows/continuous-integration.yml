@@ -73,26 +73,33 @@ jobs:
           npm install --no-save
           npm run dev
       - name: "PHP Coding Standards"
+        if: "${{ success() || failure() }}"
         run: |
           vendor/bin/php-cs-fixer check --format checkstyle | cs2pr
       - name: "PHP Stan"
+        if: "${{ success() || failure() }}"
         run: |
           vendor/bin/phpstan --ansi --no-interaction --no-progress
       - name: "ComposerRequireChecker"
+        if: "${{ success() || failure() }}"
         run: |
           vendor/bin/composer-require-checker --ansi --no-interaction
       - name: "ESLint"
+        if: "${{ success() || failure() }}"
         run: |
           node_modules/.bin/eslint --color .
       - name: "Twigcs"
+        if: "${{ success() || failure() }}"
         run: |
           vendor/bin/twigcs --ansi --no-interaction
       - name: "Initialize database"
+        if: "${{ success() || failure() }}"
         run: |
           bin/console doctrine:database:create --ansi --no-interaction
           bin/console doctrine:migrations:migrate --ansi --no-interaction
       - name: "Run tests"
         id: "phpunit"
+        if: "${{ success() || failure() }}"
         run: |
           symfony server:start --daemon --no-tls
           vendor/bin/phpunit --colors=always
