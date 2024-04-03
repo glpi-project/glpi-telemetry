@@ -13,27 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TelemetryControllerTest extends WebTestCase
 {
-    private TelemetryController $controller;
-    protected function setUp(): void
-    {
-        $chartDataStorage = $this->createMock(ChartDataStorage::class);
-        $chartDataStorage->method('getMonthlyValues')
-            ->willReturn(
-                [
-                    "2024-01" => [
-                        ['name' => '10.0.6', 'total' => 10],
-                        ['name' => '10.0.7', 'total' => 5],
-                        ['name' => '10.0.8', 'total' => 10],
-                    ],
-                    "2024-02" => [
-                        ['name' => '10.0.8', 'total' => 15],
-                        ['name' => '10.0.9', 'total' => 15],
-                    ],
-                ]
-            )
-        ;
-        $this->controller = new TelemetryController($chartDataStorage);
-    }
     public function testTelemetryRoute(): void
     {
         $client     = static::createClient();
@@ -63,71 +42,89 @@ class TelemetryControllerTest extends WebTestCase
 
     public function testGetPieChartData(): void
     {
-        $result = $this->controller->getPieChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
+        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage->method('getMonthlyValues')
+            ->willReturn(
+                [
+                    "2024-01" => [
+                        ['name' => 'TARBALL', 'total' => 10],
+                        ['name' => 'DOCKER',  'total' => 5],
+                    ],
+                    "2024-02" => [
+                        ['name' => 'TARBALL', 'total' => 15],
+                        ['name' => 'RPM',     'total' => 1],
+                        ['name' => 'GIT',     'total' => 2],
+                    ],
+                ]
+            )
+        ;
+        $controller = new TelemetryController($chartDataStorage);
+        $result = $controller->getPieChartData(ChartSerie::InstallMode, ChartPeriodFilter::Always);
 
-        self::assertIsArray($result);
-        self::assertArrayHasKey('title', $result);
-        self::assertArrayHasKey('series', $result);
+        self::assertEquals(
+            $result,
+            [
+                'title' => [
+                    'text' => 'Installation mode',
+                ],
+                'series' => [
+                    [
+                        'data' => [
+                            ['name' => 'TARBALL', 'value' => 25],
+                            ['name' => 'DOCKER',  'value' => 5],
+                            ['name' => 'GIT',     'value' => 2],
+                            ['name' => 'RPM',     'value' => 1],
+                        ],
+                    ],
+                ],
+            ]
+        );
     }
 
     public function testGetBarChartData(): void
     {
-        $result = $this->controller->getBarChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
+        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage->method('getMonthlyValues')
+            ->willReturn(
+                [
+                    "2024-01" => [
+                        ['name' => '10.0.6', 'total' => 10],
+                        ['name' => '10.0.7', 'total' => 5],
+                        ['name' => '10.0.8', 'total' => 10],
+                    ],
+                    "2024-02" => [
+                        ['name' => '10.0.8', 'total' => 15],
+                        ['name' => '10.0.9', 'total' => 15],
+                    ],
+                ]
+            )
+        ;
+
+        $controller = new TelemetryController($chartDataStorage);
+        $result = $controller->getBarChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
 
         $expected = [
             'title' => [
                 'text' => 'Number of unique GLPI instances reported by version',
             ],
             'xAxis' => [
-                'data' => ['2024-01', '2024-02']
+                'data' => ['2024-01', '2024-02'],
             ],
             'series' => [
                 [
                     'name' => '10.0.6',
-                    'type' => 'bar',
-                    'stack' => 'total',
-                    'label' => [
-                        'show' => false
-                    ],
-                    'emphasis' => [
-                        'focus' => 'series'
-                    ],
                     'data' => [40, 0]
                 ],
                 [
                     'name' => '10.0.7',
-                    'type' => 'bar',
-                    'stack' => 'total',
-                    'label' => [
-                        'show' => false
-                    ],
-                    'emphasis' => [
-                        'focus' => 'series'
-                    ],
                     'data' => [20, 0]
                 ],
                 [
                     'name' => '10.0.8',
-                    'type' => 'bar',
-                    'stack' => 'total',
-                    'label' => [
-                        'show' => false
-                    ],
-                    'emphasis' => [
-                        'focus' => 'series'
-                    ],
                     'data' => [40, 50]
                 ],
                 [
                     'name' => '10.0.9',
-                    'type' => 'bar',
-                    'stack' => 'total',
-                    'label' => [
-                        'show' => false
-                    ],
-                    'emphasis' => [
-                        'focus' => 'series'
-                    ],
                     'data' => [0, 50]
                 ],
             ]
@@ -135,5 +132,71 @@ class TelemetryControllerTest extends WebTestCase
 
         self::assertIsArray($result);
         self::assertEquals($expected, $result);
+    }
+
+    public function testGetNightingaleRoseChartData(): void
+    {
+        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage->method('getMonthlyValues')
+            ->willReturn(
+                [
+                    "2024-01" => [
+                        ['name' => 'formcreator',   'total' => 132],
+                        ['name' => 'datainjection', 'total' => 21],
+                        ['name' => 'costs',         'total' => 97],
+                        ['name' => 'moreticket',    'total' => 13],
+                        ['name' => 'genericobject', 'total' => 89],
+                        ['name' => 'fields',        'total' => 52],
+                        ['name' => 'glpiinventory', 'total' => 31],
+                        ['name' => 'scim',          'total' => 42],
+                        ['name' => 'sccm',          'total' => 19],
+                        ['name' => 'oauthimap',     'total' => 87],
+                        ['name' => 'reports',       'total' => 56],
+                        ['name' => 'pdf',           'total' => 72],
+                    ],
+                    "2024-02" => [
+                        ['name' => 'formcreator',   'total' => 124],
+                        ['name' => 'datainjection', 'total' => 42],
+                        ['name' => 'costs',         'total' => 78],
+                        ['name' => 'genericobject', 'total' => 16],
+                        ['name' => 'fields',        'total' => 15],
+                        ['name' => 'scim',          'total' => 75],
+                        ['name' => 'sccm',          'total' => 12],
+                        ['name' => 'oauthimap',     'total' => 64],
+                        ['name' => 'reports',       'total' => 24],
+                        ['name' => 'pdf',           'total' => 98],
+                        ['name' => 'cmdb',          'total' => 154],
+                        ['name' => 'jamf',          'total' => 64],
+                    ],
+                ]
+            )
+        ;
+        $controller = new TelemetryController($chartDataStorage);
+        $result = $controller->getNightingaleRoseChartData(ChartSerie::TopPlugin, ChartPeriodFilter::Always);
+
+        self::assertEquals(
+            $result,
+            [
+                'title' => [
+                    'text' => 'Top Plugins',
+                ],
+                'series' => [
+                    [
+                        'data' => [
+                            ['name' => 'formcreator',   'value' => 256],
+                            ['name' => 'costs',         'value' => 175],
+                            ['name' => 'pdf',           'value' => 170],
+                            ['name' => 'cmdb',          'value' => 154],
+                            ['name' => 'oauthimap',     'value' => 151],
+                            ['name' => 'scim',          'value' => 117],
+                            ['name' => 'genericobject', 'value' => 105],
+                            ['name' => 'reports',       'value' => 80],
+                            ['name' => 'fields',        'value' => 67],
+                            ['name' => 'jamf',          'value' => 64],
+                        ],
+                    ],
+                ],
+            ]
+        );
     }
 }

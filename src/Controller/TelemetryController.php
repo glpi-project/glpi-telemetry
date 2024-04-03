@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Telemetry;
+use App\Service\ChartDataStorage;
+use App\Telemetry\ChartPeriodFilter;
+use App\Telemetry\ChartSerie;
 use App\Telemetry\ChartType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,13 +15,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\ChartDataStorage;
-use App\Telemetry\ChartPeriodFilter;
-use App\Telemetry\ChartSerie;
 
 class TelemetryController extends AbstractController
 {
     public ChartDataStorage $chartDataStorage;
+
     public function __construct(ChartDataStorage $chartDataStorage)
     {
         $this->chartDataStorage = $chartDataStorage;
@@ -46,12 +47,7 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(): Response
     {
-        return $this->render(
-            'telemetry/index.html.twig',
-            [
-                'controller_name' => 'controller-name',
-            ]
-        );
+        return $this->render('telemetry/index.html.twig');
     }
 
     #[Route('/telemetry/chart/{serie}/{type}/{periodFilter}')]
@@ -80,16 +76,14 @@ class TelemetryController extends AbstractController
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
-     *   title: array{
-     *     text: string
-     *   },
-     *   series: array{
-     *     array{
-     *      data: array<int, array{name: string, value: int}>
-     *     }
-     *   }
-     * }
-    */
+     *     title: array{
+     *         text: string
+     *     },
+     *     series: array<int, array{
+     *         data: array<int, array{value: int, name: string}>
+     *     }>
+     *  }
+     */
     public function getPieChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
         $monthlyValues = $this->chartDataStorage->getMonthlyValues(
@@ -114,6 +108,13 @@ class TelemetryController extends AbstractController
             }
         }
 
+        usort(
+            $chartData,
+            function (array $a, array $b): int {
+                return $b['value'] - $a['value'];
+            }
+        );
+
         return [
             'title'  => [
                 'text' => $serie->getTitle()
@@ -134,21 +135,13 @@ class TelemetryController extends AbstractController
      *
      * @return array{
      *     title: array{
-     *          text: string
+     *         text: string
      *     },
      *     xAxis: array{
      *         data: array<int, string>
      *     },
      *     series: array<int, array{
      *         name: string,
-     *         type: string,
-     *         stack: string,
-     *         label: array{
-     *             show: bool
-     *         },
-     *         emphasis: array{
-     *             focus: string
-     *         },
      *         data: array<int, float>
      *     }>
      * }
@@ -207,8 +200,7 @@ class TelemetryController extends AbstractController
         }
 
         return [
-            'title' =>
-            [
+            'title' => [
                 'text' => $serie->getTitle()
             ],
             'xAxis' => [
@@ -221,22 +213,18 @@ class TelemetryController extends AbstractController
     /**
      * Get the Echart nightingale rose chart data for the given serie.
      * Sort the result by value in descending order.
-     * Filter to retreive only the top 10 plugins.
+     * Filter to retreive only the most important values.
      *
      * @param ChartSerie $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
-     *  title: array{
-     *      text: string
-     *  },
-     *  series: array{
-     *      array{
-     *          data: array<int, array{
-     *              value: int,
-     *              name: string
-     *          }>
-     *      }}
+     *     title: array{
+     *         text: string
+     *     },
+     *     series: array<int, array{
+     *         data: array<int, array{value: int, name: string}>
+     *     }>
      *  }
      */
     public function getNightingaleRoseChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array

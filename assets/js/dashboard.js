@@ -4,7 +4,10 @@
  */
 const fetchAndDisplayChartsData = function () {
     document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
-        const chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
+        let chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
+        if (typeof(chartInstance) === 'undefined') {
+            chartInstance = global.echarts.init(chart.querySelector('.card-body'));
+        }
 
         const serie = chart.getAttribute('data-chart-serie');
         const type = chart.getAttribute('data-chart-type');
@@ -196,7 +199,7 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
     const card = document.createElement('div');
     card.setAttribute('class', 'card');
     card.innerHTML = `
-        <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4">
+        <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4" style="z-index: 1">
             <i class="ti ti-arrows-maximize"></i>
         </button>
         <div class="card-body dashboard-card-size">
@@ -204,7 +207,7 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
     `;
     chart.appendChild(card);
 
-    chart.querySelector('button').addEventListener('click', (event) => {
+    card.querySelector('button').addEventListener('click', (event) => {
         const chartContainer = event.target.closest('.card').querySelector('.card-body');
         const chart = global.echarts.getInstanceByDom(chartContainer);
         displayChartInModal(chart);
