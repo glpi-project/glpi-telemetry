@@ -1,4 +1,6 @@
 
+import merge from 'deepmerge';
+
 /**
  * Fetch and display chart data.
  */
@@ -21,25 +23,24 @@ const fetchAndDisplayChartsData = function () {
         }).then(response => {
             return response.json();
         }).then(options => {
-            // Apply base options
-            let baseOptions = {
-                title: {
-                    text: '',
-                    left: 'center',
-                }
-            };
+            // Define generic base options
+            options = merge(
+                {
+                    title: {
+                        text: '',
+                        left: 'center',
+                    }
+                },
+                options
+            );
             switch (type) {
                 case 'bar':
-                    baseOptions = Object.assign(
-                        baseOptions,
+                    options = merge(
                         {
                             tooltip: {
                                 trigger: 'axis',
                                 axisPointer: {
                                     type: 'shadow',
-                                },
-                                valueFormatter: function (value) {
-                                    return value.toFixed(2) + ' %';
                                 },
                             },
                             legend: {
@@ -73,34 +74,44 @@ const fetchAndDisplayChartsData = function () {
                                 data: []
                             },
                             series: []
-                        }
+                        },
+                        options
                     );
                     break;
                 case 'pie':
-                    chartInstance.setOption({
-                        tooltip: {
-                            formatter: '{b}: {d}% ({c})'
+                    options = merge(
+                        {
+                            tooltip: {
+                                formatter: '{b}: {d}% ({c})'
+                            },
+                            series: []
                         },
-                        series: []
-                    });
+                        options
+                    );
                     break;
                 case 'nightingale-rose':
-                    chartInstance.setOption({
-                        tooltip: {
-                            formatter: '{b}: {c}'
+                    options = merge(
+                        {
+                            tooltip: {
+                                formatter: '{b}: {c}'
+                            },
+                            series: []
                         },
-                        series: [{
-                            name: 'Nightingale Chart',
-                        }]
-                    });
+                        options
+                    );
                     break;
             }
-            chartInstance.setOption(baseOptions);
 
-            // Apply series options
+            // Compute options related to series data
             switch (type) {
                 case 'bar':
-                    for (var i = 0; i < options.series.length; i++) {
+                    // Extract monthly totals
+                    // eslint-disable-next-line no-case-declarations
+                    let totalByMonth = [];
+                    for (const key of options.xAxis.data.keys()) {
+                        totalByMonth[key] = 0;
+                    }
+                    for (let i = 0; i < options.series.length; i++) {
                         options.series[i] = Object.assign(
                             {
                                 type: 'bar',
@@ -115,7 +126,66 @@ const fetchAndDisplayChartsData = function () {
                             },
                             options.series[i]
                         );
+                        for (let k = 0; k < options.series[i].data.length; k++) {
+                            totalByMonth[k] += options.series[i].data[k];
+                        }
                     }
+
+                    // Replace series absolute data by percentages
+                    // Store absolute values to be able to display them in the tooltip
+                    // eslint-disable-next-line no-case-declarations
+                    let absoluteValues = [];
+                    for (var i = 0; i < options.series.length; i++) {
+                        absoluteValues[i] = [];
+                        for (let k = 0; k < options.series[i].data.length; k++) {
+                            const percentage = totalByMonth[k] > 0
+                                ? options.series[i].data[k] / totalByMonth[k] * 100
+                                : 0;
+                            absoluteValues[i][k] = options.series[i].data[k];
+                            options.series[i].data[k] = percentage;
+                        }
+                    }
+
+                    // Defines the tooltip formatter that uses absolute values
+                    options = merge(
+                        {
+                            tooltip: {
+                                formatter: (params) => {
+                                    let name = null;
+                                    let rows = [];
+                                    for (const item of params) {
+                                        if (name === null) {
+                                            name = item.name;
+                                        }
+                                        const marker        = item.marker;
+                                        const label         = item.seriesName;
+                                        const percentage    = item.value;
+                                        const absoluteValue = absoluteValues[item.componentIndex][item.dataIndex];
+
+                                        if (absoluteValue === 0) {
+                                            // Do not display 0 values
+                                            continue;
+                                        }
+
+                                        rows.push(`
+                                            <tr>
+                                                <td>${marker} ${label}</td>
+                                                <td class="text-end">${percentage.toFixed(2)}%</td>
+                                                <td class="text-end">(${absoluteValue.toLocaleString('en')})</td>
+                                            </tr>
+                                        `);
+                                    }
+                                    return `
+                                        <table class="table table-sm table-borderless">
+                                            <tr><th colspan="3">${name}</th></tr>
+                                            ${rows.join('')}
+                                        </table>
+                                    `;
+                                }
+                            }
+                        },
+                        options
+                    );
                     break;
                 case 'pie':
                     options.series[0] = Object.assign(
@@ -148,7 +218,8 @@ const fetchAndDisplayChartsData = function () {
                     );
                     break;
             }
-            chartInstance.setOption(options);
+
+            chartInstance.setOption(options, true);
         });
     });
 };
@@ -199,12 +270,12 @@ const displayChartInModal = function (chart) {
 // Initialize charts DOM
 document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
     const card = document.createElement('div');
-    card.setAttribute('class', 'card');
+    card.setAttribute('class', 'card dashboard-card');
     card.innerHTML = `
         <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block" style="z-index: 1">
             <i class="ti ti-arrows-maximize"></i>
         </button>
-        <div class="card-body dashboard-card-size">
+        <div class="card-body">
         </div>
     `;
     chart.appendChild(card);

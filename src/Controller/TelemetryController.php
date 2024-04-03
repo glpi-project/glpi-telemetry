@@ -142,7 +142,7 @@ class TelemetryController extends AbstractController
      *     },
      *     series: array<int, array{
      *         name: string,
-     *         data: array<int, float>
+     *         data: array<int, int>
      *     }>
      * }
      */
@@ -155,22 +155,16 @@ class TelemetryController extends AbstractController
         );
 
         $months = array_keys($monthlyValues);
-        sort($months, SORT_NATURAL);
 
-        // Extract totals by month and series names
-        $names         = [];
-        $totalsByMonth = array_fill_keys($months, 0);
-
-        foreach ($monthlyValues as $month => $entries) {
+        // Extract series names
+        $names = [];
+        foreach ($monthlyValues as $entries) {
             foreach ($entries as $entry) {
-                $totalsByMonth[$month] += $entry['total'];
-
                 if (!in_array($entry['name'], $names, true)) {
                     $names[] = $entry['name'];
                 }
             }
         }
-
         sort($names, SORT_NATURAL);
 
         // Format series data
@@ -178,7 +172,7 @@ class TelemetryController extends AbstractController
 
         foreach ($names as $serieName) {
             $serieData = [];
-            foreach ($monthlyValues as $month => $entries) {
+            foreach ($monthlyValues as $entries) {
                 $total = 0;
 
                 foreach ($entries as $entry) {
@@ -188,9 +182,7 @@ class TelemetryController extends AbstractController
                     }
                 }
 
-                $serieData[] = $totalsByMonth[$month] > 0
-                    ? round(($total / $totalsByMonth[$month]) * 100, 2)
-                    : 0;
+                $serieData[] = $total;
             }
 
             $series[] = [

@@ -113,19 +113,19 @@ class TelemetryControllerTest extends WebTestCase
             'series' => [
                 [
                     'name' => '10.0.6',
-                    'data' => [40, 0]
+                    'data' => [10, 0]
                 ],
                 [
                     'name' => '10.0.7',
-                    'data' => [20, 0]
+                    'data' => [5, 0]
                 ],
                 [
                     'name' => '10.0.8',
-                    'data' => [40, 50]
+                    'data' => [10, 15]
                 ],
                 [
                     'name' => '10.0.9',
-                    'data' => [0, 50]
+                    'data' => [0, 15]
                 ],
             ]
         ];

@@ -11,7 +11,24 @@ $enable-negative-margins: true;
     transition: 0.2s;
 }
 
-.dashboard-card-size,
+.dashboard-card {
+    .card-body {
+        min-width: auto;
+        min-height: 400px;
+
+        table {
+            margin: 0;
+
+            tr {
+                th,
+                td {
+                    padding: 0 .5rem;
+                }
+            }
+        }
+    }
+}
+
 .reference-map-size {
     min-width: auto;
     min-height: 400px;
