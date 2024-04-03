@@ -92,6 +92,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }).catch(error => {
         console.error('an error occured: ', error);
     });
+
+    // Fix size on window resize
+    window.addEventListener('resize', () => {
+        myChart.resize();
+    });
 });
 
 
