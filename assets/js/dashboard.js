@@ -43,16 +43,15 @@ const fetchAndDisplayChartsData = function () {
                                 },
                             },
                             legend: {
-                                orient: 'horizontal',
-                                top: 25,
-                                textStyle: {
-                                    fontSize: 12
-                                }
+                                orient: 'vertical',
+                                top: 30,
+                                right: 0,
                             },
                             grid: {
-                                left: '3%',
-                                right: '3%',
-                                bottom: '2%',
+                                top: 40,
+                                left: 0,
+                                right: 75, // only versions are displayed, no need too much space
+                                bottom: 0,
                                 containLabel: true
                             },
                             yAxis: {
@@ -199,7 +198,7 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
     const card = document.createElement('div');
     card.setAttribute('class', 'card');
     card.innerHTML = `
-        <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4" style="z-index: 1">
+        <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block" style="z-index: 1">
             <i class="ti ti-arrows-maximize"></i>
         </button>
         <div class="card-body dashboard-card-size">
@@ -217,3 +216,13 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
 // Fetch charts data now and whenever period filter change
 fetchAndDisplayChartsData();
 document.getElementById('dataPeriod').onchange = fetchAndDisplayChartsData;
+
+// Fix charts size on widow resize
+window.addEventListener('resize', () => {
+    document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
+        let chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
+        if (typeof(chartInstance) !== 'undefined') {
+            chartInstance.resize();
+        }
+    });
+});

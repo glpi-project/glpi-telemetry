@@ -133,22 +133,22 @@ enum ChartSerie: string
     {
         switch($this) {
             case ChartSerie::GlpiVersion:
-                return 'Number of unique GLPI instances reported by version';
+                return 'GLPI versions';
 
             case ChartSerie::InstallMode:
-                return 'Installation mode';
+                return 'Installation modes';
 
             case ChartSerie::WebEngine:
-                return 'Web Engines';
+                return 'Web engines';
 
             case ChartSerie::OsFamily:
-                return 'Operating System';
+                return 'Operating systems';
 
             case ChartSerie::PhpInfos:
-                return 'PHP Versions';
+                return 'PHP versions';
 
             case ChartSerie::TopPlugin:
-                return 'Top Plugins';
+                return 'Top plugins';
 
             case ChartSerie::DefaultLanguage:
                 return 'GLPI default languages';

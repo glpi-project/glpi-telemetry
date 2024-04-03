@@ -65,7 +65,7 @@ class TelemetryControllerTest extends WebTestCase
             $result,
             [
                 'title' => [
-                    'text' => 'Installation mode',
+                    'text' => 'Installation modes',
                 ],
                 'series' => [
                     [
@@ -105,7 +105,7 @@ class TelemetryControllerTest extends WebTestCase
 
         $expected = [
             'title' => [
-                'text' => 'Number of unique GLPI instances reported by version',
+                'text' => 'GLPI versions',
             ],
             'xAxis' => [
                 'data' => ['2024-01', '2024-02'],
@@ -178,7 +178,7 @@ class TelemetryControllerTest extends WebTestCase
             $result,
             [
                 'title' => [
-                    'text' => 'Top Plugins',
+                    'text' => 'Top plugins',
                 ],
                 'series' => [
                     [
