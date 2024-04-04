@@ -80,13 +80,16 @@ const fetchAndDisplayChartsData = function () {
                 case 'pie':
                     chartInstance.setOption({
                         tooltip: {
-                            formatter: '{b}: {d}%'
+                            formatter: '{b}: {d}% ({c})'
                         },
                         series: []
                     });
                     break;
                 case 'nightingale-rose':
                     chartInstance.setOption({
+                        tooltip: {
+                            formatter: '{b}: {c}'
+                        },
                         series: [{
                             name: 'Nightingale Chart',
                         }]
