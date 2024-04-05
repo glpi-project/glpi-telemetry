@@ -108,6 +108,38 @@ class TelemetryController extends AbstractController
             }
         }
 
+        // Filter values that are less than 0.1% of the total to group them
+        $total = array_sum(array_column($chartData, 'value'));
+
+        $otherValues = [];
+
+        foreach ($chartData as $key => $value) {
+            if ($value['value'] < $total * 0.001) {
+                $otherValues[] = $value;
+                unset($chartData[$key]);
+            }
+        }
+
+        $otherSeriesData = [];
+        $tooltip = '';
+        foreach ($otherValues as $entry) {
+            $otherSeriesData[] = [
+                'name' => $entry['name'],
+                'value' => $entry['value'],
+            ];
+            $tooltip .= $entry['name'] . ': ' . number_format(($entry['value'] / $total) * 100, 2) . '% (' . $entry['value'] . ')<br />';
+        }
+
+        if (count($otherValues) > 0) {
+            $chartData[] = [
+                'name'    => 'Other',
+                'value'   => array_sum(array_column($otherSeriesData, 'value')),
+                'tooltip' => $tooltip,
+            ];
+        }
+
+        $chartData = array_merge($chartData, $otherSeriesData);
+
         usort(
             $chartData,
             function (array $a, array $b): int {
