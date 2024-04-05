@@ -59,12 +59,15 @@ window.addEventListener('DOMContentLoaded', () => {
                 {
                     name: 'References by country',
                     type: 'map',
-                    roam: true,
+                    roam: false,
                     map: 'countriesMap',
                     emphasis: {
                         label: {
                             show: false
                         }
+                    },
+                    select: {
+                        disabled: true,
                     },
                     data: []
                 }
