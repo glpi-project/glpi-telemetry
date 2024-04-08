@@ -55,15 +55,15 @@ class TelemetryController extends AbstractController
     {
         $data = [];
         switch ($type) {
-        case ChartType::Bar:
-            $data = $this->getBarChartData($serie, $periodFilter);
-            break;
-        case ChartType::Pie:
-            $data = $this->getPieChartData($serie, $periodFilter);
-            break;
-        case ChartType::NightingaleRose:
-            $data = $this->getNightingaleRoseChartData($serie, $periodFilter);
-            break;
+            case ChartType::Bar:
+                $data = $this->getBarChartData($serie, $periodFilter);
+                break;
+            case ChartType::Pie:
+                $data = $this->getPieChartData($serie, $periodFilter);
+                break;
+            case ChartType::NightingaleRose:
+                $data = $this->getNightingaleRoseChartData($serie, $periodFilter);
+                break;
         }
 
         return $this->json($data);
@@ -121,9 +121,19 @@ class TelemetryController extends AbstractController
         $otherSum = 0;
         $tooltip = "<table class='table table-sm table-borderless'><tr><th colspan='3'>Other</th></tr>";
         foreach ($chartData as $key => $entry) {
+
+            $name       = htmlspecialchars($entry['name']);
+            $percentage = number_format(($entry['value'] / $total) * 100, 2);
+            $value      = number_format($entry['value']);
+
             if ($entry['value'] < $total * 0.001) {
-                $percentage = number_format(($entry['value'] / $total) * 100, 2);
-                $tooltip .= "<tr><td>{$entry['name']}</td><td class='text-end'>{$percentage}%</td><td class='text-end overflow-hidden'>({$entry['value']})</td></tr>";
+                $tooltip .= <<<HTML
+                    <tr>
+                        <td class="text-nowrap">{$name}</td>
+                        <td class="text-end text-nowrap">{$percentage}%</td>
+                        <td class="text-end text-nowrap">({$value})</td>
+                    </tr>
+                HTML;
                 $otherSum += $entry['value'];
                 unset($chartData[$key]);
             }
@@ -149,7 +159,7 @@ class TelemetryController extends AbstractController
                     'data' => $chartData
                 ]
             ]
-            ];
+        ];
     }
 
     /**

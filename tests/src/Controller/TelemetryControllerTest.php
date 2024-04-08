@@ -73,15 +73,19 @@ class TelemetryControllerTest extends WebTestCase
                             ['name' => 'TARBALL', 'value' => 25000],
                             ['name' => 'DOCKER',  'value' => 5000],
                             ['name' => 'RPM',     'value' => 1000],
-                            ['name' => 'Other', 'value' => 2, 'tooltip' => "<table class='table table-sm table-borderless'><tr><th colspan='3'>Other</th></tr>
-                            <tr>
-                                <td>GIT</td>
-                                <td class='text-end'>0.01%</td>
-                                <td class='text-end overflow-hidden'>(2)</td>
-                            </tr></table>"],
+                            ['name' => 'Other', 'value' => 2, 'tooltip' =>
+                            <<<HTML
+                            <table class='table table-sm table-borderless'><tr><th colspan='3'>Other</th></tr>
+                                <tr>
+                                    <td class="text-nowrap">GIT</td>
+                                    <td class="text-end text-nowrap">0.01%</td>
+                                    <td class="text-end text-nowrap">(2)</td>
+                                </tr></table>
+                            HTML,
+                            ],
                         ],
                     ],
-                ]
+                ],
             ]
         );
     }
