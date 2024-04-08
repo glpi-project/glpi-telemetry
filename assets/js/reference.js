@@ -90,20 +90,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 ]
             });
 
-            // Add button to open modal and display the map in full screen
+            // Open modal and display the map in full screen
             const cardBody = document.querySelector('.card-body');
+            const button = document.getElementById('modalBtn');
             if (cardBody) {
                 const options = myChart.getOption();
-                const button = document.createElement('button');
-                button.setAttribute('class', 'btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block');
-                button.innerHTML = '<i class="ti ti-arrows-maximize"></i>';
-                cardBody.appendChild(button);
 
                 button.addEventListener('click', () => {
 
                     const modal = document.createElement('div');
                     modal.setAttribute('class', 'modal modal-blur fade');
-                    modal.setAttribute('id', 'mapModal');
                     modal.setAttribute('role', 'dialog');
                     modal.innerHTML = `
                         <div class="modal-dialog modal-fullscreen">
@@ -130,11 +126,10 @@ window.addEventListener('DOMContentLoaded', () => {
                     });
 
                     document.body.appendChild(modal);
-                    const bootstrapModal = new window.bootstrap.Modal(document.getElementById('mapModal'));
+                    const bootstrapModal = new window.bootstrap.Modal(modal);
                     bootstrapModal.show();
                 });
             }
-
 
         }).catch(error => {
             console.error('an error occured: ', error);
