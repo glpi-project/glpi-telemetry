@@ -119,20 +119,24 @@ class TelemetryController extends AbstractController
         );
 
         $otherSum = 0;
-        $tooltip = '';
+        $tooltip = "<table class='table table-sm table-borderless'><tr><th colspan='3'>Other</th></tr>";
         foreach ($chartData as $key => $entry) {
             if ($entry['value'] < $total * 0.001) {
-                $tooltip .= $entry['name'] . ': ' . number_format(($entry['value'] / $total) * 100, 2) . '% (' . $entry['value'] . ')<br />';
+                $percentage = number_format(($entry['value'] / $total) * 100, 2);
+                $tooltip .= "<tr><td>{$entry['name']}</td><td class='text-end'>{$percentage}%</td><td class='text-end overflow-hidden'>({$entry['value']})</td></tr>";
                 $otherSum += $entry['value'];
                 unset($chartData[$key]);
             }
         }
+        $tooltip .= "</table>";
 
-        $chartData[] = [
-            'name'    => 'Other',
-            'value'   => $otherSum,
-            'tooltip' => $tooltip,
-        ];
+        if ($otherSum > 0) {
+            $chartData[] = [
+                'name'    => 'Other',
+                'value'   => $otherSum,
+                'tooltip' => $tooltip,
+            ];
+        }
 
         $chartData = array_values($chartData);
 

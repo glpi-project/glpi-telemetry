@@ -47,12 +47,12 @@ class TelemetryControllerTest extends WebTestCase
             ->willReturn(
                 [
                     "2024-01" => [
-                        ['name' => 'TARBALL', 'total' => 10],
-                        ['name' => 'DOCKER',  'total' => 5],
+                        ['name' => 'TARBALL', 'total' => 10000],
+                        ['name' => 'DOCKER',  'total' => 5000],
                     ],
                     "2024-02" => [
-                        ['name' => 'TARBALL', 'total' => 15],
-                        ['name' => 'RPM',     'total' => 1],
+                        ['name' => 'TARBALL', 'total' => 15000],
+                        ['name' => 'RPM',     'total' => 1000],
                         ['name' => 'GIT',     'total' => 2],
                     ],
                 ]
@@ -70,13 +70,18 @@ class TelemetryControllerTest extends WebTestCase
                 'series' => [
                     [
                         'data' => [
-                            ['name' => 'TARBALL', 'value' => 25],
-                            ['name' => 'DOCKER',  'value' => 5],
-                            ['name' => 'GIT',     'value' => 2],
-                            ['name' => 'RPM',     'value' => 1],
+                            ['name' => 'TARBALL', 'value' => 25000],
+                            ['name' => 'DOCKER',  'value' => 5000],
+                            ['name' => 'RPM',     'value' => 1000],
+                            ['name' => 'Other', 'value' => 2, 'tooltip' => "<table class='table table-sm table-borderless'><tr><th colspan='3'>Other</th></tr>
+                            <tr>
+                                <td>GIT</td>
+                                <td class='text-end'>0.01%</td>
+                                <td class='text-end overflow-hidden'>(2)</td>
+                            </tr></table>"],
                         ],
                     ],
-                ],
+                ]
             ]
         );
     }
