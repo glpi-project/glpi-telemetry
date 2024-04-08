@@ -89,6 +89,53 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 ]
             });
+
+            // Add button to open modal and display the map in full screen
+            const cardBody = document.querySelector('.card-body');
+            if (cardBody) {
+                const options = myChart.getOption();
+                const button = document.createElement('button');
+                button.setAttribute('class', 'btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block');
+                button.innerHTML = '<i class="ti ti-arrows-maximize"></i>';
+                cardBody.appendChild(button);
+
+                button.addEventListener('click', () => {
+
+                    const modal = document.createElement('div');
+                    modal.setAttribute('class', 'modal modal-blur fade');
+                    modal.setAttribute('id', 'mapModal');
+                    modal.setAttribute('role', 'dialog');
+                    modal.innerHTML = `
+                        <div class="modal-dialog modal-fullscreen">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="chart-container" style="width: 100%; height: 80vh; max-height: 700px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    modal.addEventListener('shown.bs.modal', () => {
+                        options.title = { show: false };
+
+                        const modalChartContainer = modal.querySelector('.chart-container');
+                        const modalChart = global.echarts.init(modalChartContainer);
+                        modalChart.setOption(options);
+                    });
+                    modal.addEventListener('hidden.bs.modal', () => {
+                        modal.remove();
+                    });
+
+                    document.body.appendChild(modal);
+                    const bootstrapModal = new window.bootstrap.Modal(document.getElementById('mapModal'));
+                    bootstrapModal.show();
+                });
+            }
+
+
         }).catch(error => {
             console.error('an error occured: ', error);
         });
@@ -102,11 +149,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
 window.addEventListener("DOMContentLoaded", () => {
     const data = global.referenceData;
 
-    const translator = new Intl.DisplayNames(['en'], {type: 'region'});
+    const translator = new Intl.DisplayNames(['en'], { type: 'region' });
     const namesMap = new Map();
     const grid = new gridjs.Grid({
         columns: [

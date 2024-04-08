@@ -7,7 +7,7 @@ import merge from 'deepmerge';
 const fetchAndDisplayChartsData = function () {
     document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
         let chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
-        if (typeof(chartInstance) === 'undefined') {
+        if (typeof (chartInstance) === 'undefined') {
             chartInstance = global.echarts.init(chart.querySelector('.card-body'));
         }
 
@@ -157,9 +157,9 @@ const fetchAndDisplayChartsData = function () {
                                         if (name === null) {
                                             name = item.name;
                                         }
-                                        const marker        = item.marker;
-                                        const label         = item.seriesName;
-                                        const percentage    = item.value;
+                                        const marker = item.marker;
+                                        const label = item.seriesName;
+                                        const percentage = item.value;
                                         const absoluteValue = absoluteValues[item.componentIndex][item.dataIndex];
 
                                         if (absoluteValue === 0) {
@@ -309,7 +309,7 @@ document.getElementById('dataPeriod').dispatchEvent(new Event('change'));
 window.addEventListener('resize', () => {
     document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
         let chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
-        if (typeof(chartInstance) !== 'undefined') {
+        if (typeof (chartInstance) !== 'undefined') {
             chartInstance.resize();
         }
     });
