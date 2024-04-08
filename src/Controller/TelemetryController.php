@@ -55,15 +55,15 @@ class TelemetryController extends AbstractController
     {
         $data = [];
         switch ($type) {
-            case ChartType::Bar:
-                $data = $this->getBarChartData($serie, $periodFilter);
-                break;
-            case ChartType::Pie:
-                $data = $this->getPieChartData($serie, $periodFilter);
-                break;
-            case ChartType::NightingaleRose:
-                $data = $this->getNightingaleRoseChartData($serie, $periodFilter);
-                break;
+        case ChartType::Bar:
+            $data = $this->getBarChartData($serie, $periodFilter);
+            break;
+        case ChartType::Pie:
+            $data = $this->getPieChartData($serie, $periodFilter);
+            break;
+        case ChartType::NightingaleRose:
+            $data = $this->getNightingaleRoseChartData($serie, $periodFilter);
+            break;
         }
 
         return $this->json($data);
@@ -72,7 +72,7 @@ class TelemetryController extends AbstractController
     /**
      * Get the Echart pie chart data for the given serie.
      *
-     * @param ChartSerie $serie
+     * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
@@ -118,34 +118,23 @@ class TelemetryController extends AbstractController
             }
         );
 
-        $otherValues = [];
-
-        foreach ($chartData as $key => $value) {
-            if ($value['value'] < $total * 0.001) {
-                $otherValues[] = $value;
+        $otherSum = 0;
+        $tooltip = '';
+        foreach ($chartData as $key => $entry) {
+            if ($entry['value'] < $total * 0.001) {
+                $tooltip .= $entry['name'] . ': ' . number_format(($entry['value'] / $total) * 100, 2) . '% (' . $entry['value'] . ')<br />';
+                $otherSum += $entry['value'];
                 unset($chartData[$key]);
             }
         }
+
+        $chartData[] = [
+            'name'    => 'Other',
+            'value'   => $otherSum,
+            'tooltip' => $tooltip,
+        ];
+
         $chartData = array_values($chartData);
-
-        $otherSeriesData = [];
-
-        $tooltip = '';
-        foreach ($otherValues as $entry) {
-            $otherSeriesData[] = [
-                'name' => $entry['name'],
-                'value' => $entry['value'],
-            ];
-            $tooltip .= $entry['name'] . ': ' . number_format(($entry['value'] / $total) * 100, 2) . '% (' . $entry['value'] . ')<br />';
-        }
-
-        if (count($otherValues) > 0) {
-            $chartData[] = [
-                'name'    => 'Other',
-                'value'   => array_sum(array_column($otherValues, 'value')),
-                'tooltip' => $tooltip,
-            ];
-        }
 
         return [
             'title'  => [
@@ -156,13 +145,13 @@ class TelemetryController extends AbstractController
                     'data' => $chartData
                 ]
             ]
-        ];
+            ];
     }
 
     /**
      * Get the Echart bar chart data for the given serie.
      *
-     * @param ChartSerie $serie
+     * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
@@ -239,7 +228,7 @@ class TelemetryController extends AbstractController
      * Sort the result by value in descending order.
      * Filter to retreive only the most important values.
      *
-     * @param ChartSerie $serie
+     * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
