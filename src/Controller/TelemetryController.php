@@ -94,7 +94,7 @@ class TelemetryController extends AbstractController
 
         $chartData = [];
         foreach ($monthlyValues as $entries) {
-            foreach($entries as $entry) {
+            foreach ($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'), true);
 
                 if ($index !== false) {
@@ -111,6 +111,13 @@ class TelemetryController extends AbstractController
         // Filter values that are less than 0.1% of the total to group them
         $total = array_sum(array_column($chartData, 'value'));
 
+        usort(
+            $chartData,
+            function (array $a, array $b): int {
+                return $b['value'] - $a['value'];
+            }
+        );
+
         $otherValues = [];
 
         foreach ($chartData as $key => $value) {
@@ -121,6 +128,7 @@ class TelemetryController extends AbstractController
         }
 
         $otherSeriesData = [];
+
         $tooltip = '';
         foreach ($otherValues as $entry) {
             $otherSeriesData[] = [
@@ -139,13 +147,6 @@ class TelemetryController extends AbstractController
         }
 
         $chartData = array_merge($chartData, $otherSeriesData);
-
-        usort(
-            $chartData,
-            function (array $a, array $b): int {
-                return $b['value'] - $a['value'];
-            }
-        );
 
         return [
             'title'  => [
@@ -261,7 +262,7 @@ class TelemetryController extends AbstractController
 
         $chartData = [];
         foreach ($monthlyValues as $entries) {
-            foreach($entries as $entry) {
+            foreach ($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'), true);
 
                 if ($index !== false) {
