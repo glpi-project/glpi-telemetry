@@ -126,6 +126,7 @@ class TelemetryController extends AbstractController
                 unset($chartData[$key]);
             }
         }
+        $chartData = array_values($chartData);
 
         $otherSeriesData = [];
 
@@ -141,12 +142,10 @@ class TelemetryController extends AbstractController
         if (count($otherValues) > 0) {
             $chartData[] = [
                 'name'    => 'Other',
-                'value'   => array_sum(array_column($otherSeriesData, 'value')),
+                'value'   => array_sum(array_column($otherValues, 'value')),
                 'tooltip' => $tooltip,
             ];
         }
-
-        $chartData = array_merge($chartData, $otherSeriesData);
 
         return [
             'title'  => [
