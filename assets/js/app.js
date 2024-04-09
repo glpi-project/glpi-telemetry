@@ -17,15 +17,6 @@ window.addEventListener("DOMContentLoaded", () => {
                             gaScript.async = true;
                             gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${window.google_analytics_id}`;
                             document.head.appendChild(gaScript);
-
-                            var gaConfigScript = document.createElement('script');
-                            gaConfigScript.textContent = `
-                                window.dataLayer = window.dataLayer || [];
-                                function gtag(){dataLayer.push(arguments);}
-                                gtag('js', new Date());
-                                gtag('config', '${window.google_analytics_id}');
-                            `;
-                            document.head.appendChild(gaConfigScript);
                         },
                         onReject: () => {
                             window[`ga-disable-${window.google_analytics_id}`] = true;

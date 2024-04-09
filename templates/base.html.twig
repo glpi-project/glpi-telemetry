@@ -10,13 +10,28 @@
         {% endblock %}
         {% block javascripts %}
             <script src="{{ asset('build/js/app.js') }}" defer></script>
-            <script>window.google_analytics_id = '{{ google_analytics_id }}';</script>
+            <script>
+                {# Analytics config and data stack #}
+                {# Will not be sent unless user consents to analytics cookies usage #}
+                window.google_analytics_id = '{{ google_analytics_id|e('js') }}';
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+                gtag(
+                    'config',
+                    google_analytics_id,
+                    {
+                        send_page_view: {{ (google_analytics_send_page_view is defined ? google_analytics_send_page_view : true)|json_encode }}
+                    }
+                );
+            </script>
         {% endblock %}
     </head>
     <body>
         <div class="page">
             {% include 'header.html.twig' %}
-
             <div class="page-wrapper">
                 <div class="page-body">
                     {% set flashes = app.flashes() %}

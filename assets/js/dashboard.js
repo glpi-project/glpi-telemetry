@@ -288,8 +288,22 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
 });
 
 // Fetch charts data now and whenever period filter change
-fetchAndDisplayChartsData();
-document.getElementById('dataPeriod').onchange = fetchAndDisplayChartsData;
+var previousCustomLocation = null;
+document.getElementById('dataPeriod').onchange = () => {
+    // Trigger the page view event in Google Analytics
+    const filterEl       = document.getElementById('dataPeriod');
+    const customLocation = location.href + '/' + filterEl.value;
+    const customTitle    = filterEl.selectedOptions[0].textContent + ' - ' + document.title;
+    window.gtag('event', 'page_view', {
+        page_title: customTitle,
+        page_location: customLocation,
+        page_referrer: previousCustomLocation === null ? document.referer : previousCustomLocation,
+    });
+    previousCustomLocation = customLocation;
+
+    fetchAndDisplayChartsData();
+};
+document.getElementById('dataPeriod').dispatchEvent(new Event('change'));
 
 // Fix charts size on widow resize
 window.addEventListener('resize', () => {
