@@ -144,7 +144,12 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener("DOMContentLoaded", () => {
     const data = global.referenceData;
 
-    const translator = new Intl.DisplayNames(['en'], { type: 'region' });
+    const translator = new Intl.DisplayNames(
+        ['en'],
+        {
+            type: 'region'
+        }
+    );
     const namesMap = new Map();
     const grid = new gridjs.Grid({
         columns: [
