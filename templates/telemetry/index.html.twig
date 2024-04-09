@@ -19,9 +19,9 @@
             <div class="col-auto ms-auto d-print-none">
                 <div class="form-floating">
                     <select class="form-select" id="dataPeriod" aria-label="select data period">
-                        <option value="last-12-months" selected>Last 12 months</option>
-                        <option value="last-5-years">Five Last Years</option>
-                        <option value="always">Always</option>
+                        {% for period_filter in period_filters %}
+                            <option value="{{ period_filter.value }}">{{ period_filter.getLabel() }}</option>
+                        {% endfor %}
                     </select>
                     <label for="dataPeriod">
                         Select :
@@ -33,30 +33,21 @@
 
     <div class="container-xl mt-4">
         <div class="row row-deck row-cards">
-            <div class="col-lg-6"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::GlpiVersion').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Bar').value }}"></div>
-            <div class="col-lg-6"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::PhpInfos').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Bar').value }}"></div>
-            <div class="col-sm-6 col-lg-4"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::OsFamily').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Pie').value }}"></div>
-            <div class="col-sm-6 col-lg-4"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::WebEngine').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Pie').value }}"></div>
-            <div class="col-sm-6 col-lg-4"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::InstallMode').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Pie').value }}"></div>
-            <div class="col-sm-6 col-lg-4"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::DbEngine').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Pie').value }}"></div>
-            <div class="col-sm-6 col-lg-4"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::TopPlugin').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::NightingaleRose').value }}"></div>
-            <div class="col-sm-6 col-lg-4"
-                data-chart-serie="{{ constant('App\\Telemetry\\ChartSerie::DefaultLanguage').value }}"
-                data-chart-type="{{ constant('App\\Telemetry\\ChartType::Pie').value }}"></div>
+            {% set chart_series = [
+                constant('App\\Telemetry\\ChartSerie::GlpiVersion'),
+                constant('App\\Telemetry\\ChartSerie::PhpInfos'),
+                constant('App\\Telemetry\\ChartSerie::OsFamily'),
+                constant('App\\Telemetry\\ChartSerie::WebEngine'),
+                constant('App\\Telemetry\\ChartSerie::InstallMode'),
+                constant('App\\Telemetry\\ChartSerie::DbEngine'),
+                constant('App\\Telemetry\\ChartSerie::TopPlugin'),
+                constant('App\\Telemetry\\ChartSerie::DefaultLanguage'),
+            ] %}
+            {% for chart_serie in chart_series %}
+                <div class="{{ chart_serie.getChartType() == constant('App\\Telemetry\\ChartType::MonthlyStackedBar') ? 'col-lg-6' : 'col-sm-6 col-lg-4' }}"
+                    data-chart-serie="{{ chart_serie.value }}"
+                    data-chart-type="{{ chart_serie.getChartType().value }}"></div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

@@ -12,6 +12,15 @@ enum ChartPeriodFilter: string
     case LastFiveYears      = 'last-5-years';
     case Always             = 'always';
 
+    public function getLabel(): string
+    {
+        return match($this) {
+            self::LastTwelveMonths  => 'Last 12 months',
+            self::LastFiveYears     => 'Last 5 years',
+            self::Always            => 'Always',
+        };
+    }
+
     public function getStartDate(): DateTimeImmutable
     {
         return match($this) {

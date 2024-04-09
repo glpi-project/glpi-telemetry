@@ -47,16 +47,21 @@ class TelemetryController extends AbstractController
     #[Route('/telemetry', name: 'app_telemetry')]
     public function index(): Response
     {
-        return $this->render('telemetry/index.html.twig');
+        return $this->render(
+            'telemetry/index.html.twig',
+            [
+                'period_filters' => ChartPeriodFilter::cases(),
+            ]
+        );
     }
 
-    #[Route('/telemetry/chart/{serie}/{type}/{periodFilter}')]
-    public function chart(ChartSerie $serie, ChartType $type, ChartPeriodFilter $periodFilter): JsonResponse
+    #[Route('/telemetry/chart/{serie}/{periodFilter}')]
+    public function chart(ChartSerie $serie, ChartPeriodFilter $periodFilter): JsonResponse
     {
         $data = [];
-        switch ($type) {
-            case ChartType::Bar:
-                $data = $this->getBarChartData($serie, $periodFilter);
+        switch ($serie->getChartType()) {
+            case ChartType::MonthlyStackedBar:
+                $data = $this->getMonthlyStackedBarChartData($serie, $periodFilter);
                 break;
             case ChartType::Pie:
                 $data = $this->getPieChartData($serie, $periodFilter);
@@ -86,37 +91,10 @@ class TelemetryController extends AbstractController
      */
     public function getPieChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
-        $monthlyValues = $this->chartDataStorage->getMonthlyValues(
-            $serie,
-            $periodFilter->getStartDate(),
-            $periodFilter->getEndDate()
-        );
-
-        $chartData = [];
-        foreach ($monthlyValues as $entries) {
-            foreach ($entries as $entry) {
-                $index = array_search($entry['name'], array_column($chartData, 'name'), true);
-
-                if ($index !== false) {
-                    $chartData[$index]['value'] += $entry['total'];
-                } else {
-                    $chartData[] = [
-                        'name' => $entry['name'],
-                        'value' => $entry['total'],
-                    ];
-                }
-            }
-        }
+        $chartData = $this->chartDataStorage->getPeriodTotalValues($serie, $periodFilter);
 
         // Filter values that are less than 0.1% of the total to group them
         $total = array_sum(array_column($chartData, 'value'));
-
-        usort(
-            $chartData,
-            function (array $a, array $b): int {
-                return $b['value'] - $a['value'];
-            }
-        );
 
         $otherSum = 0;
         $tooltip = <<<HTML
@@ -124,7 +102,6 @@ class TelemetryController extends AbstractController
                 <tr><th colspan="3">Other</th></tr>
         HTML;
         foreach ($chartData as $key => $entry) {
-
             $name       = htmlspecialchars($entry['name']);
             $percentage = number_format(($entry['value'] / $total) * 100, 2);
             $value      = number_format($entry['value']);
@@ -168,7 +145,7 @@ class TelemetryController extends AbstractController
     }
 
     /**
-     * Get the Echart bar chart data for the given serie.
+     * Get the Echart monthly stacked bar chart data for the given serie.
      *
      * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
@@ -186,12 +163,11 @@ class TelemetryController extends AbstractController
      *     }>
      * }
      */
-    public function getBarChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
+    public function getMonthlyStackedBarChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
         $monthlyValues = $this->chartDataStorage->getMonthlyValues(
             $serie,
-            $periodFilter->getStartDate(),
-            $periodFilter->getEndDate()
+            $periodFilter
         );
 
         $months = array_keys($monthlyValues);
@@ -217,7 +193,7 @@ class TelemetryController extends AbstractController
 
                 foreach ($entries as $entry) {
                     if ($entry['name'] === $serieName) {
-                        $total = $entry['total'];
+                        $total = $entry['value'];
                         break;
                     }
                 }
@@ -261,34 +237,7 @@ class TelemetryController extends AbstractController
      */
     public function getNightingaleRoseChartData(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
-        $monthlyValues = $this->chartDataStorage->getMonthlyValues(
-            $serie,
-            $periodFilter->getStartDate(),
-            $periodFilter->getEndDate()
-        );
-
-        $chartData = [];
-        foreach ($monthlyValues as $entries) {
-            foreach ($entries as $entry) {
-                $index = array_search($entry['name'], array_column($chartData, 'name'), true);
-
-                if ($index !== false) {
-                    $chartData[$index]['value'] += $entry['total'];
-                } else {
-                    $chartData[] = [
-                        'value' => $entry['total'],
-                        'name'  => $entry['name'],
-                    ];
-                }
-            }
-        }
-
-        usort(
-            $chartData,
-            function (array $a, array $b): int {
-                return $b['value'] - $a['value'];
-            }
-        );
+        $chartData = $this->chartDataStorage->getPeriodTotalValues($serie, $periodFilter);
 
         $filteredArray = array_slice($chartData, 0, 10);
 

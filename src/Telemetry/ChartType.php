@@ -6,7 +6,7 @@ namespace App\Telemetry;
 
 enum ChartType: string
 {
-    case Bar             = 'bar';
-    case Pie             = 'pie';
-    case NightingaleRose = 'nightingale-rose';
+    case MonthlyStackedBar  = 'monthly-stacked-bar';
+    case Pie                = 'pie';
+    case NightingaleRose    = 'nightingale-rose';
 }
