@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\ChartDataStorage;
+use App\Telemetry\ChartPeriodFilter;
+use App\Telemetry\ChartSerie;
+use App\Telemetry\ChartType;
 use DateTimeImmutable;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -18,11 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class ComputeChartsData extends Command
 {
-    /**
-     * Iteration size, in days.
-     */
-    private const ITERATION_SIZE = 30;
-
     public function __construct(
         private ChartDataStorage $chartDataStorage,
     ) {
@@ -31,43 +29,78 @@ class ComputeChartsData extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $start = $this->chartDataStorage->getOldestTelemetryDate();
-        $end   = new DateTimeImmutable('-1 day');
+        // Compute total values for each period range
+        $output->writeln('<info>Computing total values for predefined periods...</info>');
 
-        $progressBar = new ProgressBar(
-            $output,
-            (int) ceil((int) $start->diff($end)->format('%a') / self::ITERATION_SIZE)
+        $series = array_filter(
+            ChartSerie::cases(),
+            // Compute only series that are not displayed as monthly stacked bars
+            fn(ChartSerie $serie) => $serie->getChartType() !== ChartType::MonthlyStackedBar
         );
+        $periods = ChartPeriodFilter::cases();
+        $progressBar = new ProgressBar($output, count($periods) * count($series));
         $progressBar->setFormat('%current%/%max% [%bar%] %percent:3s%%' . PHP_EOL . '%message%' . PHP_EOL);
         $progressBar->setMessage('');
         $progressBar->start();
 
-        $currentStart = $start;
+        foreach ($periods as $period) {
+            foreach ($series as $serie) {
+                $progressBar->setMessage(
+                    sprintf(
+                        '<comment>Computing values for "%s" period for serie "%s"...</comment>',
+                        $period->getLabel(),
+                        $serie->getTitle(),
+                    )
+                );
+                $progressBar->display();
+
+                $this->chartDataStorage->computePeriodTotalValues($serie, $period);
+            }
+        }
+
+        $progressBar->setMessage('<comment>Predefined period total values computation completed.</comment>');
+        $progressBar->finish();
+
+        // Compute monthly values
+        $output->writeln('<info>Computing monthly values...</info>');
+
+        $series = array_filter(
+            ChartSerie::cases(),
+            // Compute only series that are displayed as monthly stacked bars
+            fn(ChartSerie $serie) => $serie->getChartType() === ChartType::MonthlyStackedBar
+        );
+        $start  = new DateTimeImmutable($this->chartDataStorage->getOldestTelemetryDate()->format('Y-m-01 00:00:00'));
+        $end    = new DateTimeImmutable('-1 day');
+        $diff   = $start->diff($end);
+        $months = ((int) $diff->format('%y')) * 12 + ((int) $diff->format('%m'));
+
+        $progressBar = new ProgressBar($output, $months * count($series));
+        $progressBar->setFormat('%current%/%max% [%bar%] %percent:3s%%' . PHP_EOL . '%message%' . PHP_EOL);
+        $progressBar->setMessage('');
+        $progressBar->start();
+
+        $currentMonth = $start;
         do {
-            /** @var DateTimeImmutable $currentStart */
-            $currentEnd  = $currentStart->modify('+ ' . self::ITERATION_SIZE . ' days');
-            if ($currentEnd > $end) {
-                $currentEnd = $end;
+            foreach ($series as $serie) {
+                $progressBar->setMessage(
+                    sprintf(
+                        '<comment>Computing values from %s to %s for serie "%s"...</comment>',
+                        $currentMonth->format('Y-m-d'),
+                        $currentMonth->format('Y-m-t'),
+                        $serie->getTitle(),
+                    )
+                );
+                $progressBar->display();
+
+                $this->chartDataStorage->computeMonthlyValues($serie, $currentMonth);
+
+                $progressBar->advance();
             }
 
-            $progressBar->setMessage(
-                sprintf(
-                    '<comment>Computing values from %s to %s...</comment>',
-                    $currentStart->format('Y-m-d'),
-                    $currentEnd->format('Y-m-d')
-                )
-            );
-            $progressBar->display();
+            $currentMonth = $currentMonth->modify('+ 1 month');
+        } while ($currentMonth <= $end);
 
-            $this->chartDataStorage->computeValues($currentStart, $currentEnd);
-
-            $currentStart = $currentStart->modify('+ ' . (self::ITERATION_SIZE + 1) . ' days');
-
-            $progressBar->advance();
-
-        } while ($currentStart <= $end);
-
-        $progressBar->setMessage('<info>Charts data computation completed.</info>');
+        $progressBar->setMessage('<comment>Monthly values computation completed.</comment>');
         $progressBar->finish();
 
         return Command::SUCCESS;

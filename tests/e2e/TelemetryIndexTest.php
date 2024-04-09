@@ -6,7 +6,6 @@ namespace App\E2ETests;
 
 use App\Telemetry\ChartPeriodFilter;
 use App\Telemetry\ChartSerie;
-use App\Telemetry\ChartType;
 use App\Tests\PantherTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,15 +15,12 @@ class TelemetryIndexTest extends PantherTestCase
     {
         $routes = ['/telemetry'];
         foreach (ChartSerie::cases() as $chartSerie) {
-            foreach (ChartType::cases() as $chartType) {
-                foreach (ChartPeriodFilter::cases() as $chartPeriodFilter) {
-                    $routes[] = sprintf(
-                        '/telemetry/chart/%s/%s/%s',
-                        $chartSerie->value,
-                        $chartType->value,
-                        $chartPeriodFilter->value
-                    );
-                }
+            foreach (ChartPeriodFilter::cases() as $chartPeriodFilter) {
+                $routes[] = sprintf(
+                    '/telemetry/chart/%s/%s',
+                    $chartSerie->value,
+                    $chartPeriodFilter->value
+                );
             }
         }
 

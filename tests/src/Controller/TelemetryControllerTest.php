@@ -15,7 +15,7 @@ class TelemetryControllerTest extends KernelTestCase
     /**
      * @return array<
      *      array{
-     *          storedData: array<string, array<int, array{name: string, total: int}>>,
+     *          storedData: array<int, array{name: string, value: int}>,
      *          expectedValues: array{
      *              title: array{text: string},
      *              series: array<int, array{data: array<int, array{name: string, value: int, tooltip?: string}>}>
@@ -28,18 +28,13 @@ class TelemetryControllerTest extends KernelTestCase
         // Data with tooltip
         yield [
             'storedData' => [
-                '2024-01' => [
-                    ['name' => 'TARBALL', 'total' => 10000],
-                    ['name' => 'DOCKER',  'total' => 500],
-                    ['name' => 'CLOUD',   'total' => 35], // just above the 0.1% limit
-                    ['name' => 'APT',     'total' => 10],
-                ],
-                '2024-02' => [
-                    ['name' => 'TARBALL', 'total' => 15000],
-                    ['name' => 'RPM',     'total' => 1000],
-                    ['name' => 'GIT',     'total' => 12],
-                    ['name' => 'YUM',     'total' => 2],
-                ],
+                ['name' => 'TARBALL', 'value' => 25000],
+                ['name' => 'RPM',     'value' => 1000],
+                ['name' => 'DOCKER',  'value' => 500],
+                ['name' => 'CLOUD',   'value' => 35], // just above the 0.1% limit
+                ['name' => 'GIT',     'value' => 12],
+                ['name' => 'APT',     'value' => 10],
+                ['name' => 'YUM',     'value' => 2],
             ],
             'expectedValues' => [
                 'title' => [
@@ -86,17 +81,12 @@ class TelemetryControllerTest extends KernelTestCase
         // Data without tooltip
         yield [
             'storedData' => [
-                '2024-01' => [
-                    ['name' => 'TARBALL', 'total' => 50],
-                    ['name' => 'CLOUD',   'total' => 35],
-                    ['name' => 'APT',     'total' => 10],
-                ],
-                '2024-02' => [
-                    ['name' => 'TARBALL', 'total' => 75],
-                    ['name' => 'RPM',     'total' => 100],
-                    ['name' => 'GIT',     'total' => 15],
-                    ['name' => 'YUM',     'total' => 20],
-                ],
+                ['name' => 'TARBALL', 'value' => 125],
+                ['name' => 'RPM',     'value' => 100],
+                ['name' => 'CLOUD',   'value' => 35],
+                ['name' => 'YUM',     'value' => 20],
+                ['name' => 'GIT',     'value' => 15],
+                ['name' => 'APT',     'value' => 10],
             ],
             'expectedValues' => [
                 'title' => [
@@ -121,7 +111,7 @@ class TelemetryControllerTest extends KernelTestCase
     /**
      * @dataProvider pieChartDataProvider
      *
-     * @param array<string, array<int, array{name: string, total: int}>> $storedData
+     * @param array<string, array<int, array{name: string, value: int}>> $storedData
      * @param array{
      *      title: array{text: string},
      *      series: array<int, array{data: array<int, array{name: string, value: int, tooltip?: string}>}>
@@ -130,7 +120,7 @@ class TelemetryControllerTest extends KernelTestCase
     public function testGetPieChartData(array $storedData, array $expectedResult): void
     {
         $chartDataStorage = $this->createMock(ChartDataStorage::class);
-        $chartDataStorage->method('getMonthlyValues')->willReturn($storedData);
+        $chartDataStorage->method('getPeriodTotalValues')->willReturn($storedData);
 
         $controller = new TelemetryController($chartDataStorage);
         $result = $controller->getPieChartData(ChartSerie::InstallMode, ChartPeriodFilter::Always);
@@ -138,27 +128,27 @@ class TelemetryControllerTest extends KernelTestCase
         self::assertEquals($expectedResult, $result);
     }
 
-    public function testGetBarChartData(): void
+    public function testGetMonthlyStackedBarChartData(): void
     {
         $chartDataStorage = $this->createMock(ChartDataStorage::class);
         $chartDataStorage->method('getMonthlyValues')
             ->willReturn(
                 [
                     "2024-01" => [
-                        ['name' => '10.0.6', 'total' => 10],
-                        ['name' => '10.0.7', 'total' => 5],
-                        ['name' => '10.0.8', 'total' => 10],
+                        ['name' => '10.0.6', 'value' => 10],
+                        ['name' => '10.0.8', 'value' => 10],
+                        ['name' => '10.0.7', 'value' => 5],
                     ],
                     "2024-02" => [
-                        ['name' => '10.0.8', 'total' => 15],
-                        ['name' => '10.0.9', 'total' => 15],
+                        ['name' => '10.0.8', 'value' => 15],
+                        ['name' => '10.0.9', 'value' => 15],
                     ],
                 ]
             )
         ;
 
         $controller = new TelemetryController($chartDataStorage);
-        $result = $controller->getBarChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
+        $result = $controller->getMonthlyStackedBarChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
 
         $expected = [
             'title' => [
@@ -194,37 +184,23 @@ class TelemetryControllerTest extends KernelTestCase
     public function testGetNightingaleRoseChartData(): void
     {
         $chartDataStorage = $this->createMock(ChartDataStorage::class);
-        $chartDataStorage->method('getMonthlyValues')
+        $chartDataStorage->method('getPeriodTotalValues')
             ->willReturn(
                 [
-                    "2024-01" => [
-                        ['name' => 'formcreator',   'total' => 132],
-                        ['name' => 'datainjection', 'total' => 21],
-                        ['name' => 'costs',         'total' => 97],
-                        ['name' => 'moreticket',    'total' => 13],
-                        ['name' => 'genericobject', 'total' => 89],
-                        ['name' => 'fields',        'total' => 52],
-                        ['name' => 'glpiinventory', 'total' => 31],
-                        ['name' => 'scim',          'total' => 42],
-                        ['name' => 'sccm',          'total' => 19],
-                        ['name' => 'oauthimap',     'total' => 87],
-                        ['name' => 'reports',       'total' => 56],
-                        ['name' => 'pdf',           'total' => 72],
-                    ],
-                    "2024-02" => [
-                        ['name' => 'formcreator',   'total' => 124],
-                        ['name' => 'datainjection', 'total' => 42],
-                        ['name' => 'costs',         'total' => 78],
-                        ['name' => 'genericobject', 'total' => 16],
-                        ['name' => 'fields',        'total' => 15],
-                        ['name' => 'scim',          'total' => 75],
-                        ['name' => 'sccm',          'total' => 12],
-                        ['name' => 'oauthimap',     'total' => 64],
-                        ['name' => 'reports',       'total' => 24],
-                        ['name' => 'pdf',           'total' => 98],
-                        ['name' => 'cmdb',          'total' => 154],
-                        ['name' => 'jamf',          'total' => 64],
-                    ],
+                    ['name' => 'formcreator',   'value' => 256],
+                    ['name' => 'costs',         'value' => 175],
+                    ['name' => 'pdf',           'value' => 170],
+                    ['name' => 'cmdb',          'value' => 154],
+                    ['name' => 'oauthimap',     'value' => 151],
+                    ['name' => 'scim',          'value' => 117],
+                    ['name' => 'genericobject', 'value' => 105],
+                    ['name' => 'reports',       'value' => 80],
+                    ['name' => 'fields',        'value' => 67],
+                    ['name' => 'jamf',          'value' => 64],
+                    ['name' => 'glpiinventory', 'value' => 31],
+                    ['name' => 'datainjection', 'value' => 21],
+                    ['name' => 'sccm',          'value' => 19],
+                    ['name' => 'moreticket',    'value' => 13],
                 ]
             )
         ;

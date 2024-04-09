@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Telemetry\ChartPeriodFilter;
 use App\Telemetry\ChartSerie;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 
 class ChartDataStorage
 {
@@ -26,60 +26,82 @@ class ChartDataStorage
     }
 
     /**
-     * Compute charts data values and store them into the filesystem.
+     * Compute monthly values and store them into the filesystem.
      */
-    public function computeValues(DateTimeInterface $start, DateTimeInterface $end): void
+    public function computeMonthlyValues(ChartSerie $serie, DateTimeInterface $month): void
     {
-        $directory = $this->storageDir . '/chart-data';
+        $serieDirectory = $this->storageDir . '/chart-data/' . $serie->name;
 
-        if (!$this->filesystem->exists($directory)) {
-            $this->filesystem->mkdir($directory);
+        if (!$this->filesystem->exists($serieDirectory)) {
+            $this->filesystem->mkdir($serieDirectory);
         }
 
-        foreach (ChartSerie::cases() as $serie) {
-            $serieDirectory = $directory . '/' . $serie->name;
+        $monthFile = $serieDirectory . '/' . $month->format('Y-m') . '.json';
 
-            if (!$this->filesystem->exists($serieDirectory)) {
-                $this->filesystem->mkdir($serieDirectory);
-            }
-
-            $alreadyComputedDates = [];
-
-            $files = (new Finder())->files()->in($serieDirectory)->name('*.json');
-            foreach ($files as $file) {
-                $alreadyComputedDates[] = $file->getBasename('.json');
-            }
-
-            $currentDate = $start;
-            while ($currentDate <= $end) {
-                /** @var DateTimeImmutable $currentDate */
-                $date = $currentDate->format('Y-m-d');
-
-                if (!in_array($date, $alreadyComputedDates, true)) {
-                    $sql = $serie->getSqlQuery();
-                    $result = $this->connection->executeQuery($sql, [
-                        'startDate' => $date . ' 00:00:00',
-                        'endDate' => $date . ' 23:59:59'
-                    ])->fetchAllAssociative();
-
-                    $this->filesystem->dumpFile(
-                        $serieDirectory . '/' . $date . '.json',
-                        json_encode($result, flags: JSON_THROW_ON_ERROR)
-                    );
-                }
-                $currentDate = $currentDate->modify('+1 day');
-            }
+        if (
+            $this->filesystem->exists($monthFile)
+            && filemtime($monthFile) > strtotime($month->format('Y-m-t 23:59:59'))
+        ) {
+            // Do not recompute values when file exists, unless it has been computed before the end
+            // of the corresponding month.
+            return;
         }
+
+        $result = $this->connection->executeQuery(
+            $serie->getSqlQuery(),
+            [
+                'startDate' => $month->format('Y-m-01 00:00:00'),
+                'endDate'   => $month->format('Y-m-t 23:59:59'),
+            ]
+        )->fetchAllAssociative();
+
+        $this->filesystem->dumpFile(
+            $monthFile,
+            json_encode($result, flags: JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
-     *
-     * Retrieve the data for the given period & serie from the file system
-     * Process them to get the values filtered by month
-     *
-     * @return array<string, array<int, array{name: string, total: int}>>
+     * Compute total values corresponding to given period and store them into the filesystem.
      */
-    public function getMonthlyValues(ChartSerie $serie, DateTimeInterface $start, DateTimeInterface $end): array
+    public function computePeriodTotalValues(ChartSerie $serie, ChartPeriodFilter $periodFilter): void
+    {
+        $serieDirectory = $this->storageDir . '/chart-data/' . $serie->name;
+
+        if (!$this->filesystem->exists($serieDirectory)) {
+            $this->filesystem->mkdir($serieDirectory);
+        }
+
+        $periodFile = $serieDirectory . '/' . $periodFilter->value . '.json';
+
+        if (
+            $this->filesystem->exists($periodFile)
+            && filemtime($periodFile) > strtotime('today midnight')
+        ) {
+            // Do not recompute values when file exists, unless it has been computed before today.
+            return;
+        }
+
+        $result = $this->connection->executeQuery(
+            $serie->getSqlQuery(),
+            [
+                'startDate' => $periodFilter->getStartDate()->format('Y-m-01 00:00:00'),
+                'endDate'   => $periodFilter->getEndDate()->format('Y-m-t 23:59:59'),
+            ]
+        )->fetchAllAssociative();
+
+        $this->filesystem->dumpFile(
+            $periodFile,
+            json_encode($result, flags: JSON_THROW_ON_ERROR)
+        );
+    }
+
+    /**
+     * Retrieve the monthly values for the given period & serie.
+     *
+     * @return array<string, array<int, array{name: string, value: int}>>
+     */
+    public function getMonthlyValues(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
     {
         $directory = $this->storageDir . '/chart-data/' . $serie->name;
 
@@ -88,60 +110,55 @@ class ChartDataStorage
             return [];
         }
 
-        $finder    = new Finder();
-        $files     = $finder->files()->in($directory)->name('*.json');
-        $dates     = [];
-
-        foreach ($files as $file) {
-            $dates[] = $file->getBasename('.json');
-        }
-
         $monthlyValues = [];
         $oldest        = $this->getOldestTelemetryDate();
-        $currentDate   = $start > $oldest ? $start : $oldest;
+        $start         = $periodFilter->getStartDate();
+        $end           = $periodFilter->getEndDate();
+        $currentDate   = new DateTimeImmutable(($start > $oldest ? $start : $oldest)->format('Y-m-01 00:00:00'));
         while ($currentDate <= $end) {
-            /** @var DateTimeImmutable $currentDate */
-            $date          = $currentDate->format('Y-m-d');
             $monthKey      = $currentDate->format('Y-m');
-            $dailyFileName = $date . '.json';
+            $monthFileName = $directory . '/' . $monthKey . '.json';
 
-            if (!array_key_exists($monthKey, $monthlyValues)) {
-                $monthlyValues[$monthKey] = [];
-            }
-
-            if (in_array($date, $dates, true)) {
-                $fileContents = file_get_contents($directory . '/' . $dailyFileName);
+            if ($this->filesystem->exists($monthFileName)) {
+                $fileContents = file_get_contents($monthFileName);
                 if ($fileContents === false) {
-                    throw new \Exception(sprintf('Error reading file %s.', $dailyFileName));
+                    throw new \Exception(sprintf('Error reading file `%s`.', $monthFileName));
                 }
 
-                /** @var array<int, array{name: string, total: int}> $dailyData */
-                $dailyData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
-
-                foreach ($dailyData as $entry) {
-                    $name  = $entry['name'];
-                    $total = $entry['total'];
-
-                    $versionExists = false;
-                    foreach ($monthlyValues[$monthKey] as $existingKey => $existingData) {
-                        if ($existingData['name'] === $name) {
-                            $versionExists = true;
-                            $monthlyValues[$monthKey][$existingKey]['total'] += $total;
-                            break;
-                        }
-                    }
-
-                    if (!$versionExists) {
-                        $monthlyValues[$monthKey][] = [
-                            'name'  => $name,
-                            'total' => $total,
-                        ];
-                    }
-                }
+                /** @var array<int, array{name: string, value: int}> $monthData */
+                $monthData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
+                $monthlyValues[$monthKey] = $monthData;
             }
-            $currentDate = $currentDate->modify('+1 day');
+
+            $currentDate = $currentDate->modify('+1 month');
         }
+
         return $monthlyValues;
+    }
+
+    /**
+     * Retrieve the total values for the given period & serie.
+     *
+     * @return array<int, array{name: string, value: int}>
+     */
+    public function getPeriodTotalValues(ChartSerie $serie, ChartPeriodFilter $periodFilter): array
+    {
+        $periodFile = $this->storageDir . '/chart-data/' . $serie->name . '/' . $periodFilter->value . '.json';
+
+        if (!$this->filesystem->exists($periodFile)) {
+            // No data exists
+            return [];
+        }
+
+        $fileContents = file_get_contents($periodFile);
+        if ($fileContents === false) {
+            throw new \Exception(sprintf('Error reading file `%s`.', $periodFile));
+        }
+
+        /** @var array<int, array{name: string, value: int}> $periodData */
+        $periodData = json_decode($fileContents, true, flags: JSON_THROW_ON_ERROR);
+
+        return $periodData;
     }
 
     /**

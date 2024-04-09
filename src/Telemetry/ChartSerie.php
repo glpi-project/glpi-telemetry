@@ -27,14 +27,23 @@ enum ChartSerie: string
             )
         SQL;
 
+        $defaultGroup = <<<SQL
+            GROUP BY name
+        SQL;
+
+        $defaultOrder = <<<SQL
+            ORDER BY value DESC
+        SQL;
+
         switch ($this) {
             case ChartSerie::GlpiVersion:
                 $sql = <<<SQL
                     SELECT SUBSTRING_INDEX(glpi_version, '.', 2) as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
-                    GROUP BY name
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::InstallMode:
@@ -42,22 +51,24 @@ enum ChartSerie: string
                 // and therefore is `null` for entries related to GLPI 9.2.0
                 $sql = <<<SQL
                     SELECT install_mode as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
                     AND install_mode IS NOT NULL
-                    GROUP BY name
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::WebEngine:
                 $sql = <<<SQL
                     SELECT web_engine as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
                     AND web_engine IS NOT NULL
                     AND web_engine != ''
-                    GROUP BY name
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::OsFamily:
@@ -68,46 +79,46 @@ enum ChartSerie: string
                         WHEN os_family LIKE '%Linux%' THEN 'Linux'
                         ELSE os_family
                     END as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
-                    GROUP BY name
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::PhpInfos:
                 $sql = <<<SQL
                     SELECT SUBSTRING_INDEX(php_version, '.', 2) as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
-                    GROUP BY name
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::TopPlugin:
                 $sql = <<<SQL
                     SELECT pkey as name,
-                    COUNT(DISTINCT telemetry.glpi_uuid) as total
+                    COUNT(DISTINCT telemetry.glpi_uuid) as value
                     FROM telemetry_glpi_plugin as tgp
                     INNER JOIN glpi_plugin as gp
                     ON tgp.glpi_plugin_id = gp.id
                     INNER JOIN telemetry
                     ON tgp.telemetry_entry_id = telemetry.id
                     WHERE $baseFilter
-                    GROUP BY glpi_plugin_id
-                    ORDER BY total DESC
-                    LIMIT 10
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::DefaultLanguage:
                 $sql = <<<SQL
                     SELECT glpi_default_language as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
                     AND glpi_default_language REGEXP '^[a-z]{2}(_([A-Z]{2}|419))?$'
-                    GROUP BY name
-                    ORDER BY total DESC
-                    LIMIT 10
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
             case ChartSerie::DbEngine:
@@ -123,10 +134,11 @@ enum ChartSerie: string
                         WHEN UPPER(db_version) LIKE '%MARIA%' THEN 'MariaDB'
                         ELSE 'MySQL'
                     END as name,
-                    COUNT(DISTINCT glpi_uuid) as total
+                    COUNT(DISTINCT glpi_uuid) as value
                     FROM telemetry
                     WHERE $baseFilter
-                    GROUP BY name
+                    $defaultGroup
+                    $defaultOrder
                 SQL;
                 return $sql;
 
@@ -161,6 +173,28 @@ enum ChartSerie: string
 
             case ChartSerie::DbEngine:
                 return 'DB engines';
+
+            default:
+                throw new \RuntimeException();
+        }
+    }
+
+    public function getChartType(): ChartType
+    {
+        switch($this) {
+            case ChartSerie::GlpiVersion:
+            case ChartSerie::PhpInfos:
+                return ChartType::MonthlyStackedBar;
+
+            case ChartSerie::InstallMode:
+            case ChartSerie::WebEngine:
+            case ChartSerie::OsFamily:
+            case ChartSerie::DefaultLanguage:
+            case ChartSerie::DbEngine:
+                return ChartType::Pie;
+
+            case ChartSerie::TopPlugin:
+                return ChartType::NightingaleRose;
 
             default:
                 throw new \RuntimeException();

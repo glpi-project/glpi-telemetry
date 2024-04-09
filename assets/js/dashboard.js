@@ -15,7 +15,7 @@ const fetchAndDisplayChartsData = function () {
         const type = chart.getAttribute('data-chart-type');
         const periodFilter = document.getElementById('dataPeriod').value;
 
-        fetch(`telemetry/chart/${serie}/${type}/${periodFilter}`, {
+        fetch(`telemetry/chart/${serie}/${periodFilter}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ const fetchAndDisplayChartsData = function () {
                 options
             );
             switch (type) {
-                case 'bar':
+                case 'monthly-stacked-bar':
                     options = merge(
                         {
                             tooltip: {
@@ -110,7 +110,7 @@ const fetchAndDisplayChartsData = function () {
 
             // Compute options related to series data
             switch (type) {
-                case 'bar':
+                case 'monthly-stacked-bar':
                     // Extract monthly totals
                     // eslint-disable-next-line no-case-declarations
                     let totalByMonth = [];
