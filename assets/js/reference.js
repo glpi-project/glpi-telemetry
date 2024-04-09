@@ -3,10 +3,10 @@ import * as gridjs from "gridjs";
 window.gridjs = gridjs;
 
 window.addEventListener('DOMContentLoaded', () => {
-    const chartDom = document.getElementById('map_graph');
-    const myChart = global.echarts.init(chartDom);
+    const chartContainer = document.querySelector('.reference-map');
+    const mapChart = global.echarts.init(chartContainer);
 
-    myChart.showLoading();
+    mapChart.showLoading();
 
     fetch('reference/map/countries', {
         method: 'GET',
@@ -16,23 +16,16 @@ window.addEventListener('DOMContentLoaded', () => {
     }).then(response => {
         return response.json();
     }).then(geoJson => {
-        myChart.hideLoading();
+        mapChart.hideLoading();
         global.echarts.registerMap('countriesMap', geoJson);
 
-        myChart.setOption({
+        mapChart.setOption({
             title: {
                 text: 'GLPI references by country',
                 left: 'center',
-                top: 10,
-                textStyle: {
-                    fontSize: 15
-                }
             },
             tooltip: {
-                trigger: 'item',
-                showDelay: 0,
-                transitionDuration: 0.2,
-                formatter: '{b} : {c}'
+                formatter: '{b}: {c}'
             },
             visualMap: {
                 show: false,
@@ -53,11 +46,9 @@ window.addEventListener('DOMContentLoaded', () => {
                         '#00134d'
                     ]
                 },
-                calculable: true
             },
             series: [
                 {
-                    name: 'References by country',
                     type: 'map',
                     roam: false,
                     map: 'countriesMap',
@@ -82,7 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }).then(response => {
             return response.json();
         }).then(json => {
-            myChart.setOption({
+            mapChart.setOption({
                 series: [
                     {
                         data: json
@@ -91,13 +82,12 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             // Open modal and display the map in full screen
-            const card = document.querySelector('.card');
-
-            const button = card.querySelector('button');
-
-            const options = myChart.getOption();
-
+            const button = chartContainer.parentElement.querySelector('button');
             button.addEventListener('click', () => {
+                const options = mapChart.getOption();
+                const title = typeof (options.title) !== 'undefined' && typeof (options.title[0]) !== 'undefined' && typeof (options.title[0].text) !== 'undefined'
+                    ? options.title[0].text
+                    : '';
 
                 const modal = document.createElement('div');
                 modal.setAttribute('class', 'modal modal-blur fade');
@@ -106,10 +96,11 @@ window.addEventListener('DOMContentLoaded', () => {
                     <div class="modal-dialog modal-fullscreen">
                         <div class="modal-content">
                             <div class="modal-header">
+                                <h5 class="modal-title">${title}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="chart-container" style="width: 100%; height: 80vh; max-height: 700px;"></div>
+                                <div class="chart-container" style="width: 100%; height: 100%;"></div>
                             </div>
                         </div>
                     </div>
@@ -140,7 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Fix size on window resize
     window.addEventListener('resize', () => {
-        myChart.resize();
+        mapChart.resize();
     });
 });
 
