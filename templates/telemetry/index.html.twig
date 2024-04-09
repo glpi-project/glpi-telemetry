@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Telemetry - {{ parent() }}{% endblock %}
+
+{# Disable automatic page view, they will be simulated when filter value is initialized/changed #}
+{% block google_analytics_send_page_view %}false{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('build/js/dashboard.js') }}" defer></script>
