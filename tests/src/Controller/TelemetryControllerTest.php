@@ -40,45 +40,130 @@ class TelemetryControllerTest extends WebTestCase
         self::assertJsonStringEqualsJsonString($content, '{"error":"Bad request"}');
     }
 
-    public function testGetPieChartData(): void
+    /**
+     * @return array<
+     *      array{
+     *          storedData: array<string, array<int, array{name: string, total: int}>>,
+     *          expectedValues: array{
+     *              title: array{text: string},
+     *              series: array<int, array{data: array<int, array{name: string, value: int, tooltip?: string}>}>
+     *          }
+     *      }
+     *  >
+     */
+    public static function pieChartDataProvider(): iterable
     {
-        $chartDataStorage = $this->createMock(ChartDataStorage::class);
-        $chartDataStorage->method('getMonthlyValues')
-            ->willReturn(
-                [
-                    "2024-01" => [
-                        ['name' => 'TARBALL', 'total' => 10],
-                        ['name' => 'DOCKER',  'total' => 5],
-                    ],
-                    "2024-02" => [
-                        ['name' => 'TARBALL', 'total' => 15],
-                        ['name' => 'RPM',     'total' => 1],
-                        ['name' => 'GIT',     'total' => 2],
-                    ],
-                ]
-            )
-        ;
-        $controller = new TelemetryController($chartDataStorage);
-        $result = $controller->getPieChartData(ChartSerie::InstallMode, ChartPeriodFilter::Always);
-
-        self::assertEquals(
-            $result,
-            [
+        // Data with tooltip
+        yield [
+            'storedData' => [
+                '2024-01' => [
+                    ['name' => 'TARBALL', 'total' => 10000],
+                    ['name' => 'DOCKER',  'total' => 500],
+                    ['name' => 'CLOUD',   'total' => 35], // just above the 0.1% limit
+                    ['name' => 'APT',     'total' => 10],
+                ],
+                '2024-02' => [
+                    ['name' => 'TARBALL', 'total' => 15000],
+                    ['name' => 'RPM',     'total' => 1000],
+                    ['name' => 'GIT',     'total' => 12],
+                    ['name' => 'YUM',     'total' => 2],
+                ],
+            ],
+            'expectedValues' => [
                 'title' => [
                     'text' => 'Installation modes',
                 ],
                 'series' => [
                     [
                         'data' => [
-                            ['name' => 'TARBALL', 'value' => 25],
-                            ['name' => 'DOCKER',  'value' => 5],
-                            ['name' => 'GIT',     'value' => 2],
-                            ['name' => 'RPM',     'value' => 1],
+                            ['name' => 'TARBALL', 'value' => 25000],
+                            ['name' => 'RPM',     'value' => 1000],
+                            ['name' => 'DOCKER',  'value' => 500],
+                            ['name' => 'CLOUD',   'value' => 35],
+                            [
+                                'name' => 'Other',
+                                'value' => 24,
+                                // tooltip contains all values below 0.1%, ordered by value DESC
+                                'tooltip' => <<<HTML
+                                    <table class="table table-sm table-borderless">
+                                        <tr><th colspan="3">Other</th></tr>
+                                        <tr>
+                                            <td class="text-nowrap">GIT</td>
+                                            <td class="text-end text-nowrap">0.05%</td>
+                                            <td class="text-end text-nowrap">(12)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">APT</td>
+                                            <td class="text-end text-nowrap">0.04%</td>
+                                            <td class="text-end text-nowrap">(10)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">YUM</td>
+                                            <td class="text-end text-nowrap">0.01%</td>
+                                            <td class="text-end text-nowrap">(2)</td>
+                                        </tr>
+                                    </table>
+                                HTML
+                            ],
                         ],
                     ],
                 ],
             ]
-        );
+        ];
+
+        // Data without tooltip
+        yield [
+            'storedData' => [
+                '2024-01' => [
+                    ['name' => 'TARBALL', 'total' => 50],
+                    ['name' => 'CLOUD',   'total' => 35],
+                    ['name' => 'APT',     'total' => 10],
+                ],
+                '2024-02' => [
+                    ['name' => 'TARBALL', 'total' => 75],
+                    ['name' => 'RPM',     'total' => 100],
+                    ['name' => 'GIT',     'total' => 15],
+                    ['name' => 'YUM',     'total' => 20],
+                ],
+            ],
+            'expectedValues' => [
+                'title' => [
+                    'text' => 'Installation modes',
+                ],
+                'series' => [
+                    [
+                        'data' => [
+                            ['name' => 'TARBALL', 'value' => 125],
+                            ['name' => 'RPM',     'value' => 100],
+                            ['name' => 'CLOUD',   'value' => 35],
+                            ['name' => 'YUM',     'value' => 20],
+                            ['name' => 'GIT',     'value' => 15],
+                            ['name' => 'APT',     'value' => 10],
+                        ],
+                    ],
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider pieChartDataProvider
+     *
+     * @param array<string, array<int, array{name: string, total: int}>> $storedData
+     * @param array{
+     *      title: array{text: string},
+     *      series: array<int, array{data: array<int, array{name: string, value: int, tooltip?: string}>}>
+     *  } $expectedResult
+     */
+    public function testGetPieChartData(array $storedData, array $expectedResult): void
+    {
+        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage->method('getMonthlyValues')->willReturn($storedData);
+
+        $controller = new TelemetryController($chartDataStorage);
+        $result = $controller->getPieChartData(ChartSerie::InstallMode, ChartPeriodFilter::Always);
+
+        self::assertEquals($expectedResult, $result);
     }
 
     public function testGetBarChartData(): void

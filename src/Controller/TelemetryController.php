@@ -72,7 +72,7 @@ class TelemetryController extends AbstractController
     /**
      * Get the Echart pie chart data for the given serie.
      *
-     * @param ChartSerie $serie
+     * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
@@ -94,7 +94,7 @@ class TelemetryController extends AbstractController
 
         $chartData = [];
         foreach ($monthlyValues as $entries) {
-            foreach($entries as $entry) {
+            foreach ($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'), true);
 
                 if ($index !== false) {
@@ -108,12 +108,52 @@ class TelemetryController extends AbstractController
             }
         }
 
+        // Filter values that are less than 0.1% of the total to group them
+        $total = array_sum(array_column($chartData, 'value'));
+
         usort(
             $chartData,
             function (array $a, array $b): int {
                 return $b['value'] - $a['value'];
             }
         );
+
+        $otherSum = 0;
+        $tooltip = <<<HTML
+            <table class="table table-sm table-borderless">
+                <tr><th colspan="3">Other</th></tr>
+        HTML;
+        foreach ($chartData as $key => $entry) {
+
+            $name       = htmlspecialchars($entry['name']);
+            $percentage = number_format(($entry['value'] / $total) * 100, 2);
+            $value      = number_format($entry['value']);
+
+            if ($entry['value'] < $total * 0.001) {
+                $tooltip .= "\n" . <<<HTML
+                        <tr>
+                            <td class="text-nowrap">{$name}</td>
+                            <td class="text-end text-nowrap">{$percentage}%</td>
+                            <td class="text-end text-nowrap">({$value})</td>
+                        </tr>
+                HTML;
+                $otherSum += $entry['value'];
+                unset($chartData[$key]);
+            }
+        }
+        $tooltip .= "\n" . <<<HTML
+            </table>
+        HTML;
+
+        if ($otherSum > 0) {
+            $chartData[] = [
+                'name'    => 'Other',
+                'value'   => $otherSum,
+                'tooltip' => $tooltip,
+            ];
+        }
+
+        $chartData = array_values($chartData);
 
         return [
             'title'  => [
@@ -130,7 +170,7 @@ class TelemetryController extends AbstractController
     /**
      * Get the Echart bar chart data for the given serie.
      *
-     * @param ChartSerie $serie
+     * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
@@ -207,7 +247,7 @@ class TelemetryController extends AbstractController
      * Sort the result by value in descending order.
      * Filter to retreive only the most important values.
      *
-     * @param ChartSerie $serie
+     * @param ChartSerie        $serie
      * @param ChartPeriodFilter $periodFilter
      *
      * @return array{
@@ -229,7 +269,7 @@ class TelemetryController extends AbstractController
 
         $chartData = [];
         foreach ($monthlyValues as $entries) {
-            foreach($entries as $entry) {
+            foreach ($entries as $entry) {
                 $index = array_search($entry['name'], array_column($chartData, 'name'), true);
 
                 if ($index !== false) {
