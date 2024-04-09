@@ -91,7 +91,9 @@ window.addEventListener('DOMContentLoaded', () => {
             });
 
             // Open modal and display the map in full screen
-            const button = chartDom.closest('.card-body').querySelector('button');
+            const card = document.querySelector('.card');
+
+            const button = card.querySelector('button');
 
             const options = myChart.getOption();
 
