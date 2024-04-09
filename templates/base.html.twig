@@ -23,7 +23,7 @@
                     'config',
                     google_analytics_id,
                     {
-                        send_page_view: {{ (google_analytics_send_page_view is defined ? google_analytics_send_page_view : true)|json_encode }}
+                        send_page_view: {{ block('google_analytics_send_page_view') is defined ? block('google_analytics_send_page_view') : 'true' }}
                     }
                 );
             </script>
