@@ -3,44 +3,49 @@
 {% block title %}References - {{ parent() }}{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('build/styles/reference.css') }}" />
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/styles/reference.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('build/js/reference.js') }}" defer></script>
+	{{ parent() }}
+	<script src="{{ asset('build/js/reference.js') }}" defer></script>
 {% endblock %}
 
 {% block body_content %}
-<div class="container-xl">
-    <div class="card">
-        <button type="button" id="modalBtn" class="btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block" style="z-index: 1">
-            <i class="ti ti-arrows-maximize"></i>
-        </button>
-        <div class="card-body reference-map-size" id="map_graph"></div>
-    </div>
+	<div class="container-xl">
+		<div class="card">
+			<button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block" style="z-index: 1">
+				<i class="ti ti-arrows-maximize"></i>
+			</button>
+			<div class="card-body reference-map-size" id="map_graph"></div>
+		</div>
 
-    <div class="mt-4">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <div class="page-title">References</div>
-                <div class="page-subtitle">{{ references|length }} users already registered their GLPI installations</div>
-            </div>
-            <div class="col-auto ms-auto d-print-none">
-                <a class="btn btn-primary d-none d-sm-inline-block" href="{{ path('app_reference_register') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
-                    Register your GLPI instance
-                </a>
-            </div>
-        </div>
-    </div>
+		<div class="mt-4">
+			<div class="row g-2 align-items-center">
+				<div class="col">
+					<div class="page-title">References</div>
+					<div class="page-subtitle">{{ references|length }}
+						users already registered their GLPI installations</div>
+				</div>
+				<div class="col-auto ms-auto d-print-none">
+					<a class="btn btn-primary d-none d-sm-inline-block" href="{{ path('app_reference_register') }}">
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewbox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+							<path d="M12 5l0 14"></path>
+							<path d="M5 12l14 0"></path>
+						</svg>
+						Register your GLPI instance
+					</a>
+				</div>
+			</div>
+		</div>
 
-    <div id="references-table-container"></div>
-</div>
-{% set reference_data = [] %}
-{% for reference in references %}
-    {% set reference_data = reference_data|merge([[
+		<div id="references-table-container"></div>
+	</div>
+	{% set reference_data = [] %}
+	{% for reference in references %}
+		{% set reference_data = reference_data|merge([[
         reference.name,
         reference.country,
         reference.glpireference.numAssets|default(''),
@@ -49,8 +54,8 @@
         reference.comment,
         reference.url,
     ]]) %}
-{% endfor %}
-<script>
-    window.referenceData = {{ reference_data|json_encode|raw }};
-</script>
+	{% endfor %}
+	<script>
+		window.referenceData = {{ reference_data|json_encode|raw }};
+	</script>
 {% endblock %}
