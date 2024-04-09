@@ -6,4 +6,6 @@ controllers:
 
 index:
     path: /
-    controller: App\Controller\TelemetryController::index
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: 'app_telemetry'
