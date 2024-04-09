@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Register your GLPI instance - {{ parent() }}{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>

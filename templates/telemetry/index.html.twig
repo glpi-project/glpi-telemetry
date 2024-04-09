@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Telemetry - {{ parent() }}{% endblock %}
+
 {# Disable automatic page view, they will be simulated when filter value is initialized/changed #}
 {% set google_analytics_send_page_view = false %}
 
