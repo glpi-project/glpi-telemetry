@@ -96,17 +96,26 @@ class TelemetryController extends AbstractController
         // Filter values that are less than 0.1% of the total to group them
         $total = array_sum(array_column($chartData, 'value'));
 
+        $otherValues = [];
+        foreach ($chartData as $key => $entry) {
+            if ($entry['value'] < $total * 0.001) {
+                $otherValues[] = $entry;
+                unset($chartData[$key]);
+            }
+        }
+
         $otherSum = 0;
+        $remainingSum = 0;
         $tooltip = <<<HTML
             <table class="table table-sm table-borderless">
                 <tr><th colspan="3">Other</th></tr>
         HTML;
-        foreach ($chartData as $key => $entry) {
-            $name       = htmlspecialchars($entry['name']);
-            $percentage = number_format(($entry['value'] / $total) * 100, 2);
-            $value      = number_format($entry['value']);
-
-            if ($entry['value'] < $total * 0.001) {
+        foreach ($otherValues as $index => $entry) {
+            // Show details for all entries if there are less than 15 entries in "other"
+            if (count($otherValues) <= 15 || $index < 10) {
+                $name       = htmlspecialchars($entry['name']);
+                $percentage = number_format(($entry['value'] / $total) * 100, 2);
+                $value      = number_format($entry['value']);
                 $tooltip .= "\n" . <<<HTML
                         <tr>
                             <td class="text-nowrap">{$name}</td>
@@ -115,9 +124,23 @@ class TelemetryController extends AbstractController
                         </tr>
                 HTML;
                 $otherSum += $entry['value'];
-                unset($chartData[$key]);
+            } else {
+                $remainingSum += $entry['value'];
             }
         }
+
+        if ($remainingSum > 0) {
+            $percentage = number_format(($remainingSum / $total) * 100, 2);
+            $value      = number_format($remainingSum);
+            $tooltip .= "\n" . <<<HTML
+                    <tr>
+                        <td class="text-nowrap">Other</td>
+                        <td class="text-end text-nowrap">{$percentage}%</td>
+                        <td class="text-end text-nowrap">({$value})</td>
+                    </tr>
+            HTML;
+        }
+
         $tooltip .= "\n" . <<<HTML
             </table>
         HTML;

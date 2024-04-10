@@ -78,6 +78,120 @@ class TelemetryControllerTest extends KernelTestCase
             ]
         ];
 
+        // Data with more than 15 values in tooltip
+        yield [
+            'storedData' => [
+                ['name' => 'TARBALL', 'value' => 25000],
+                ['name' => 'RPM',     'value' => 1000],
+                ['name' => 'DOCKER',  'value' => 500],
+                ['name' => 'CLOUD',   'value' => 35], // just above the 0.1% limit
+                ['name' => 'GIT',     'value' => 30],
+                ['name' => 'APT',     'value' => 25],
+                ['name' => 'YUM',     'value' => 22],
+                ['name' => 'A',       'value' => 15],
+                ['name' => 'B',       'value' => 14],
+                ['name' => 'C',       'value' => 12],
+                ['name' => 'D',       'value' => 11],
+                ['name' => 'E',       'value' => 10],
+                ['name' => 'F',       'value' => 8],
+                ['name' => 'G',       'value' => 7],
+                ['name' => 'H',       'value' => 6],
+                ['name' => 'I',       'value' => 1],
+                ['name' => 'J',       'value' => 1],
+                ['name' => 'K',       'value' => 1],
+                ['name' => 'L',       'value' => 1],
+                ['name' => 'M',       'value' => 1],
+                ['name' => 'N',       'value' => 1],
+                ['name' => 'O',       'value' => 1],
+                ['name' => 'P',       'value' => 1],
+                ['name' => 'Q',       'value' => 1],
+                ['name' => 'R',       'value' => 1],
+                ['name' => 'S',       'value' => 1],
+            ],
+            'expectedValues' => [
+                'title' => [
+                    'text' => 'Installation modes',
+                ],
+                'series' => [
+                    [
+                        'data' => [
+                            ['name' => 'TARBALL', 'value' => 25000],
+                            ['name' => 'RPM',     'value' => 1000],
+                            ['name' => 'DOCKER',  'value' => 500],
+                            ['name' => 'CLOUD',   'value' => 35],
+                            ['name' => 'GIT',     'value' => 30],
+                            [
+                                'name' => 'Other',
+                                'value' => 130,
+                                // tooltip contains all values below 0.1%, ordered by value DESC
+                                // but only 10 first values are detailled, other are grouped
+                                'tooltip' => <<<HTML
+                                    <table class="table table-sm table-borderless">
+                                        <tr><th colspan="3">Other</th></tr>
+                                        <tr>
+                                            <td class="text-nowrap">APT</td>
+                                            <td class="text-end text-nowrap">0.09%</td>
+                                            <td class="text-end text-nowrap">(25)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">YUM</td>
+                                            <td class="text-end text-nowrap">0.08%</td>
+                                            <td class="text-end text-nowrap">(22)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">A</td>
+                                            <td class="text-end text-nowrap">0.06%</td>
+                                            <td class="text-end text-nowrap">(15)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">B</td>
+                                            <td class="text-end text-nowrap">0.05%</td>
+                                            <td class="text-end text-nowrap">(14)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">C</td>
+                                            <td class="text-end text-nowrap">0.04%</td>
+                                            <td class="text-end text-nowrap">(12)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">D</td>
+                                            <td class="text-end text-nowrap">0.04%</td>
+                                            <td class="text-end text-nowrap">(11)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">E</td>
+                                            <td class="text-end text-nowrap">0.04%</td>
+                                            <td class="text-end text-nowrap">(10)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">F</td>
+                                            <td class="text-end text-nowrap">0.03%</td>
+                                            <td class="text-end text-nowrap">(8)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">G</td>
+                                            <td class="text-end text-nowrap">0.03%</td>
+                                            <td class="text-end text-nowrap">(7)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">H</td>
+                                            <td class="text-end text-nowrap">0.02%</td>
+                                            <td class="text-end text-nowrap">(6)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-nowrap">Other</td>
+                                            <td class="text-end text-nowrap">0.04%</td>
+                                            <td class="text-end text-nowrap">(11)</td>
+                                        </tr>
+                                    </table>
+                                HTML
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        ];
+
         // Data without tooltip
         yield [
             'storedData' => [
