@@ -157,10 +157,10 @@ class ChartDataStorage
                 FROM telemetry
             SQL;
 
-            /** @var string $result */
+            /** @var ?string $result */
             $result = $this->connection->executeQuery($sql)->fetchOne();
 
-            $this->oldestDate = new DateTimeImmutable($result);
+            $this->oldestDate = $result !== null ? new DateTimeImmutable($result) : new DateTimeImmutable();
         }
 
         return $this->oldestDate;

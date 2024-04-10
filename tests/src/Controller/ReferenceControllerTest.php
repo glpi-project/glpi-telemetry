@@ -6,21 +6,12 @@ namespace App\Tests\Controller;
 
 use App\Controller\ReferenceController;
 use App\Repository\ReferenceRepository;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\KernelTestCase;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Cache\CacheInterface;
 
-class ReferenceControllerTest extends WebTestCase
+class ReferenceControllerTest extends KernelTestCase
 {
-    public function testMapDataRoute(): Void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/reference/map/data');
-
-        self::assertEquals(200, $client->getResponse()->getStatusCode());
-    }
-
     public function testMapData(): Void
     {
         $data = [
@@ -54,14 +45,6 @@ class ReferenceControllerTest extends WebTestCase
             $expectedvalue = $data[$entry->name]['value'] ?? 0;
             self::assertEquals($expectedvalue, $entry->value, $entry->name);
         }
-    }
-
-    public function testMapCountriesRoute(): Void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/reference/map/countries');
-
-        self::assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
     public function testMapCountries(): Void

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\E2ETests;
 
 use App\Entity\Reference;
+use App\Tests\PantherTestCase;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Panther\PantherTestCase;
 
 class ReferenceRegistrationTest extends PantherTestCase
 {
     public function testSuccessfulReferenceRegistrationWillAllFields(): void
     {
-        $client = static::createPantherClient();
+        $client = $this->getPantherClient();
 
         // Load the reference registration page
         $client->request('GET', '/reference/register');
@@ -62,7 +62,7 @@ class ReferenceRegistrationTest extends PantherTestCase
 
     public function testSuccessfulReferenceRegistrationWithOnlyName(): void
     {
-        $client = static::createPantherClient();
+        $client = $this->getPantherClient();
 
         // Load the reference registration page
         $client->request('GET', '/reference/register');
@@ -95,7 +95,7 @@ class ReferenceRegistrationTest extends PantherTestCase
 
     public function testFailedReferenceRegistration(): void
     {
-        $client = static::createPantherClient();
+        $client = $this->getPantherClient();
 
         // Load the reference registration page
         $uuid = bin2hex(random_bytes(20));
@@ -141,7 +141,7 @@ class ReferenceRegistrationTest extends PantherTestCase
 
     public function testRedirectFromLegacyUrl(): void
     {
-        $client = static::createPantherClient();
+        $client = $this->getPantherClient();
 
         // Load the legacy URL
         $uuid = bin2hex(random_bytes(20));
