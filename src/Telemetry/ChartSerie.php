@@ -62,7 +62,12 @@ enum ChartSerie: string
                 return $sql;
             case ChartSerie::OsFamily:
                 $sql = <<<SQL
-                    SELECT os_family as name,
+                    SELECT
+                    CASE
+                        WHEN os_family LIKE '%SunOS%' THEN 'SunOS'
+                        WHEN os_family LIKE '%Linux%' THEN 'Linux'
+                        ELSE os_family
+                    END as name,
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
                     WHERE $baseFilter
