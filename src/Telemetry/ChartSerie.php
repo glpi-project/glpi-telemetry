@@ -104,6 +104,7 @@ enum ChartSerie: string
                     COUNT(DISTINCT glpi_uuid) as total
                     FROM telemetry
                     WHERE $baseFilter
+                    AND glpi_default_language REGEXP '^[a-z]{2}(_([A-Z]{2}|419))?$'
                     GROUP BY name
                     ORDER BY total DESC
                     LIMIT 10
