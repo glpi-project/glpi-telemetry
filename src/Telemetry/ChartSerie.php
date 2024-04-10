@@ -86,7 +86,7 @@ enum ChartSerie: string
             case ChartSerie::TopPlugin:
                 $sql = <<<SQL
                     SELECT pkey as name,
-                    COUNT('glpi_plugin_id') as total
+                    COUNT(DISTINCT telemetry.glpi_uuid) as total
                     FROM telemetry_glpi_plugin as tgp
                     INNER JOIN glpi_plugin as gp
                     ON tgp.glpi_plugin_id = gp.id
