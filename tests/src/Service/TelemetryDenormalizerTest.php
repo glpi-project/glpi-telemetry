@@ -9,22 +9,24 @@ use App\Entity\Telemetry;
 use App\Entity\TelemetryGlpiPlugin;
 use App\Repository\GlpiPluginRepository;
 use App\Service\TelemetryDenormalizer;
+use App\Tests\KernelTestCase;
 use DateTimeImmutable;
 use DirectoryIterator;
 use Doctrine\ORM\EntityManager;
 use Opis\JsonSchema\Validator;
-use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use stdClass;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-class TelemetryDenormalizerTest extends TestCase
+class TelemetryDenormalizerTest extends KernelTestCase
 {
     private PropertyAccessorInterface $propertyAccessor;
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
             ->disableExceptionOnInvalidPropertyPath()
             ->getPropertyAccessor();

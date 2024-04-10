@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Telemetry;
 
 use App\Telemetry\ChartPeriodFilter;
+use App\Tests\KernelTestCase;
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
 
-class ChartPeriodFilterTest extends TestCase
+class ChartPeriodFilterTest extends KernelTestCase
 {
     /**
      * @return array<array{filter: ChartPeriodFilter}>
