@@ -195,6 +195,12 @@ const fetchAndDisplayChartsData = function () {
                             itemStyle: {
                                 borderRadius: 5
                             },
+                            tooltip: {
+                                formatter: function (params) {
+                                    var value = params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                    return `${params.name}: ${params.percent}% (${value})`;
+                                }
+                            },
                             data: []
                         },
                         options.series[0]
@@ -211,6 +217,12 @@ const fetchAndDisplayChartsData = function () {
                             roseType: 'area',
                             itemStyle: {
                                 borderRadius: 3
+                            },
+                            tooltip: {
+                                formatter: function (params) {
+                                    var value = params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                    return `${params.name}: ${params.percent}% (${value})`;
+                                }
                             },
                             data: []
                         },
