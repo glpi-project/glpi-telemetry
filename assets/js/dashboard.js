@@ -7,7 +7,7 @@ import merge from 'deepmerge';
 const fetchAndDisplayChartsData = function () {
     document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
         let chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
-        if (typeof(chartInstance) === 'undefined') {
+        if (typeof (chartInstance) === 'undefined') {
             chartInstance = global.echarts.init(chart.querySelector('.card-body'));
         }
 
@@ -82,7 +82,10 @@ const fetchAndDisplayChartsData = function () {
                     options = merge(
                         {
                             tooltip: {
-                                formatter: '{b}: {d}% ({c})'
+                                formatter: function (params) {
+                                    const value = Number(params.value).toLocaleString('en');
+                                    return `${params.name}: ${params.percent}% (${value})`;
+                                }
                             },
                             series: []
                         },
@@ -93,7 +96,10 @@ const fetchAndDisplayChartsData = function () {
                     options = merge(
                         {
                             tooltip: {
-                                formatter: '{b}: {c}'
+                                formatter: function (params) {
+                                    const value = Number(params.value).toLocaleString('en');
+                                    return `${params.name}: ${params.percent}% (${value})`;
+                                }
                             },
                             series: []
                         },
@@ -157,9 +163,9 @@ const fetchAndDisplayChartsData = function () {
                                         if (name === null) {
                                             name = item.name;
                                         }
-                                        const marker        = item.marker;
-                                        const label         = item.seriesName;
-                                        const percentage    = item.value;
+                                        const marker = item.marker;
+                                        const label = item.seriesName;
+                                        const percentage = item.value;
                                         const absoluteValue = absoluteValues[item.componentIndex][item.dataIndex];
 
                                         if (absoluteValue === 0) {
@@ -195,12 +201,6 @@ const fetchAndDisplayChartsData = function () {
                             itemStyle: {
                                 borderRadius: 5
                             },
-                            tooltip: {
-                                formatter: function (params) {
-                                    var value = params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                    return `${params.name}: ${params.percent}% (${value})`;
-                                }
-                            },
                             data: []
                         },
                         options.series[0]
@@ -217,12 +217,6 @@ const fetchAndDisplayChartsData = function () {
                             roseType: 'area',
                             itemStyle: {
                                 borderRadius: 3
-                            },
-                            tooltip: {
-                                formatter: function (params) {
-                                    var value = params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                    return `${params.name}: ${params.percent}% (${value})`;
-                                }
                             },
                             data: []
                         },
@@ -303,9 +297,9 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
 var previousCustomLocation = null;
 document.getElementById('dataPeriod').onchange = () => {
     // Trigger the page view event in Google Analytics
-    const filterEl       = document.getElementById('dataPeriod');
+    const filterEl = document.getElementById('dataPeriod');
     const customLocation = location.href + '/' + filterEl.value;
-    const customTitle    = filterEl.selectedOptions[0].textContent + ' - ' + document.title;
+    const customTitle = filterEl.selectedOptions[0].textContent + ' - ' + document.title;
     window.gtag('event', 'page_view', {
         page_title: customTitle,
         page_location: customLocation,
@@ -321,7 +315,7 @@ document.getElementById('dataPeriod').dispatchEvent(new Event('change'));
 window.addEventListener('resize', () => {
     document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
         let chartInstance = global.echarts.getInstanceByDom(chart.querySelector('.card-body'));
-        if (typeof(chartInstance) !== 'undefined') {
+        if (typeof (chartInstance) !== 'undefined') {
             chartInstance.resize();
         }
     });
