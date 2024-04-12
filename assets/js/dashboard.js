@@ -278,7 +278,7 @@ document.querySelectorAll('[data-chart-serie]').forEach((chart) => {
     const card = document.createElement('div');
     card.setAttribute('class', 'card dashboard-card');
     card.innerHTML = `
-        <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block" style="z-index: 1">
+        <button type="button" class="btn p-1 ms-auto mt-1 me-1 mb-n4 d-none d-lg-inline-block d-md-block d-sm-none" style="z-index: 1">
             <i class="ti ti-arrows-maximize"></i>
         </button>
         <div class="card-body">
