@@ -95,8 +95,6 @@ class TelemetryDenormalizerTest extends KernelTestCase
             } else {
                 self::assertEquals('TARBALL', $telemetry->getInstallMode());
             }
-            self::assertInstanceOf(DateTimeImmutable::class, $telemetry->getCreatedAt());
-            self::assertInstanceOf(DateTimeImmutable::class, $telemetry->getUpdatedAt());
             self::assertEquals('IZM6hxPNpegwAdAaErWCWyKaN7DCCWaGfdvUKuI6', $telemetry->getGlpiUuid());
             $glpiVersion = $telemetry->getGlpiVersion();
             self::assertIsString($glpiVersion);

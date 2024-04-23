@@ -83,13 +83,11 @@ class ReferenceController extends AbstractController
                     $reference->setEmail($data['email']);
                     $reference->setReferent($data['referent']);
                     $reference->setComment($data['comment']);
-                    $reference->setCreatedAt(new \DateTimeImmutable());
 
                     $glpiReference = new GlpiReference();
                     $glpiReference->setNumAssets($data['nb_assets']);
                     $glpiReference->setNumHelpdesk($data['nb_helpdesk']);
                     $glpiReference->setReference($reference);
-                    $glpiReference->setCreatedAt(new \DateTimeImmutable());
                     $reference->setGlpiReference($glpiReference);
 
                     $manager->persist($reference);

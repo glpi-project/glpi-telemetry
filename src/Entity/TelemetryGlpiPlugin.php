@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\TelemetryGlpiPluginRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TelemetryGlpiPluginRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name:"created_at_idx", columns:["created_at"])]
 class TelemetryGlpiPlugin
 {
@@ -26,10 +28,10 @@ class TelemetryGlpiPlugin
     private ?string $version = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
+    private ?DateTimeImmutable $updated_at = null;
 
     public function getId(): ?int
     {
@@ -72,27 +74,40 @@ class TelemetryGlpiPlugin
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setTimestampsOnPersist(): void
+    {
+        $this->created_at = new DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setTimestampsOnUpdate(): void
+    {
+        $this->updated_at = new DateTimeImmutable();
     }
 }

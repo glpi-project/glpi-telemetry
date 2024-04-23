@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ReferenceRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReferenceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Reference
 {
     #[ORM\Id]
@@ -37,10 +39,10 @@ class Reference
     private ?string $referent = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
+    private ?DateTimeImmutable $updated_at = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $is_displayed = null;
@@ -141,24 +143,24 @@ class Reference
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $created_at): self
+    public function setCreatedAt(?DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
 
@@ -199,5 +201,18 @@ class Reference
         $this->glpireference = $glpireference;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setTimestampsOnPersist(): void
+    {
+        $this->created_at = new DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function setTimestampsOnUpdate(): void
+    {
+        $this->updated_at = new DateTimeImmutable();
     }
 }

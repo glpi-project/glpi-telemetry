@@ -241,8 +241,6 @@ class TelemetryDenormalizer implements DenormalizerInterface
                 ? $mode
                 : null,
         );
-        $telemetry->setCreatedAt(new DateTimeImmutable());
-        $telemetry->setUpdatedAt(new DateTimeImmutable());
 
         $plugins = $this->propertyAccessor->getValue($data, 'data.glpi.plugins');
 
@@ -255,16 +253,12 @@ class TelemetryDenormalizer implements DenormalizerInterface
                 if ($glpiPlugin === null) {
                     $glpiPlugin = new GlpiPlugin();
                     $glpiPlugin->setPkey($plugin->key);
-                    $glpiPlugin->setCreatedAt(new DateTimeImmutable());
-                    $glpiPlugin->setUpdatedAt(new DateTimeImmutable());
                 }
 
                 $telemetryGlpiPlugin = new TelemetryGlpiPlugin();
                 $telemetryGlpiPlugin->setGlpiPlugin($glpiPlugin);
                 $telemetryGlpiPlugin->setTelemetryEntry($telemetry);
                 $telemetryGlpiPlugin->setVersion($plugin->version);
-                $telemetryGlpiPlugin->setCreatedAt(new DateTimeImmutable());
-                $telemetryGlpiPlugin->setUpdatedAt(new DateTimeImmutable());
 
                 $telemetry->addTelemetryGlpiPlugin($telemetryGlpiPlugin);
             }
