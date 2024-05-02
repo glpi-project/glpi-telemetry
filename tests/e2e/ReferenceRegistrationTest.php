@@ -19,7 +19,7 @@ class ReferenceRegistrationTest extends PantherTestCase
         self::assertSelectorTextSame('.card-title', 'Register your GLPI instance');
 
         // Wait for captcha validation
-        $this->waitForCaptcha($client);
+        $this->waitForCaptcha($client, 'reference_form');
         $crawler = $client->refreshCrawler();
 
         // Submit the form
@@ -69,7 +69,7 @@ class ReferenceRegistrationTest extends PantherTestCase
         self::assertSelectorTextSame('.card-title', 'Register your GLPI instance');
 
         // Wait for captcha validation
-        $this->waitForCaptcha($client);
+        $this->waitForCaptcha($client, 'reference_form');
         $crawler = $client->refreshCrawler();
 
         // Submit the form
@@ -153,7 +153,7 @@ class ReferenceRegistrationTest extends PantherTestCase
         self::assertInputValueSame('reference_form[uuid]', $uuid);
 
         // Wait for captcha validation
-        $this->waitForCaptcha($client);
+        $this->waitForCaptcha($client, 'reference_form');
         $crawler = $client->refreshCrawler();
 
         // Submit the form
@@ -178,10 +178,5 @@ class ReferenceRegistrationTest extends PantherTestCase
         $reference = $repository->findOneBy(['uuid' => $uuid]);
         self::assertInstanceOf(Reference::class, $reference);
         self::assertEquals($reference->getUuid(), $uuid);
-    }
-
-    private function waitForCaptcha(Client $pantherClient): void
-    {
-        $pantherClient->waitFor('[name="reference_form"] [name="captcha_token"][value*="DUMMY"]');
     }
 }
