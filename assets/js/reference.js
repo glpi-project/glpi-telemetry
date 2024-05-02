@@ -125,11 +125,7 @@ fetch('reference/map/countries', {
                 }
             ]
         });
-    }).catch(error => {
-        console.error('an error occured: ', error);
     });
-}).catch(error => {
-    console.error('an error occured: ', error);
 });
 
 // Display the map in a modal when clicking on the maximize button
