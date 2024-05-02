@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'app:compute-charts-data',
-    description: 'Compute charts data'
+    description: 'Compute charts data',
 )]
 class ComputeChartsData extends Command
 {
@@ -35,7 +35,7 @@ class ComputeChartsData extends Command
         $series = array_filter(
             ChartSerie::cases(),
             // Compute only series that are not displayed as monthly stacked bars
-            fn(ChartSerie $serie) => $serie->getChartType() !== ChartType::MonthlyStackedBar
+            fn(ChartSerie $serie) => $serie->getChartType() !== ChartType::MonthlyStackedBar,
         );
         $periods = ChartPeriodFilter::cases();
         $progressBar = new ProgressBar($output, count($periods) * count($series));
@@ -50,7 +50,7 @@ class ComputeChartsData extends Command
                         '<comment>Computing values for "%s" period for serie "%s"...</comment>',
                         $period->getLabel(),
                         $serie->getTitle(),
-                    )
+                    ),
                 );
                 $progressBar->display();
 
@@ -67,7 +67,7 @@ class ComputeChartsData extends Command
         $series = array_filter(
             ChartSerie::cases(),
             // Compute only series that are displayed as monthly stacked bars
-            fn(ChartSerie $serie) => $serie->getChartType() === ChartType::MonthlyStackedBar
+            fn(ChartSerie $serie) => $serie->getChartType() === ChartType::MonthlyStackedBar,
         );
         $start  = new DateTimeImmutable($this->chartDataStorage->getOldestTelemetryDate()->format('Y-m-01 00:00:00'));
         $end    = new DateTimeImmutable('-1 day');
@@ -88,7 +88,7 @@ class ComputeChartsData extends Command
                         $currentMonth->format('Y-m-d'),
                         $currentMonth->format('Y-m-t'),
                         $serie->getTitle(),
-                    )
+                    ),
                 );
                 $progressBar->display();
 

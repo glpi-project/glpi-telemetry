@@ -21,7 +21,7 @@ class ContactController extends AbstractController
         MailerInterface $mailer,
         CaptchaValidator $captchaValidator,
         string $captchaSiteKey,
-        string $contactFormRecipientEmail
+        string $contactFormRecipientEmail,
     ): Response {
         $form = $this->createForm(ContactFormType::class);
         $form->handleRequest($request);

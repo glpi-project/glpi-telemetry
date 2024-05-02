@@ -70,12 +70,12 @@ class TelemetryControllerTest extends KernelTestCase
                                             <td class="text-end text-nowrap">(2)</td>
                                         </tr>
                                     </table>
-                                HTML
+                                HTML,
                             ],
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
 
         // Data with more than 15 values in tooltip
@@ -184,12 +184,12 @@ class TelemetryControllerTest extends KernelTestCase
                                             <td class="text-end text-nowrap">(11)</td>
                                         </tr>
                                     </table>
-                                HTML
+                                HTML,
                             ],
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
 
         // Data without tooltip
@@ -218,7 +218,7 @@ class TelemetryControllerTest extends KernelTestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
     }
 
@@ -257,7 +257,7 @@ class TelemetryControllerTest extends KernelTestCase
                         ['name' => '10.0.8', 'value' => 15],
                         ['name' => '10.0.9', 'value' => 15],
                     ],
-                ]
+                ],
             )
         ;
 
@@ -274,21 +274,21 @@ class TelemetryControllerTest extends KernelTestCase
             'series' => [
                 [
                     'name' => '10.0.6',
-                    'data' => [10, 0]
+                    'data' => [10, 0],
                 ],
                 [
                     'name' => '10.0.7',
-                    'data' => [5, 0]
+                    'data' => [5, 0],
                 ],
                 [
                     'name' => '10.0.8',
-                    'data' => [10, 15]
+                    'data' => [10, 15],
                 ],
                 [
                     'name' => '10.0.9',
-                    'data' => [0, 15]
+                    'data' => [0, 15],
                 ],
-            ]
+            ],
         ];
 
         self::assertIsArray($result);
@@ -315,7 +315,7 @@ class TelemetryControllerTest extends KernelTestCase
                     ['name' => 'datainjection', 'value' => 21],
                     ['name' => 'sccm',          'value' => 19],
                     ['name' => 'moreticket',    'value' => 13],
-                ]
+                ],
             )
         ;
         $controller = new TelemetryController($chartDataStorage);
@@ -343,7 +343,7 @@ class TelemetryControllerTest extends KernelTestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         );
     }
 }

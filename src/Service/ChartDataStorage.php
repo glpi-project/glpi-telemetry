@@ -52,12 +52,12 @@ class ChartDataStorage
             [
                 'startDate' => $month->format('Y-m-01 00:00:00'),
                 'endDate'   => $month->format('Y-m-t 23:59:59'),
-            ]
+            ],
         )->fetchAllAssociative();
 
         $this->filesystem->dumpFile(
             $monthFile,
-            json_encode($result, flags: JSON_THROW_ON_ERROR)
+            json_encode($result, flags: JSON_THROW_ON_ERROR),
         );
     }
 
@@ -87,12 +87,12 @@ class ChartDataStorage
             [
                 'startDate' => $periodFilter->getStartDate()->format('Y-m-01 00:00:00'),
                 'endDate'   => $periodFilter->getEndDate()->format('Y-m-t 23:59:59'),
-            ]
+            ],
         )->fetchAllAssociative();
 
         $this->filesystem->dumpFile(
             $periodFile,
-            json_encode($result, flags: JSON_THROW_ON_ERROR)
+            json_encode($result, flags: JSON_THROW_ON_ERROR),
         );
     }
 

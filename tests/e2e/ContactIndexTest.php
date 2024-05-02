@@ -19,7 +19,7 @@ class ContactIndexTest extends PantherTestCase
             self::assertEquals(
                 Response::HTTP_OK,
                 $client->getResponse()->getStatusCode(),
-                $client->getResponse()->__toString()
+                $client->getResponse()->__toString(),
             );
         }
     }

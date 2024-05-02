@@ -19,7 +19,7 @@ class TelemetryIndexTest extends PantherTestCase
                 $routes[] = sprintf(
                     '/telemetry/chart/%s/%s',
                     $chartSerie->value,
-                    $chartPeriodFilter->value
+                    $chartPeriodFilter->value,
                 );
             }
         }
@@ -30,7 +30,7 @@ class TelemetryIndexTest extends PantherTestCase
             self::assertEquals(
                 Response::HTTP_OK,
                 $client->getResponse()->getStatusCode(),
-                $client->getResponse()->__toString()
+                $client->getResponse()->__toString(),
             );
         }
     }

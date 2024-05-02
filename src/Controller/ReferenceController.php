@@ -35,7 +35,7 @@ class ReferenceController extends AbstractController
             'reference/index.html.twig',
             [
                 'references' => $references,
-            ]
+            ],
         );
     }
 
@@ -44,7 +44,7 @@ class ReferenceController extends AbstractController
         Request $request,
         EntityManagerInterface $manager,
         CaptchaValidator $captchaValidator,
-        string $captchaSiteKey
+        string $captchaSiteKey,
     ): Response {
         $form = $this->createForm(ReferenceFormType::class);
         if ($request->query->has('uuid')) {
