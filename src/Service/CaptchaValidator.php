@@ -21,7 +21,7 @@ class CaptchaValidator
 
     public function __construct(
         HttpClientInterface $client,
-        string $captchaSecretKey
+        string $captchaSecretKey,
     ) {
         $this->client = $client;
         $this->captchaSecretKey = $captchaSecretKey;
@@ -46,8 +46,8 @@ class CaptchaValidator
                     'body' => [
                         'secret' => $this->captchaSecretKey,
                         'response' => $token,
-                    ]
-                ]
+                    ],
+                ],
             );
 
             return (bool) ($response->toArray()['success'] ?? false);

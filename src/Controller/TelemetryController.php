@@ -51,7 +51,7 @@ class TelemetryController extends AbstractController
             'telemetry/index.html.twig',
             [
                 'period_filters' => ChartPeriodFilter::cases(),
-            ]
+            ],
         );
     }
 
@@ -157,13 +157,13 @@ class TelemetryController extends AbstractController
 
         return [
             'title'  => [
-                'text' => $serie->getTitle()
+                'text' => $serie->getTitle(),
             ],
             'series' => [
                 [
-                    'data' => $chartData
-                ]
-            ]
+                    'data' => $chartData,
+                ],
+            ],
         ];
     }
 
@@ -190,7 +190,7 @@ class TelemetryController extends AbstractController
     {
         $monthlyValues = $this->chartDataStorage->getMonthlyValues(
             $serie,
-            $periodFilter
+            $periodFilter,
         );
 
         $months = array_keys($monthlyValues);
@@ -232,7 +232,7 @@ class TelemetryController extends AbstractController
 
         return [
             'title' => [
-                'text' => $serie->getTitle()
+                'text' => $serie->getTitle(),
             ],
             'xAxis' => [
                 'data' => $months,
@@ -266,13 +266,13 @@ class TelemetryController extends AbstractController
 
         return [
             'title'  => [
-                'text' => $serie->getTitle()
+                'text' => $serie->getTitle(),
             ],
             'series' => [
                 [
-                    'data' => $filteredArray
-                ]
-            ]
+                    'data' => $filteredArray,
+                ],
+            ],
         ];
     }
 }

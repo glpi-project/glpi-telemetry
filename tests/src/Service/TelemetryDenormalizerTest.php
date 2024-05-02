@@ -153,8 +153,8 @@ class TelemetryDenormalizerTest extends KernelTestCase
                 [
                     'fields',
                     'formcreator',
-                    version_compare($glpiVersion, '10.0.0', '<') ? 'fusioninventory' : 'glpiinventory'
-                ]
+                    version_compare($glpiVersion, '10.0.0', '<') ? 'fusioninventory' : 'glpiinventory',
+                ],
             );
         }
     }
@@ -289,7 +289,7 @@ class TelemetryDenormalizerTest extends KernelTestCase
         return new TelemetryDenormalizer(
             new Validator(),
             __DIR__ . '/../../../resources/schema',
-            $this->createMock(GlpiPluginRepository::class)
+            $this->createMock(GlpiPluginRepository::class),
         );
     }
 
@@ -328,7 +328,7 @@ class TelemetryDenormalizerTest extends KernelTestCase
                         [
                             'key' => 'myplugin',
                             'version' => '1.0.0',
-                        ]
+                        ],
                     ],
                     'default_language' => 'en_GB',
                     'install_mode' => 'TARBALL',
@@ -424,14 +424,14 @@ class TelemetryDenormalizerTest extends KernelTestCase
                         'version' => '5.15.0-91-generic',
                     ],
                 ],
-            ]
+            ],
         ];
 
         // Convert array structure to object structure.
         /** @var \stdClass $data */
         $data = json_decode(
             json_encode($data, flags: JSON_THROW_ON_ERROR),
-            flags: JSON_THROW_ON_ERROR
+            flags: JSON_THROW_ON_ERROR,
         );
 
         return $data;
