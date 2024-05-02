@@ -61,12 +61,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Copy files to container.
 COPY ./files/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY ./files/opt/startup.sh /opt/startup.sh
 
 # Define application path as volume and working dir
 VOLUME /var/www/telemetry.glpi-project.org
 WORKDIR /var/www/telemetry.glpi-project.org
-
-# Make startup script executable and executes it as default command.
-RUN chmod u+x /opt/startup.sh
-CMD /opt/startup.sh
