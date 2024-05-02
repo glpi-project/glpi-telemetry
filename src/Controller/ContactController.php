@@ -34,18 +34,18 @@ class ContactController extends AbstractController
                 try {
                     /**
                      * @var array{
-                     *          Email: string,
-                     *          Subject: string,
-                     *          Message: string
+                     *          email: string,
+                     *          subject: string,
+                     *          message: string
                      *      } $contactFormData
                      */
                     $contactFormData = $form->getData();
 
                     $message = (new Email())
-                        ->from($contactFormData['Email'])
+                        ->from($contactFormData['email'])
                         ->to($contactFormRecipientEmail)
-                        ->subject('New message from Telemetry: ' . $contactFormData['Subject'])
-                        ->text($contactFormData['Message']);
+                        ->subject('New message from Telemetry: ' . $contactFormData['subject'])
+                        ->text($contactFormData['message']);
 
                     $mailer->send($message);
 

@@ -21,8 +21,6 @@ abstract class PantherTestCase extends \Symfony\Component\Panther\PantherTestCas
 
     /**
      * Get the HTTP client.
-     *
-     * @return KernelBrowser
      */
     protected function getHttpClient(): KernelBrowser
     {
@@ -31,8 +29,6 @@ abstract class PantherTestCase extends \Symfony\Component\Panther\PantherTestCas
 
     /**
      * Get the Panther client.
-     *
-     * @return PantherClient
      */
     protected function getPantherClient(): PantherClient
     {
@@ -40,5 +36,13 @@ abstract class PantherTestCase extends \Symfony\Component\Panther\PantherTestCas
             throw new \RuntimeException();
         }
         return self::$pantherClient;
+    }
+
+    /**
+     * Wait for the captcha from the given form to be validated.
+     */
+    protected function waitForCaptcha(PantherClient $pantherClient, string $formName): void
+    {
+        $pantherClient->waitFor(sprintf('[name="%s"] [name="captcha_token"][value*="DUMMY"]', $formName));
     }
 }

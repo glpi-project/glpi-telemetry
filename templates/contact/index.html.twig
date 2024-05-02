@@ -16,16 +16,16 @@
                     <p class="card-subtitle mb-4">Feel free to ask us</p>
                     <div class="form-group">
                         <div class="mb-3">
-                            {{ form_label(form.Email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_row(form.Email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
                         </div>
                         <div class="mb-3">
-                            {{ form_label(form.Subject, 'Subject', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_row(form.Subject, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_label(form.subject, 'Subject', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_row(form.subject, {'attr': {'class': 'form-control'}}) }}
                         </div>
                         <div class="mb-3">
-                            {{ form_label(form.Message, 'Message', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_row(form.Message, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_label(form.message, 'Message', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_row(form.message, {'attr': {'class': 'form-control'}}) }}
                         </div>
                         <div class="cf-turnstile" data-sitekey="{{ captchaSiteKey }}" data-response-field-name="captcha_token"></div>
                     </div>

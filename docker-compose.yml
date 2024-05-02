@@ -9,3 +9,8 @@ services:
       - ".:/var/www/telemetry.glpi-project.org:rw"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  mail:
+    image: "axllent/mailpit"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

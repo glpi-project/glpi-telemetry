@@ -20,6 +20,8 @@ Before setting up the Telemetry 2.0 application, ensure that your system meets t
 
 A docker development environment can be easilly instanciated by running the command `docker compose up -d`.
 
+### HTTP server
+
 By default, the HTTP port is not exposed, to prevent conflicts with other projects. You will have to define it in
 the `docker-compose.override.yml` file.
 
@@ -43,15 +45,12 @@ services:
         HOST_USER_ID: "${HOST_USER_ID:-1000}"
 ```
 
-By default, only the application container is created. If you want to create additional services, you can add them in
-the `docker-compose.override.yml` file.
+### Database server
+
+By default, the database service is not provided. You can add it in the `docker-compose.override.yml` file.
 
 ```yaml
 services:
-  telemetry.glpi-project.org:
-    restart: "unless-stopped"
-    ports:
-      - "8001:80"
   database:
     image: "mariadb:11.0"
     environment:
@@ -63,19 +62,25 @@ services:
       - "3306:3306"
     volumes:
       - "db:/var/lib/mysql"
-  mailer:
-    image: "schickling/mailcatcher"
-    ports:
-      - "1025"
-      - "1080:1080"
 
 volumes:
   db:
 ```
 
-Corresponding services could be used by defining the following variables in the `.env.local` file:
- - `DATABASE_URL="mysql://telemetry:P4ssw0rd@database:3306/telemetry?charset=utf8mb4"`;
- - `MAILER_DSN=smtp://mailer:1025`.
+The corresponding database service can be used by defining the following variable in the `.env.local` file:
+`DATABASE_URL="mysql://telemetry:P4ssw0rd@database:3306/telemetry?charset=utf8mb4"`.
+
+### Mailpit service
+
+The Mailpit service is required for end-to-end tests. It is already present in the `docker-compose.yml` file, 
+but its UI is not exposed by default. You can be exposed by defining the port in the `docker-compose.override.yml` file.
+
+```yaml
+services:
+  mail:
+    ports:
+      - "8025:8025"
+```
 
 ## Installation
 
