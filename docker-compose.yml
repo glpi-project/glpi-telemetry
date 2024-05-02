@@ -1,5 +1,3 @@
-version: "3.5"
-
 services:
   telemetry.glpi-project.org:
     container_name: "telemetry.glpi-project.org"
