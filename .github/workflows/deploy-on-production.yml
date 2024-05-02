@@ -1,0 +1,33 @@
+name: "Deploy on production"
+
+on:
+  release:
+    types:
+      - "published"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: "Deploy on production"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.3"
+          extensions: "pdo_mysql"
+          tools: "composer"
+      - name: "Install and build dependencies"
+        run: |
+          composer install --no-scripts --ansi --no-interaction --no-progress --prefer-dist
+      - name: "Deploy on production server"
+        env:
+          SSH_AUTH_SOCK: "/tmp/ssh_agent.sock"
+        run: |
+          mkdir --parents /home/runner/.ssh
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          printf '%s\n' "${{ secrets.DEPLOYER_PRIVATE_KEY }}" | ssh-add -
+          ssh-keyscan -H bastion.teclib.com >> /home/runner/.ssh/known_hosts
+          vendor/bin/dep deploy stage=production --revision=${{ github.sha }} --file=.deploy.php --ansi --no-interaction --verbose

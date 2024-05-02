@@ -133,6 +133,10 @@ add('shared_dirs', ['var/storage']);
 add('writable_dirs', ['var/storage']);
 
 // Hosts
+host('164.132.49.166')
+    ->set('hostname', 'bastion.teclib.com')
+    ->set('labels', ['stage' => 'production'])
+    ->set('ssh_remote_command', 'telemetry.glpi-project.org');
 host('telemetry-dev.glpi-project.org')
     ->set('hostname', 'bastion.teclib.com')
     ->set('labels', ['stage' => 'development'])
