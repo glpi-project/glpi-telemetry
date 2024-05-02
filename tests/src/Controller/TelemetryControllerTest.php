@@ -16,7 +16,7 @@ class TelemetryControllerTest extends KernelTestCase
      * @return array<
      *      array{
      *          storedData: array<int, array{name: string, value: int}>,
-     *          expectedValues: array{
+     *          expectedResult: array{
      *              title: array{text: string},
      *              series: array<int, array{data: array<int, array{name: string, value: int, tooltip?: string}>}>
      *          }
@@ -36,7 +36,7 @@ class TelemetryControllerTest extends KernelTestCase
                 ['name' => 'APT',     'value' => 10],
                 ['name' => 'YUM',     'value' => 2],
             ],
-            'expectedValues' => [
+            'expectedResult' => [
                 'title' => [
                     'text' => 'Installation modes',
                 ],
@@ -108,7 +108,7 @@ class TelemetryControllerTest extends KernelTestCase
                 ['name' => 'R',       'value' => 1],
                 ['name' => 'S',       'value' => 1],
             ],
-            'expectedValues' => [
+            'expectedResult' => [
                 'title' => [
                     'text' => 'Installation modes',
                 ],
@@ -202,7 +202,7 @@ class TelemetryControllerTest extends KernelTestCase
                 ['name' => 'GIT',     'value' => 15],
                 ['name' => 'APT',     'value' => 10],
             ],
-            'expectedValues' => [
+            'expectedResult' => [
                 'title' => [
                     'text' => 'Installation modes',
                 ],
