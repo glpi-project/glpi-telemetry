@@ -10,7 +10,6 @@
         "@stylistic/eslint-plugin-js": "^1.6.3",
         "@symfony/webpack-encore": "^4.6.1",
         "@tabler/core": "^1.0.0-beta20",
-        "@tabler/icons-webfont": "^2.47.0",
         "deepmerge": "^4.3.1",
         "echarts": "^5.5.0",
         "eslint": "^8.57.0",
