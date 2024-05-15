@@ -28,7 +28,7 @@ class ChartDataStorage
     /**
      * Compute monthly values and store them into the filesystem.
      */
-    public function computeMonthlyValues(ChartSerie $serie, DateTimeInterface $month): void
+    public function computeMonthlyValues(ChartSerie $serie, DateTimeInterface $month, bool $force = false): void
     {
         $serieDirectory = $this->storageDir . '/chart-data/' . $serie->name;
 
@@ -41,6 +41,7 @@ class ChartDataStorage
         if (
             $this->filesystem->exists($monthFile)
             && filemtime($monthFile) > strtotime($month->format('Y-m-t 23:59:59'))
+            && $force === false
         ) {
             // Do not recompute values when file exists, unless it has been computed before the end
             // of the corresponding month.
@@ -64,7 +65,7 @@ class ChartDataStorage
     /**
      * Compute total values corresponding to given period and store them into the filesystem.
      */
-    public function computePeriodTotalValues(ChartSerie $serie, ChartPeriodFilter $periodFilter): void
+    public function computePeriodTotalValues(ChartSerie $serie, ChartPeriodFilter $periodFilter, bool $force = false): void
     {
         $serieDirectory = $this->storageDir . '/chart-data/' . $serie->name;
 
@@ -77,6 +78,7 @@ class ChartDataStorage
         if (
             $this->filesystem->exists($periodFile)
             && filemtime($periodFile) > strtotime('today midnight')
+            && $force === false
         ) {
             // Do not recompute values when file exists, unless it has been computed before today.
             return;
@@ -85,6 +87,7 @@ class ChartDataStorage
         $result = $this->connection->executeQuery(
             $serie->getSqlQuery(),
             [
+                // expand to first day of start month and to last day of end month in order to display full months data
                 'startDate' => $periodFilter->getStartDate()->format('Y-m-01 00:00:00'),
                 'endDate'   => $periodFilter->getEndDate()->format('Y-m-t 23:59:59'),
             ],

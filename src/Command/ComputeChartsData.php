@@ -13,6 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
@@ -25,6 +26,13 @@ class ComputeChartsData extends Command
         private ChartDataStorage $chartDataStorage,
     ) {
         parent::__construct();
+
+        $this->addOption(
+            'force',
+            'f',
+            InputOption::VALUE_NONE,
+            'Force the computation, even for already computed data',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,7 +62,11 @@ class ComputeChartsData extends Command
                 );
                 $progressBar->display();
 
-                $this->chartDataStorage->computePeriodTotalValues($serie, $period);
+                $this->chartDataStorage->computePeriodTotalValues(
+                    $serie,
+                    $period,
+                    force: (bool) $input->getOption('force'),
+                );
 
                 $progressBar->advance();
             }
@@ -94,7 +106,11 @@ class ComputeChartsData extends Command
                 );
                 $progressBar->display();
 
-                $this->chartDataStorage->computeMonthlyValues($serie, $currentMonth);
+                $this->chartDataStorage->computeMonthlyValues(
+                    $serie,
+                    $currentMonth,
+                    force: (bool) $input->getOption('force'),
+                );
 
                 $progressBar->advance();
             }
