@@ -55,6 +55,8 @@ class ComputeChartsData extends Command
                 $progressBar->display();
 
                 $this->chartDataStorage->computePeriodTotalValues($serie, $period);
+
+                $progressBar->advance();
             }
         }
 
