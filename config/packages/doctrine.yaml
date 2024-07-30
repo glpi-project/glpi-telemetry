@@ -2,8 +2,8 @@ doctrine:
     dbal:
         url: '%env(DATABASE_URL)%'
         charset: 'utf8mb4'
-        # MariaDB 10.11.2 is the first GA release of the 10.11 version
-        server_version: '10.11.2-MariaDB'
+        # MariaDB 11.4.2 is the first GA release of the 11.4 version
+        server_version: '11.4.2-MariaDB'
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

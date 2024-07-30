@@ -27,14 +27,14 @@ jobs:
     runs-on: "ubuntu-latest"
     services:
       db:
-        image: "mariadb:10.11"
+        image: "mariadb:11.4"
         env:
           MYSQL_DATABASE: "telemetry"
           MYSQL_ROOT_PASSWORD: "password"
         ports:
           - "3306:3306"
         options: >-
-          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          --health-cmd="mariadb-admin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       mail:
         image: "axllent/mailpit"
         ports:
