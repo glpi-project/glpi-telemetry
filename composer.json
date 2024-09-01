@@ -11,7 +11,7 @@
         "ext-iconv": "*",
         "ext-pdo_mysql": "*",
         "doctrine/collections": "^2.2",
-        "doctrine/dbal": "^4.0",
+        "doctrine/dbal": "^4.1",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.1",
