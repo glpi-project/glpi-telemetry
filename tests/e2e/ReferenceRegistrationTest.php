@@ -102,7 +102,11 @@ class ReferenceRegistrationTest extends PantherTestCase
         $crawler = $client->request('GET', sprintf('/reference/register?uuid=%s', $uuid));
         self::assertSelectorTextSame('.card-title', 'Register your GLPI instance');
 
-        // Submit the form without waiting for captcha token to be generated
+        // Remove the captcha from the form, to make it invalid
+        $this->removeCaptcha($client, 'reference_form');
+        $crawler = $client->refreshCrawler();
+
+        // Submit the form
         $name       = bin2hex(random_bytes(10));
         $url        = sprintf('https://example.com/?name=%s', $name);
         $phone      = '+330123456789';
