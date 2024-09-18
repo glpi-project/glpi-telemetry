@@ -28,7 +28,7 @@ class TelemetryController extends AbstractController
 
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
     public function post(
-        #[MapRequestPayload(serializationContext:['json_decode_associative' => false])]
+        #[MapRequestPayload(serializationContext: ['json_decode_associative' => false])]
         ?Telemetry $telemetry,
         TelemetryRepository $telemetryRepository,
     ): Response {

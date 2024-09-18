@@ -14,7 +14,7 @@ enum ChartPeriodFilter: string
 
     public function getLabel(): string
     {
-        return match($this) {
+        return match ($this) {
             self::LastTwelveMonths  => 'Last 12 months',
             self::LastFiveYears     => 'Last 5 years',
             self::Always            => 'Always',
@@ -23,7 +23,7 @@ enum ChartPeriodFilter: string
 
     public function getStartDate(): DateTimeImmutable
     {
-        return match($this) {
+        return match ($this) {
             self::LastTwelveMonths  => new DateTimeImmutable('-1 year'),
             self::LastFiveYears     => new DateTimeImmutable('-5 years'),
             self::Always            => new DateTimeImmutable('1970-01-01'),
