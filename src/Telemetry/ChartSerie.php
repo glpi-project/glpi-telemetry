@@ -149,7 +149,7 @@ enum ChartSerie: string
 
     public function getTitle(): string
     {
-        switch($this) {
+        switch ($this) {
             case ChartSerie::GlpiVersion:
                 return 'GLPI versions';
 
@@ -181,7 +181,7 @@ enum ChartSerie: string
 
     public function getChartType(): ChartType
     {
-        switch($this) {
+        switch ($this) {
             case ChartSerie::GlpiVersion:
             case ChartSerie::PhpInfos:
                 return ChartType::MonthlyStackedBar;
