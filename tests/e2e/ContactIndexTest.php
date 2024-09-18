@@ -89,7 +89,11 @@ class ContactIndexTest extends PantherTestCase
         $crawler = $client->request('GET', '/contact');
         self::assertSelectorTextSame('.card-title', 'Any question about GLPI ?');
 
-        // Submit the form without waiting for captcha token to be generated
+        // Remove the captcha from the form, to make it invalid
+        $this->removeCaptcha($client, 'contact_form');
+        $crawler = $client->refreshCrawler();
+
+        // Submit the form
         $subject = sprintf('Hello from %s', bin2hex(random_bytes(10)));
         $email   = sprintf('%s@example.com', bin2hex(random_bytes(10)));
         $message = sprintf("This is really a great software. Thanks! Cheers from %s.", bin2hex(random_bytes(10)));

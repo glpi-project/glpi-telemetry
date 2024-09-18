@@ -45,4 +45,18 @@ abstract class PantherTestCase extends \Symfony\Component\Panther\PantherTestCas
     {
         $pantherClient->waitFor(sprintf('[name="%s"] [name="captcha_token"][value*="DUMMY"]', $formName));
     }
+
+    /**
+     * Remove the captcha from the form.
+     */
+    protected function removeCaptcha(PantherClient $pantherClient, string $formName): void
+    {
+        $this->waitForCaptcha($pantherClient, $formName);
+        $pantherClient->executeScript(
+            sprintf(
+                'document.querySelector(\'[name="%s"] [name="captcha_token"]\').value = \'\';',
+                $formName,
+            ),
+        );
+    }
 }
