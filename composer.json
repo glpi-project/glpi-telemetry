@@ -89,10 +89,10 @@
         "symfony/symfony": "*"
     },
     "require-dev": {
-        "deployer/deployer": "^7.4",
+        "deployer/deployer": "^7.5",
         "friendsofphp/php-cs-fixer": "^3.64",
         "friendsoftwig/twigcs": "^6.4",
-        "maglnet/composer-require-checker": "^4.12",
+        "maglnet/composer-require-checker": "^4.13",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^1.12",
         "phpstan/phpstan-deprecation-rules": "^1.2",
