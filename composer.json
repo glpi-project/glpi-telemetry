@@ -42,7 +42,7 @@
         "symfony/twig-bundle": "^7.1",
         "symfony/validator": "^7.1",
         "symfony/yaml": "^7.1",
-        "twig/extra-bundle": "^3.13",
+        "twig/extra-bundle": "^3.20",
         "twig/twig": "^3.14.1"
     },
     "config": {
