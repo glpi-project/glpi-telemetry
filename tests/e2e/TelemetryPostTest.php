@@ -17,8 +17,8 @@ class TelemetryPostTest extends PantherTestCase
     {
         $client = $this->getHttpClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'text/html']);
-        self::assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
-        $content = $client->getResponse()->getContent();
+        self::assertEquals(Response::HTTP_BAD_REQUEST, $client->getInternalResponse()->getStatusCode());
+        $content = $client->getInternalResponse()->getContent();
         self::assertIsString($content);
         self::assertJsonStringEqualsJsonString('{"error":"Bad request"}', $content);
     }
@@ -27,8 +27,8 @@ class TelemetryPostTest extends PantherTestCase
     {
         $client = $this->getHttpClient();
         $client->request('POST', '/telemetry', [], [], ['CONTENT_TYPE' => 'application/json'], '{"test": "test"}');
-        self::assertEquals(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
-        $content = $client->getResponse()->getContent();
+        self::assertEquals(Response::HTTP_BAD_REQUEST, $client->getInternalResponse()->getStatusCode());
+        $content = $client->getInternalResponse()->getContent();
         self::assertIsString($content);
         self::assertJsonStringEqualsJsonString('{"error":"Bad request"}', $content);
     }
@@ -56,8 +56,8 @@ class TelemetryPostTest extends PantherTestCase
                 server: ['CONTENT_TYPE' => 'application/json'],
                 content: $postContent,
             );
-            self::assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-            $responseContent = $client->getResponse()->getContent();
+            self::assertEquals(Response::HTTP_OK, $client->getInternalResponse()->getStatusCode());
+            $responseContent = $client->getInternalResponse()->getContent();
             self::assertIsString($responseContent);
             self::assertJsonStringEqualsJsonString(
                 $i === 0 ? '{"message":"OK"}' : '{"message":"The report was ignored because a previous report has already been sent today."}',
@@ -196,8 +196,8 @@ class TelemetryPostTest extends PantherTestCase
             server: ['CONTENT_TYPE' => 'application/json'],
             content: $postContent,
         );
-        self::assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-        $responseContent = $client->getResponse()->getContent();
+        self::assertEquals(Response::HTTP_OK, $client->getInternalResponse()->getStatusCode());
+        $responseContent = $client->getInternalResponse()->getContent();
         self::assertIsString($responseContent);
         self::assertJsonStringEqualsJsonString('{"message":"OK"}', $responseContent);
 
@@ -295,8 +295,8 @@ class TelemetryPostTest extends PantherTestCase
                 server: ['CONTENT_TYPE' => 'application/json'],
                 content: $postContent,
             );
-            self::assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-            $responseContent = $client->getResponse()->getContent();
+            self::assertEquals(Response::HTTP_OK, $client->getInternalResponse()->getStatusCode());
+            $responseContent = $client->getInternalResponse()->getContent();
             self::assertIsString($responseContent);
             self::assertJsonStringEqualsJsonString('{"message":"OK"}', $responseContent);
 

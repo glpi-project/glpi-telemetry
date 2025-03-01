@@ -27,8 +27,8 @@ class ContactIndexTest extends PantherTestCase
             $client->request('GET', $route);
             self::assertEquals(
                 Response::HTTP_OK,
-                $client->getResponse()->getStatusCode(),
-                $client->getResponse()->__toString(),
+                $client->getInternalResponse()->getStatusCode(),
+                $client->getInternalResponse()->__toString(),
             );
         }
     }
