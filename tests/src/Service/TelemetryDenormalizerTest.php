@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use DirectoryIterator;
 use Doctrine\ORM\EntityManager;
 use Opis\JsonSchema\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use stdClass;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -174,9 +175,7 @@ class TelemetryDenormalizerTest extends KernelTestCase
         yield ['value' => 'TARBALL to FHS'];
     }
 
-    /**
-     * @dataProvider installModeProvider
-     */
+    #[DataProvider('installModeProvider')]
     public function testInstallModeValues(string $value): void
     {
         $data = $this->getBaseTelemetryV1Data();
@@ -262,9 +261,7 @@ class TelemetryDenormalizerTest extends KernelTestCase
         }
     }
 
-    /**
-     * @dataProvider defaultLanguageProvider
-     */
+    #[DataProvider('defaultLanguageProvider')]
     public function testGlpiDefaultLanguageValues(string $value): void
     {
         $data = $this->getBaseTelemetryV1Data();

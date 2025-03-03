@@ -9,6 +9,7 @@ use App\Service\ChartDataStorage;
 use App\Telemetry\ChartPeriodFilter;
 use App\Telemetry\ChartSerie;
 use App\Tests\KernelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TelemetryControllerTest extends KernelTestCase
 {
@@ -223,14 +224,13 @@ class TelemetryControllerTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider pieChartDataProvider
-     *
      * @param array<string, array<int, array{name: string, value: int}>> $storedData
      * @param array{
      *      title: array{text: string},
      *      series: array<int, array{data: array<int, array{name: string, value: int, tooltip?: string}>}>
      *  } $expectedResult
      */
+    #[DataProvider('pieChartDataProvider')]
     public function testGetPieChartData(array $storedData, array $expectedResult): void
     {
         $chartDataStorage = $this->createMock(ChartDataStorage::class);

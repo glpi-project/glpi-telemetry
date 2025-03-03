@@ -7,6 +7,7 @@ namespace App\Tests\Telemetry;
 use App\Telemetry\ChartPeriodFilter;
 use App\Tests\KernelTestCase;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ChartPeriodFilterTest extends KernelTestCase
 {
@@ -20,17 +21,13 @@ class ChartPeriodFilterTest extends KernelTestCase
         }
     }
 
-    /**
-     * @dataProvider caseProvider
-     */
+    #[DataProvider('caseProvider')]
     public function testGetStartDate(ChartPeriodFilter $filter): void
     {
         self::assertInstanceOf(DateTimeImmutable::class, $filter->getStartDate());
     }
 
-    /**
-     * @dataProvider caseProvider
-     */
+    #[DataProvider('caseProvider')]
     public function testGetEndDate(ChartPeriodFilter $filter): void
     {
         self::assertInstanceOf(DateTimeImmutable::class, $filter->getEndDate());
