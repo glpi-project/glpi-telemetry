@@ -55,7 +55,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
     * @return Telemetry|null
     * @throws \Symfony\Component\Serializer\Exception\InvalidArgumentException
     */
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
         if (
             (!is_object($data) && !is_array($data))
@@ -274,7 +274,7 @@ class TelemetryDenormalizer implements DenormalizerInterface
     * @param array<mixed> $context
     * @return bool
     */
-    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
         return Telemetry::class === $type;
     }

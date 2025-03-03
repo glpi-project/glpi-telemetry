@@ -11,7 +11,7 @@ Before setting up the Telemetry 2.0 application, ensure that your system meets t
 
 - A web server (Apache, NginX, etc.)
 - A database server (MariaDB, MySQL)
-- PHP version 8.3 or higher
+- PHP version 8.4 or higher
 - Composer version 2.6 or higher
 - Node.js version 20.09 or higher
 - npm version 10.1 or higher
