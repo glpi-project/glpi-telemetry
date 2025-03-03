@@ -59,7 +59,7 @@ jobs:
       - name: "Setup PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "8.3"
+          php-version: "8.4"
           extensions: "pdo_mysql"
           tools: "composer, cs2pr, symfony-cli"
       - name: "Get dependencies cache directories"
@@ -85,7 +85,7 @@ jobs:
       - name: "PHP Coding Standards"
         if: "${{ success() || failure() }}"
         run: |
-          vendor/bin/php-cs-fixer check --format checkstyle | cs2pr
+          PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer check --format checkstyle | cs2pr
       - name: "PHP Stan"
         if: "${{ success() || failure() }}"
         run: |

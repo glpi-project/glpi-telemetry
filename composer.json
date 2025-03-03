@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-date": "*",
         "ext-gettext": "*",
@@ -51,6 +51,11 @@
             "symfony/runtime": true,
             "phpstan/extension-installer": true
         },
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.4.99"
+        },
+        "preferred-install": "dist",
         "sort-packages": true
     },
     "autoload": {
