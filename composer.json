@@ -17,7 +17,7 @@
         "doctrine/orm": "^3.3",
         "doctrine/persistence": "^3.3",
         "mledoze/countries": "dev-master",
-        "opis/json-schema": "^2.3",
+        "opis/json-schema": "^2.4",
         "psr/log": "^3.0",
         "symfony/asset": "^7.2",
         "symfony/cache-contracts": "^3.5",
