@@ -90,7 +90,7 @@
     },
     "require-dev": {
         "deployer/deployer": "^7.5",
-        "friendsofphp/php-cs-fixer": "^3.70",
+        "friendsofphp/php-cs-fixer": "^3.75",
         "friendsoftwig/twigcs": "^6.5",
         "maglnet/composer-require-checker": "^4.16",
         "phpstan/extension-installer": "^1.4",
