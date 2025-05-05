@@ -16,7 +16,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
         "doctrine/persistence": "^4.0",
-        "mledoze/countries": "dev-master",
+        "mledoze/countries": "^5.1",
         "opis/json-schema": "^2.4",
         "psr/log": "^3.0",
         "symfony/asset": "^7.2",
