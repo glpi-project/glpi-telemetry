@@ -7,19 +7,19 @@
         "npm": ">= 10.1"
     },
     "devDependencies": {
-        "@stylistic/eslint-plugin-js": "^2.10.1",
-        "@symfony/webpack-encore": "^5.0.1",
+        "@stylistic/eslint-plugin-js": "^4.4.0",
+        "@symfony/webpack-encore": "^5.1.0",
         "@tabler/core": "^1.2.0",
         "deepmerge": "^4.3.1",
         "echarts": "^5.6.0",
-        "eslint": "^8.57.1",
+        "eslint": "^9.28.0",
         "flag-icons": "^7.3.2",
         "gridjs": "^6.2.0",
-        "sass": "^1.80.6",
-        "sass-loader": "^16.0.3",
+        "sass": "^1.89.1",
+        "sass-loader": "^16.0.5",
         "vanilla-cookieconsent": "^3.1.0",
-        "webpack": "^5.96.1",
-        "webpack-cli": "^5.1.4"
+        "webpack": "^5.99.9",
+        "webpack-cli": "^6.0.1"
     },
     "scripts": {
         "encore": "encore",
