@@ -21,6 +21,9 @@ RUN apt-get update \
   && docker-php-ext-enable apcu \
   && echo "apc.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
   \
+  # Install bcmath PHP extension.
+  && docker-php-ext-install bcmath \
+  \
   # Install gettext PHP extension.
   && docker-php-ext-install gettext \
   \
