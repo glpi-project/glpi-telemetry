@@ -23,7 +23,7 @@ enum ChartSerie: string
             (
                 telemetry.created_at BETWEEN :startDate AND :endDate
                 AND telemetry.glpi_version NOT LIKE '%dev'
-                AND telemetry.glpi_version REGEXP '^(9|10)\.[0-9]+'
+                AND telemetry.glpi_version REGEXP '^(9|10|11)\.[0-9]+'
             )
         SQL;
 
