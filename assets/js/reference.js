@@ -163,7 +163,7 @@ const grid = new gridjs.Grid({
                         },
                         name
                     );
-                } catch (e) {
+                } catch {
                     return name;
                 }
             }
