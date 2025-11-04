@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7d3141a6c4b63539272df8d6562f512",
+    "content-hash": "158d12703245ab79a9f193c001dcfe9f",
     "packages": [
         {
             "name": "doctrine/collections",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "2eb07e5953eed811ce1b309a7478a3b236f2273d"
+                "reference": "9acfeea2e8666536edff3d77c531261c63680160"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/2eb07e5953eed811ce1b309a7478a3b236f2273d",
-                "reference": "2eb07e5953eed811ce1b309a7478a3b236f2273d",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/9acfeea2e8666536edff3d77c531261c63680160",
+                "reference": "9acfeea2e8666536edff3d77c531261c63680160",
                 "shasum": ""
             },
             "require": {
@@ -26,11 +26,11 @@
                 "symfony/polyfill-php84": "^1.30"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^12",
+                "doctrine/coding-standard": "^14",
                 "ext-json": "*",
-                "phpstan/phpstan": "^1.8",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^10.5"
+                "phpstan/phpstan": "^2.1.30",
+                "phpstan/phpstan-phpunit": "^2.0.7",
+                "phpunit/phpunit": "^10.5.58 || ^11.5.42 || ^12.4"
             },
             "type": "library",
             "autoload": {
@@ -74,7 +74,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/collections/issues",
-                "source": "https://github.com/doctrine/collections/tree/2.3.0"
+                "source": "https://github.com/doctrine/collections/tree/2.4.0"
             },
             "funding": [
                 {
@@ -90,20 +90,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-22T10:17:19+00:00"
+            "time": "2025-10-25T09:18:13+00:00"
         },
         {
             "name": "doctrine/dbal",
-            "version": "4.3.3",
+            "version": "4.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "231959669bb2173194c95636eae7f1b41b2a8b19"
+                "reference": "1a2fbd0e93b8dec7c3d1ac2b6396a7b929b130dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/231959669bb2173194c95636eae7f1b41b2a8b19",
-                "reference": "231959669bb2173194c95636eae7f1b41b2a8b19",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/1a2fbd0e93b8dec7c3d1ac2b6396a7b929b130dc",
+                "reference": "1a2fbd0e93b8dec7c3d1ac2b6396a7b929b130dc",
                 "shasum": ""
             },
             "require": {
@@ -113,15 +113,15 @@
                 "psr/log": "^1|^2|^3"
             },
             "require-dev": {
-                "doctrine/coding-standard": "13.0.1",
+                "doctrine/coding-standard": "14.0.0",
                 "fig/log-test": "^1",
                 "jetbrains/phpstorm-stubs": "2023.2",
-                "phpstan/phpstan": "2.1.22",
-                "phpstan/phpstan-phpunit": "2.0.6",
+                "phpstan/phpstan": "2.1.30",
+                "phpstan/phpstan-phpunit": "2.0.7",
                 "phpstan/phpstan-strict-rules": "^2",
                 "phpunit/phpunit": "11.5.23",
-                "slevomat/coding-standard": "8.16.2",
-                "squizlabs/php_codesniffer": "3.13.1",
+                "slevomat/coding-standard": "8.24.0",
+                "squizlabs/php_codesniffer": "4.0.0",
                 "symfony/cache": "^6.3.8|^7.0",
                 "symfony/console": "^5.4|^6.3|^7.0"
             },
@@ -180,7 +180,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/4.3.3"
+                "source": "https://github.com/doctrine/dbal/tree/4.3.4"
             },
             "funding": [
                 {
@@ -196,7 +196,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-04T23:52:42+00:00"
+            "time": "2025-10-09T09:11:36+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -976,16 +976,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "4.1.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "dcbdfe4b211ae09478e192289cae7ab0987b29a4"
+                "reference": "b9c49ad3558bb77ef973f4e173f2e9c2eca9be09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/dcbdfe4b211ae09478e192289cae7ab0987b29a4",
-                "reference": "dcbdfe4b211ae09478e192289cae7ab0987b29a4",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/b9c49ad3558bb77ef973f4e173f2e9c2eca9be09",
+                "reference": "b9c49ad3558bb77ef973f4e173f2e9c2eca9be09",
                 "shasum": ""
             },
             "require": {
@@ -994,11 +994,11 @@
                 "psr/cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^12",
-                "phpstan/phpstan": "1.12.7",
-                "phpstan/phpstan-phpunit": "^1",
-                "phpstan/phpstan-strict-rules": "^1.6",
-                "phpunit/phpunit": "^9.6",
+                "doctrine/coding-standard": "^14",
+                "phpstan/phpstan": "2.1.30",
+                "phpstan/phpstan-phpunit": "^2",
+                "phpstan/phpstan-strict-rules": "^2",
+                "phpunit/phpunit": "^10.5.58 || ^12",
                 "symfony/cache": "^4.4 || ^5.4 || ^6.0 || ^7.0",
                 "symfony/finder": "^4.4 || ^5.4 || ^6.0 || ^7.0"
             },
@@ -1049,7 +1049,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/persistence/issues",
-                "source": "https://github.com/doctrine/persistence/tree/4.1.0"
+                "source": "https://github.com/doctrine/persistence/tree/4.1.1"
             },
             "funding": [
                 {
@@ -1065,7 +1065,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-21T16:00:31+00:00"
+            "time": "2025-10-16T20:13:18+00:00"
         },
         {
             "name": "doctrine/sql-formatter",
@@ -1350,21 +1350,21 @@
         },
         {
             "name": "opis/json-schema",
-            "version": "2.4.1",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/json-schema.git",
-                "reference": "712827751c62b465daae6e725bf0cf5ffbf965e1"
+                "reference": "8458763e0dd0b6baa310e04f1829fc73da4e8c8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/json-schema/zipball/712827751c62b465daae6e725bf0cf5ffbf965e1",
-                "reference": "712827751c62b465daae6e725bf0cf5ffbf965e1",
+                "url": "https://api.github.com/repos/opis/json-schema/zipball/8458763e0dd0b6baa310e04f1829fc73da4e8c8a",
+                "reference": "8458763e0dd0b6baa310e04f1829fc73da4e8c8a",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "opis/string": "^2.0",
+                "opis/string": "^2.1",
                 "opis/uri": "^1.0",
                 "php": "^7.4 || ^8.0"
             },
@@ -1409,22 +1409,22 @@
             ],
             "support": {
                 "issues": "https://github.com/opis/json-schema/issues",
-                "source": "https://github.com/opis/json-schema/tree/2.4.1"
+                "source": "https://github.com/opis/json-schema/tree/2.6.0"
             },
-            "time": "2024-12-30T20:20:21+00:00"
+            "time": "2025-10-17T12:46:48+00:00"
         },
         {
             "name": "opis/string",
-            "version": "2.0.2",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/string.git",
-                "reference": "ba0b9607b9809462b0e28a11e4881a8d77431feb"
+                "reference": "3e4d2aaff518ac518530b89bb26ed40f4503635e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/string/zipball/ba0b9607b9809462b0e28a11e4881a8d77431feb",
-                "reference": "ba0b9607b9809462b0e28a11e4881a8d77431feb",
+                "url": "https://api.github.com/repos/opis/string/zipball/3e4d2aaff518ac518530b89bb26ed40f4503635e",
+                "reference": "3e4d2aaff518ac518530b89bb26ed40f4503635e",
                 "shasum": ""
             },
             "require": {
@@ -1471,9 +1471,9 @@
             ],
             "support": {
                 "issues": "https://github.com/opis/string/issues",
-                "source": "https://github.com/opis/string/tree/2.0.2"
+                "source": "https://github.com/opis/string/tree/2.1.0"
             },
-            "time": "2024-12-30T21:43:22+00:00"
+            "time": "2025-10-17T12:38:41+00:00"
         },
         {
             "name": "opis/uri",
