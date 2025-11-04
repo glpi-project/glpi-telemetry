@@ -114,7 +114,7 @@ jobs:
           symfony server:start --daemon --no-tls
           vendor/bin/phpunit --colors=always
       - name: "Upload `/var` dir artifact"
-        uses: "actions/upload-artifact@v4"
+        uses: "actions/upload-artifact@v5"
         if: "${{ failure() && steps.phpunit.conclusion == 'failure' }}"
         with:
           name: "var"
