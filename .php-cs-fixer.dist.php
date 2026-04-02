@@ -2,7 +2,14 @@
 
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
-    ->exclude(['node_modules', 'var', 'vendor'])
+    ->exclude([
+        'node_modules',
+        'var',
+        'vendor',
+    ])
+    ->notPath([
+        'config/reference.php',
+    ])
 ;
 
 return (new PhpCsFixer\Config())
