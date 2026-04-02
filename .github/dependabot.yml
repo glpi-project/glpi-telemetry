@@ -18,9 +18,11 @@ updates:
     groups:
       dev-dependencies:
         patterns:
-          - "@stylistic/eslint-plugin-js"
+          - "@stylistic/eslint-plugin"
           - "@symfony/webpack-encore"
           - "eslint"
+          - "file-loader"
+          - "globals"
           - "sass"
           - "sass-loader"
           - "webpack"
@@ -38,9 +40,17 @@ updates:
     open-pull-requests-limit: 100
     versioning-strategy: "increase"
     rebase-strategy: "disabled"
+    ignore:
+      - dependency-name: "symfony/*"
+        versions:
+          - ">= 8.0"
     groups:
       dev-dependencies:
         dependency-type: "development"
+      doctrine:
+        dependency-type: "production"
+        patterns:
+          - "doctrine/*"
       symfony:
         dependency-type: "production"
         patterns:
