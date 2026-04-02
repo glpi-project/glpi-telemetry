@@ -47,14 +47,6 @@ class TelemetryDenormalizer implements DenormalizerInterface
         $this->glpiPluginRepository = $glpiPluginRepository;
     }
 
-    /**
-    * @param mixed $data
-    * @param string $type
-    * @param string|null $format
-    * @param array<mixed> $context
-    * @return Telemetry|null
-    * @throws \Symfony\Component\Serializer\Exception\InvalidArgumentException
-    */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
         if (
@@ -267,13 +259,6 @@ class TelemetryDenormalizer implements DenormalizerInterface
         return $telemetry;
     }
 
-    /**
-    * @param mixed $data
-    * @param string $type
-    * @param string|null $format
-    * @param array<mixed> $context
-    * @return bool
-    */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
         return Telemetry::class === $type;
