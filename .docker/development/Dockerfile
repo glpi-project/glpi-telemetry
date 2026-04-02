@@ -45,7 +45,7 @@ RUN apt-get update \
   # Install nodejs and npm.
   && apt-get install --assume-yes --no-install-recommends --quiet gnupg \
   && mkdir -p /etc/apt/keyrings \
-  && curl --fail --silent --show-error --location https://deb.nodesource.com/setup_20.x | bash -E \
+  && curl --fail --silent --show-error --location https://deb.nodesource.com/setup_22.x | bash -E \
   && apt-get install --assume-yes --no-install-recommends --quiet nodejs \
   \
   # Install git and zip used by composer when fetching dependencies.
