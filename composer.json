@@ -112,14 +112,21 @@
         ]
     },
     "conflict": {
-        "symfony/symfony": "*",
+        "symfony/cache": ">= 8.0",
+        "symfony/config": ">= 8.0",
+        "symfony/dependency-injection": ">= 8.0",
         "symfony/dom-crawler": ">= 8.0",
         "symfony/error-handler": ">= 8.0",
+        "symfony/event-dispatcher": ">= 8.0",
         "symfony/monolog-bridge": ">= 8.0",
+        "symfony/options-resolver": ">= 8.0",
+        "symfony/process": ">= 8.0",
         "symfony/property-info": ">= 8.0",
         "symfony/string": ">= 8.0",
+        "symfony/symfony": "*",
         "symfony/twig-bridge": ">= 8.0",
         "symfony/type-info": ">= 8.0",
-        "symfony/var-dumper": ">= 8.0"
+        "symfony/var-dumper": ">= 8.0",
+        "symfony/var-exporter": ">= 8.0"
     }
 }
