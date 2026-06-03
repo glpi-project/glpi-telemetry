@@ -11,7 +11,7 @@
         "@symfony/webpack-encore": "^6.0.0",
         "@tabler/core": "^1.4.0",
         "deepmerge": "^4.3.1",
-        "echarts": "^6.0.0",
+        "echarts": "^6.1.0",
         "eslint": "^9.39.1",
         "file-loader": "^6.2.0",
         "flag-icons": "^7.5.0",
