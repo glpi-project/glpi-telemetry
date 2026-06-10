@@ -46,7 +46,7 @@
         "twig/twig": "^3.27.1"
     },
     "require-dev": {
-        "deployer/deployer": "^8.0",
+        "deployer/deployer": "^7.5",
         "friendsofphp/php-cs-fixer": "^3.95",
         "friendsoftwig/twigcs": "^6.6",
         "maglnet/composer-require-checker": "^4.18",
@@ -112,6 +112,7 @@
         ]
     },
     "conflict": {
+        "deployer/deployer": "< 7.0 || >= 8.0",
         "symfony/cache": ">= 8.0",
         "symfony/config": ">= 8.0",
         "symfony/dependency-injection": ">= 8.0",
