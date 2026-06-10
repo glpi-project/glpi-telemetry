@@ -43,7 +43,7 @@
         "symfony/validator": "^7.4",
         "symfony/yaml": "^7.4",
         "twig/extra-bundle": "^3.24",
-        "twig/twig": "^3.14.1"
+        "twig/twig": "^3.27.1"
     },
     "require-dev": {
         "deployer/deployer": "^7.5",
