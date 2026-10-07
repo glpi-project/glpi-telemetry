@@ -9,7 +9,7 @@
         "@eslint/js": "^10.0.1",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@symfony/webpack-encore": "^7.2.0",
-        "@tabler/core": "^1.4.0",
+        "@tabler/core": "^1.6.1",
         "deepmerge": "^4.3.1",
         "echarts": "^6.1.0",
         "eslint": "^10.12.0",
