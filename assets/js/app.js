@@ -1,8 +1,8 @@
-import * as bootstrap from "bootstrap";
+import * as tabler from "@tabler/core";
 import * as echarts from "echarts";
 import * as CookieConsent from "vanilla-cookieconsent";
 
-window.bootstrap = bootstrap;
+window.tabler = tabler;
 window.echarts = echarts;
 
 // Cookie consent banner

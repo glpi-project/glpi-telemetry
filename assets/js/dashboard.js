@@ -269,8 +269,8 @@ const displayChartInModal = function (chart) {
         modal.remove();
     });
 
-    const bootstrapModal = new window.bootstrap.Modal(modal);
-    bootstrapModal.show();
+    const tablerModal = new window.tabler.Modal(modal);
+    tablerModal.show();
 };
 
 // Initialize charts DOM

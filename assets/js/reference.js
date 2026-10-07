@@ -43,8 +43,8 @@ const displayMapInModal = function () {
     });
 
     document.body.appendChild(modal);
-    const bootstrapModal = new window.bootstrap.Modal(modal);
-    bootstrapModal.show();
+    const tablerModal = new window.tabler.Modal(modal);
+    tablerModal.show();
 };
 
 // Initialize map
