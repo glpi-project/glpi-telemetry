@@ -233,7 +233,7 @@ class TelemetryControllerTest extends KernelTestCase
     #[DataProvider('pieChartDataProvider')]
     public function testGetPieChartData(array $storedData, array $expectedResult): void
     {
-        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage = self::createStub(ChartDataStorage::class);
         $chartDataStorage->method('getPeriodTotalValues')->willReturn($storedData);
 
         $controller = new TelemetryController($chartDataStorage);
@@ -244,7 +244,7 @@ class TelemetryControllerTest extends KernelTestCase
 
     public function testGetMonthlyStackedBarChartData(): void
     {
-        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage = self::createStub(ChartDataStorage::class);
         $chartDataStorage->method('getMonthlyValues')
             ->willReturn(
                 [
@@ -297,7 +297,7 @@ class TelemetryControllerTest extends KernelTestCase
 
     public function testGetNightingaleRoseChartData(): void
     {
-        $chartDataStorage = $this->createMock(ChartDataStorage::class);
+        $chartDataStorage = self::createStub(ChartDataStorage::class);
         $chartDataStorage->method('getPeriodTotalValues')
             ->willReturn(
                 [

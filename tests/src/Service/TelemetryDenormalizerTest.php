@@ -284,7 +284,7 @@ class TelemetryDenormalizerTest extends KernelTestCase
         return new TelemetryDenormalizer(
             new Validator(),
             __DIR__ . '/../../../resources/schema',
-            $this->createMock(GlpiPluginRepository::class),
+            self::createStub(GlpiPluginRepository::class),
         );
     }
 
