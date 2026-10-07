@@ -57,6 +57,10 @@ class ContactIndexTest extends PantherTestCase
         ]);
         $client->submit($form);
 
+        // Force refresh to prevent test flakyness
+        \sleep(1);
+        $crawler = $client->refreshCrawler();
+
         // Validates that user is redirected to form with a success message
         self::assertStringEndsWith('/contact', $client->getCurrentURL());
         self::assertSelectorTextSame('.alert-success', 'Your message has been sent.');
@@ -104,6 +108,10 @@ class ContactIndexTest extends PantherTestCase
             'contact_form[message]' => $message,
         ]);
         $client->submit($form);
+
+        // Force refresh to prevent test flakyness
+        \sleep(1);
+        $crawler = $client->refreshCrawler();
 
         // Validates that user is redirected to form with an error message
         self::assertStringEndsWith('/contact', $client->getCurrentURL());
