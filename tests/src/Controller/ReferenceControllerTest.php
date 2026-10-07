@@ -20,7 +20,7 @@ class ReferenceControllerTest extends KernelTestCase
             'Belgium'   => ['key' => 'be', 'value' => 300],
         ];
 
-        $referenceRepositoryMock = $this->createMock(ReferenceRepository::class);
+        $referenceRepositoryMock = self::createStub(ReferenceRepository::class);
         $referenceRepositoryMock->method('getReferencesCountbyCountries')
             ->willReturn(array_combine(array_column($data, 'key'), array_column($data, 'value')));
 
