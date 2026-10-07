@@ -36,7 +36,7 @@ export default [
         },
     },
     {
-        files: ["eslint.config.js", "webpack.config.js"],
+        files: ["eslint.config.mjs", "webpack.config.mjs"],
         languageOptions: {
             globals: {
                 ...globals.node,
