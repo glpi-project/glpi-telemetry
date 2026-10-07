@@ -45,6 +45,10 @@ class ReferenceRegistrationTest extends PantherTestCase
         ]);
         $crawler = $client->submit($form);
 
+        // Force refresh to prevent test flakyness
+        \sleep(1);
+        $crawler = $client->refreshCrawler();
+
         // Validates that user is redirected to reference list page and that reference has been added
         self::assertStringEndsWith('/reference', $client->getCurrentURL());
         self::assertSelectorTextSame('.alert-success', 'Your reference has been added successfully');
@@ -79,6 +83,10 @@ class ReferenceRegistrationTest extends PantherTestCase
             'reference_form[name]' => $name,
         ]);
         $crawler = $client->submit($form);
+
+        // Force refresh to prevent test flakyness
+        \sleep(1);
+        $crawler = $client->refreshCrawler();
 
         // Validates that user is redirected to reference list page and that reference has been added
         self::assertStringEndsWith('/reference', $client->getCurrentURL());
@@ -129,6 +137,10 @@ class ReferenceRegistrationTest extends PantherTestCase
         ]);
         $crawler = $client->submit($form);
 
+        // Force refresh to prevent test flakyness
+        \sleep(1);
+        $crawler = $client->refreshCrawler();
+
         // Validates that a propoer error message is displayed and form is still displayed with user values
         self::assertSelectorTextContains('.alert-danger', 'An error occurred while adding your reference');
         self::assertInputValueSame('reference_form[name]', $name);
@@ -167,6 +179,10 @@ class ReferenceRegistrationTest extends PantherTestCase
             'reference_form[name]' => $name,
         ]);
         $crawler = $client->submit($form);
+
+        // Force refresh to prevent test flakyness
+        \sleep(1);
+        $crawler = $client->refreshCrawler();
 
         // Validates that user is redirected to reference list page and that reference has been added
         self::assertStringEndsWith('/reference', $client->getCurrentURL());
