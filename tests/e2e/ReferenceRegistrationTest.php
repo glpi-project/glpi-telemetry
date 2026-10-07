@@ -43,7 +43,7 @@ class ReferenceRegistrationTest extends PantherTestCase
             'reference_form[nb_helpdesk]'   => $nbHelpdesk,
             'reference_form[comment]'       => $comment,
         ]);
-        $client->submit($form);
+        $crawler = $client->submit($form);
 
         // Validates that user is redirected to reference list page and that reference has been added
         self::assertStringEndsWith('/reference', $client->getCurrentURL());
@@ -78,7 +78,7 @@ class ReferenceRegistrationTest extends PantherTestCase
         $form->setValues([
             'reference_form[name]' => $name,
         ]);
-        $client->submit($form);
+        $crawler = $client->submit($form);
 
         // Validates that user is redirected to reference list page and that reference has been added
         self::assertStringEndsWith('/reference', $client->getCurrentURL());
@@ -127,7 +127,7 @@ class ReferenceRegistrationTest extends PantherTestCase
             'reference_form[nb_helpdesk]'   => $nbHelpdesk,
             'reference_form[comment]'       => $comment,
         ]);
-        $client->submit($form);
+        $crawler = $client->submit($form);
 
         // Validates that a propoer error message is displayed and form is still displayed with user values
         self::assertSelectorTextContains('.alert-danger', 'An error occurred while adding your reference');
@@ -166,7 +166,7 @@ class ReferenceRegistrationTest extends PantherTestCase
         $form->setValues([
             'reference_form[name]' => $name,
         ]);
-        $client->submit($form);
+        $crawler = $client->submit($form);
 
         // Validates that user is redirected to reference list page and that reference has been added
         self::assertStringEndsWith('/reference', $client->getCurrentURL());

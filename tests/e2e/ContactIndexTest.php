@@ -55,11 +55,7 @@ class ContactIndexTest extends PantherTestCase
             'contact_form[email]'   => $email,
             'contact_form[message]' => $message,
         ]);
-        $client->submit($form);
-
-        // Force refresh to prevent test flakyness
-        \sleep(1);
-        $crawler = $client->refreshCrawler();
+        $crawler = $client->submit($form);
 
         // Validates that user is redirected to form with a success message
         self::assertStringEndsWith('/contact', $client->getCurrentURL());
@@ -107,11 +103,7 @@ class ContactIndexTest extends PantherTestCase
             'contact_form[email]'   => $email,
             'contact_form[message]' => $message,
         ]);
-        $client->submit($form);
-
-        // Force refresh to prevent test flakyness
-        \sleep(1);
-        $crawler = $client->refreshCrawler();
+        $crawler = $client->submit($form);
 
         // Validates that user is redirected to form with an error message
         self::assertStringEndsWith('/contact', $client->getCurrentURL());
