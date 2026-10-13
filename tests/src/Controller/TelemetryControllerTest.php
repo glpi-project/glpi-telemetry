@@ -6,6 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Controller\TelemetryController;
 use App\Service\ChartDataStorage;
+use App\Service\GlpiVersionChecker;
 use App\Telemetry\ChartPeriodFilter;
 use App\Telemetry\ChartSerie;
 use App\Tests\KernelTestCase;
@@ -236,7 +237,9 @@ class TelemetryControllerTest extends KernelTestCase
         $chartDataStorage = self::createStub(ChartDataStorage::class);
         $chartDataStorage->method('getPeriodTotalValues')->willReturn($storedData);
 
-        $controller = new TelemetryController($chartDataStorage);
+        $glpiVersionChecker = self::createStub(GlpiVersionChecker::class);
+
+        $controller = new TelemetryController($chartDataStorage, $glpiVersionChecker);
         $result = $controller->getPieChartData(ChartSerie::InstallMode, ChartPeriodFilter::Always);
 
         self::assertEquals($expectedResult, $result);
@@ -261,7 +264,9 @@ class TelemetryControllerTest extends KernelTestCase
             )
         ;
 
-        $controller = new TelemetryController($chartDataStorage);
+        $glpiVersionChecker = self::createStub(GlpiVersionChecker::class);
+
+        $controller = new TelemetryController($chartDataStorage, $glpiVersionChecker);
         $result = $controller->getMonthlyStackedBarChartData(ChartSerie::GlpiVersion, ChartPeriodFilter::Always);
 
         $expected = [
@@ -318,7 +323,10 @@ class TelemetryControllerTest extends KernelTestCase
                 ],
             )
         ;
-        $controller = new TelemetryController($chartDataStorage);
+
+        $glpiVersionChecker = self::createStub(GlpiVersionChecker::class);
+
+        $controller = new TelemetryController($chartDataStorage, $glpiVersionChecker);
         $result = $controller->getNightingaleRoseChartData(ChartSerie::TopPlugin, ChartPeriodFilter::Always);
 
         self::assertEquals(

@@ -310,4 +310,133 @@ class TelemetryPostTest extends PantherTestCase
             self::assertNotEmpty($telemetry->getTelemetryGlpiPlugins());
         }
     }
+
+    public function testInvalidVersionPost(): void
+    {
+        $uniqueUuid = bin2hex(random_bytes(20));
+
+        $postContent = <<<JSON
+            {
+                "data": {
+                    "glpi": {
+                        "uuid": "{$uniqueUuid}",
+                        "version": "4.5.2",
+                        "plugins": [],
+                        "default_language": "fr_FR",
+                        "install_mode": "TARBALL",
+                        "usage": {
+                            "avg_entities": "0-10",
+                            "avg_computers": "10-20",
+                            "avg_networkequipments": "20-30",
+                            "avg_tickets": "30-40",
+                            "avg_problems": "40-50",
+                            "avg_changes": "50-60",
+                            "avg_projects": "60-70",
+                            "avg_users": "70-80",
+                            "avg_groups": "80-90",
+                            "ldap_enabled": false,
+                            "mailcollector_enabled": true,
+                            "notifications_modes": ["mailing", "custom"]
+                        }
+                    },
+                    "system": {
+                        "db": {
+                            "engine": "MySQL Community Server - GPL",
+                            "version": "8.0.35",
+                            "size": "39.2",
+                            "log_size": "",
+                            "sql_mode": "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+                        },
+                        "web_server": {
+                            "engine": "Apache",
+                            "version": "2.4.25"
+                        },
+                        "php": {
+                            "version": "8.2.18",
+                            "modules": [
+                                "Core",
+                                "date",
+                                "libxml",
+                                "openssl",
+                                "pcre",
+                                "sqlite3",
+                                "zlib",
+                                "ctype",
+                                "curl",
+                                "dom",
+                                "fileinfo",
+                                "filter",
+                                "ftp",
+                                "hash",
+                                "iconv",
+                                "json",
+                                "mbstring",
+                                "SPL",
+                                "PDO",
+                                "pdo_sqlite",
+                                "bz2",
+                                "posix",
+                                "Reflection",
+                                "session",
+                                "SimpleXML",
+                                "standard",
+                                "tokenizer",
+                                "xml",
+                                "xmlreader",
+                                "xmlwriter",
+                                "mysqlnd",
+                                "apache2handler",
+                                "Phar",
+                                "exif",
+                                "gd",
+                                "intl",
+                                "ldap",
+                                "memcached",
+                                "mysqli",
+                                "pcntl",
+                                "redis",
+                                "soap",
+                                "sodium",
+                                "xmlrpc",
+                                "zip",
+                                "Zend OPcache"
+                            ],
+                            "setup": {
+                                "max_execution_time": "30",
+                                "memory_limit": "128M",
+                                "post_max_size": "8M",
+                                "safe_mode": false,
+                                "session": "files",
+                                "upload_max_filesize": "2M"
+                            }
+                        },
+                        "os": {
+                            "family": "Linux",
+                            "distribution": "Ubuntu",
+                            "version": "5.15.0-91-generic"
+                        }
+                    }
+                }
+            }
+        JSON;
+
+        $client = $this->getHttpClient();
+        $client->request(
+            method: 'POST',
+            uri: '/telemetry',
+            server: ['CONTENT_TYPE' => 'application/json'],
+            content: $postContent,
+        );
+        self::assertEquals(Response::HTTP_OK, $client->getInternalResponse()->getStatusCode());
+        $responseContent = $client->getInternalResponse()->getContent();
+        self::assertIsString($responseContent);
+        self::assertJsonStringEqualsJsonString('{"message":"OK"}', $responseContent);
+
+        // Validates that the telemetry entry is not saved in DB
+        /** @var \Doctrine\Persistence\ManagerRegistry $doctrine */
+        $doctrine = static::getContainer()->get('doctrine');
+        $repository = $doctrine->getManager()->getRepository(Telemetry::class);
+        $telemetry = $repository->findOneBy(['glpi_uuid' => $uniqueUuid]);
+        self::assertNull($telemetry);
+    }
 }

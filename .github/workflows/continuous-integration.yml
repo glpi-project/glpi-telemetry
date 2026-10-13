@@ -52,6 +52,7 @@ jobs:
           echo "DATABASE_URL=mysql://root:password@127.0.0.1:${{ job.services.db.ports['3306'] }}/telemetry" >> .env.test.local
           echo "MAILER_DSN=smtp://127.0.0.1:${{ job.services.mail.ports['1025'] }}" >> .env.test.local
           echo "MAILER_API_URL=http://127.0.0.1:${{ job.services.mail.ports['8025'] }}" >> .env.test.local
+          echo "GITHUB_API_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env.test.local
       - name: "Setup Node.js"
         uses: "actions/setup-node@v7"
         with:
