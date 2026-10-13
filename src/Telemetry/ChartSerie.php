@@ -17,14 +17,8 @@ enum ChartSerie: string
 
     public function getSqlQuery(): string
     {
-        // TODO Remove invalid values from DB once migration from PgSQL will be done
-        // and filter values based on official release list once a day or at submit time.
         $baseFilter = <<<SQL
-            (
-                telemetry.created_at BETWEEN :startDate AND :endDate
-                AND telemetry.glpi_version NOT LIKE '%dev'
-                AND telemetry.glpi_version REGEXP '^(9|10|11|12)\.[0-9]+'
-            )
+            telemetry.created_at BETWEEN :startDate AND :endDate
         SQL;
 
         $defaultGroup = <<<SQL

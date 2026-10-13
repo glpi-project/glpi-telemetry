@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Telemetry;
 use App\Repository\TelemetryRepository;
 use App\Service\ChartDataStorage;
+use App\Service\GlpiVersionChecker;
 use App\Telemetry\ChartPeriodFilter;
 use App\Telemetry\ChartSerie;
 use App\Telemetry\ChartType;
@@ -19,12 +20,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TelemetryController extends AbstractController
 {
-    public ChartDataStorage $chartDataStorage;
-
-    public function __construct(ChartDataStorage $chartDataStorage)
-    {
-        $this->chartDataStorage = $chartDataStorage;
-    }
+    public function __construct(
+        private ChartDataStorage $chartDataStorage,
+        private GlpiVersionChecker $glpiVersionChecker,
+    ) {}
 
     #[Route('/telemetry', name: 'app_telemetry_post', methods: ['POST'])]
     public function post(
@@ -34,6 +33,11 @@ class TelemetryController extends AbstractController
     ): Response {
         if ($telemetry === null) {
             return $this->json(['error' => 'Bad request'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($this->glpiVersionChecker->isGlpiVersionValid($telemetry->getGlpiVersion() ?? '0.0.0') !== true) {
+            // Do not send a refusal, since we do not want this to be reported form pre-releases.
+            return $this->json(['message' => 'OK']);
         }
 
         if (
