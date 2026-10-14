@@ -49,11 +49,10 @@ class ChartDataStorage
         }
 
         $result = $this->connection->executeQuery(
-            $serie->getSqlQuery(),
-            [
-                'startDate' => $month->format('Y-m-01 00:00:00'),
-                'endDate'   => $month->format('Y-m-t 23:59:59'),
-            ],
+            $serie->getSqlQuery(
+                startDate: new DateTimeImmutable($month->format('Y-m-01 00:00:00')),
+                endDate: new DateTimeImmutable($month->format('Y-m-t 23:59:59')),
+            ),
         )->fetchAllAssociative();
 
         $this->filesystem->dumpFile(
@@ -84,13 +83,15 @@ class ChartDataStorage
             return;
         }
 
+        $startDate = $periodFilter->getStartDate();
+        $endDate   = $periodFilter->getEndDate();
+
         $result = $this->connection->executeQuery(
-            $serie->getSqlQuery(),
-            [
+            $serie->getSqlQuery(
                 // expand to first day of start month and to last day of end month in order to display full months data
-                'startDate' => $periodFilter->getStartDate()->format('Y-m-01 00:00:00'),
-                'endDate'   => $periodFilter->getEndDate()->format('Y-m-t 23:59:59'),
-            ],
+                startDate: $startDate !== null ? new DateTimeImmutable($startDate->format('Y-m-01 00:00:00')) : null,
+                endDate: $endDate !== null ? new DateTimeImmutable($endDate->format('Y-m-t 23:59:59')) : null,
+            ),
         )->fetchAllAssociative();
 
         $this->filesystem->dumpFile(
@@ -115,8 +116,8 @@ class ChartDataStorage
 
         $monthlyValues = [];
         $oldest        = $this->getOldestTelemetryDate();
-        $start         = $periodFilter->getStartDate();
-        $end           = $periodFilter->getEndDate();
+        $start         = $periodFilter->getStartDate() ?? new DateTimeImmutable('1970-01-01');
+        $end           = $periodFilter->getEndDate() ?? new DateTimeImmutable();
         $currentDate   = new DateTimeImmutable(($start > $oldest ? $start : $oldest)->format('Y-m-01 00:00:00'));
         while ($currentDate <= $end) {
             $monthKey      = $currentDate->format('Y-m');

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Telemetry;
 
+use DateTimeImmutable;
+
 enum ChartSerie: string
 {
     case GlpiVersion     = 'glpi_version';
@@ -15,11 +17,25 @@ enum ChartSerie: string
     case DefaultLanguage = 'glpi_default_language';
     case DbEngine        = 'db_engine';
 
-    public function getSqlQuery(): string
+    public function getSqlQuery(?DateTimeImmutable $startDate, ?DateTimeImmutable $endDate): string
     {
-        $baseFilter = <<<SQL
-            telemetry.created_at BETWEEN :startDate AND :endDate
-        SQL;
+        if ($startDate !== null && $endDate !== null) {
+            $baseFilter = <<<SQL
+                telemetry.created_at BETWEEN '{$startDate->format('Y-m-d H:i:s')}' AND '{$endDate->format('Y-m-d H:i:s')}'
+            SQL;
+        } elseif ($startDate !== null) {
+            $baseFilter = <<<SQL
+                telemetry.created_at >= '{$startDate->format('Y-m-d H:i:s')}'
+            SQL;
+        } elseif ($endDate !== null) {
+            $baseFilter = <<<SQL
+                telemetry.created_at <= '{$endDate->format('Y-m-d H:i:s')}'
+            SQL;
+        } else {
+            $baseFilter = <<<SQL
+                true
+            SQL;
+        }
 
         $defaultGroup = <<<SQL
             GROUP BY name
