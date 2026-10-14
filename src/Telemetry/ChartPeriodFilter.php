@@ -21,17 +21,17 @@ enum ChartPeriodFilter: string
         };
     }
 
-    public function getStartDate(): DateTimeImmutable
+    public function getStartDate(): ?DateTimeImmutable
     {
         return match ($this) {
             self::LastTwelveMonths  => new DateTimeImmutable('-1 year'),
             self::LastFiveYears     => new DateTimeImmutable('-5 years'),
-            self::Always            => new DateTimeImmutable('1970-01-01'),
+            self::Always            => null,
         };
     }
 
-    public function getEndDate(): DateTimeImmutable
+    public function getEndDate(): ?DateTimeImmutable
     {
-        return new DateTimeImmutable();
+        return null;
     }
 }
